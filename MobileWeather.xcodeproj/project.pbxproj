@@ -47,6 +47,7 @@
 		E4BD7AF01B023A2C006BE23B /* Localization.m in Sources */ = {isa = PBXBuildFile; fileRef = E4BD7AEE1B023A2C006BE23B /* Localization.m */; };
 		E4C5B2DE1AEE248C0056E934 /* EnumType.m in Sources */ = {isa = PBXBuildFile; fileRef = E4C5B2DD1AEE248C0056E934 /* EnumType.m */; };
 		E4C5B2E11AEE24AC0056E934 /* WeatherLanguage.m in Sources */ = {isa = PBXBuildFile; fileRef = E4C5B2E01AEE24AC0056E934 /* WeatherLanguage.m */; };
+		E4D544511B6F9BB00076D531 /* SmartDeviceLinkService.m in Sources */ = {isa = PBXBuildFile; fileRef = E4D544501B6F9BB00076D531 /* SmartDeviceLinkService.m */; };
 		FB8DD2C8193E39FA00F3E936 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB8DD2C7193E39FA00F3E936 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
@@ -152,6 +153,8 @@
 		E4C5B2DD1AEE248C0056E934 /* EnumType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EnumType.m; path = MobileWeather/EnumType.m; sourceTree = SOURCE_ROOT; };
 		E4C5B2DF1AEE24AC0056E934 /* WeatherLanguage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherLanguage.h; sourceTree = "<group>"; };
 		E4C5B2E01AEE24AC0056E934 /* WeatherLanguage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherLanguage.m; sourceTree = "<group>"; };
+		E4D5444F1B6F9BB00076D531 /* SmartDeviceLinkService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartDeviceLinkService.h; sourceTree = "<group>"; };
+		E4D544501B6F9BB00076D531 /* SmartDeviceLinkService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartDeviceLinkService.m; sourceTree = "<group>"; };
 		E4E3EC5F1B6F59A9000F3DBF /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E4E3EC601B6F59A9000F3DBF /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E4E3EC611B6F59A9000F3DBF /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = fr; path = fr.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
@@ -217,6 +220,8 @@
 				E441104E19F555B800CF3A8F /* Supporting Files */,
 				E402122619F689FF00CEB3B7 /* Settings.bundle */,
 				E402122419F62BF500CEB3B7 /* Images.xcassets */,
+				E4D5444F1B6F9BB00076D531 /* SmartDeviceLinkService.h */,
+				E4D544501B6F9BB00076D531 /* SmartDeviceLinkService.m */,
 			);
 			path = MobileWeather;
 			sourceTree = "<group>";
@@ -537,6 +542,7 @@
 				E4059D6819FF8AF500C9996D /* ForecastIOService.m in Sources */,
 				E4780C221A35E6D200B194E7 /* UnitConverter.m in Sources */,
 				E477F2551A8B526E0028B59C /* UnitNumber.m in Sources */,
+				E4D544511B6F9BB00076D531 /* SmartDeviceLinkService.m in Sources */,
 				E4C5B2E11AEE24AC0056E934 /* WeatherLanguage.m in Sources */,
 				E4BAFA851A0BA707003BB807 /* NSUserDefaults+RegisterSettings.m in Sources */,
 				E48C4DB319FE970100A90448 /* WeatherLocation.m in Sources */,

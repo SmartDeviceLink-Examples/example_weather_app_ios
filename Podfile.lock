@@ -1,0 +1,10 @@
+PODS:
+  - SmartDeviceLink-iOS (4.0.0-alpha.3)
+
+DEPENDENCIES:
+  - SmartDeviceLink-iOS (= 4.0.0-alpha.3)
+
+SPEC CHECKSUMS:
+  SmartDeviceLink-iOS: 81506865ea94cc0d8a6badc6cad60b379c343693
+
+COCOAPODS: 0.38.2

@@ -10,6 +10,10 @@
 
 @interface SmartDeviceLinkService () <SDLProxyListener>
 @property SDLProxy *proxy;
+@property BOOL graphicsAvailable;
+@property NSUInteger textFieldsAvailable;
+@property NSUInteger softButtonsAvailable;
+@property NSArray *templatesAvailable;
 @end
 
 @implementation SmartDeviceLinkService
@@ -21,8 +25,16 @@
     return shared;
 }
 
+- (void)resetProperties {
+    [self setGraphicsAvailable:NO];
+    [self setTextFieldsAvailable:0];
+    [self setSoftButtonsAvailable:0];
+    [self setTemplatesAvailable:nil];
+}
+
 - (void)setupProxy {
     if ([self proxy] == nil) {
+        [self resetProperties];
         // Create a proxy object by simply using the factory class.
         [self setProxy:[SDLProxyFactory buildSDLProxyWithListener:self]];
     }
@@ -85,6 +97,14 @@
     [self sendRequest:request];
 }
 
+- (void)registerDisplayLayout:(NSString *)layout {
+    if ([[self templatesAvailable] containsObject:layout]) {
+        SDLSetDisplayLayout *request = [[SDLSetDisplayLayout alloc] init];
+        [request setDisplayLayout:layout];
+        [self sendRequest:request];
+    }
+}
+
 - (void)onOnHMIStatus:(SDLOnHMIStatus *)notification {}
 - (void)onOnDriverDistraction:(SDLOnDriverDistraction *)notification {}
 
@@ -103,6 +123,45 @@
     } else {
         [center postNotificationName:SDLRequestsUnlockScreenNotification object:self];
     }
+}
+
+- (void)onRegisterAppInterfaceResponse:(SDLRegisterAppInterfaceResponse *)response {
+    // are graphics supported?
+    [self setGraphicsAvailable:[[[response displayCapabilities] graphicSupported] boolValue]];
+    
+    // get the display type
+    SDLDisplayType *display = [[response displayCapabilities] displayType];
+    
+    if ([[SDLDisplayType MFD3] isEqual:display] ||
+        [[SDLDisplayType MFD4] isEqual:display] ||
+        [[SDLDisplayType MFD5] isEqual:display]) {
+        // MFDs can show 2 lines of text and 3 soft buttons
+        [self setTextFieldsAvailable:2];
+        [self setSoftButtonsAvailable:3];
+    } else if ([[SDLDisplayType GEN3_8_INCH] isEqual:display]) {
+        // SYNC3 can show 3 lines of text and 6 soft buttons
+        [self setTextFieldsAvailable:3];
+        [self setSoftButtonsAvailable:6];
+    } else if ([[SDLDisplayType CID] isEqual:display]) {
+        // CID can show 2 lines of text but no soft buttons
+        [self setTextFieldsAvailable:2];
+        [self setSoftButtonsAvailable:0];
+    } else {
+        // All other can show at minimum 1 line of text
+        [self setTextFieldsAvailable:1];
+        [self setSoftButtonsAvailable:0];
+    }
+    
+    // get the available templates
+    NSMutableArray *templates = [[response displayCapabilities] templatesAvailable];
+    if ([templates isKindOfClass:[NSMutableArray class]]) {
+        [self setTemplatesAvailable:templates];
+    } else {
+        [self setTemplatesAvailable:[NSMutableArray array]];
+    }
+    
+    // set the app display layout to the non-media template
+    [self registerDisplayLayout:@"NON-MEDIA"];
 }
 
 @end

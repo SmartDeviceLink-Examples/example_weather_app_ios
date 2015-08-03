@@ -24,3 +24,6 @@ NSString * const MobileWeatherServiceLoadedNotification;
 
 /** A notification used to inform that the unit has been changed. */
 NSString * const MobileWeatherUnitChangedNotification;
+
+NSString * const SDLRequestsLockScreenNotification;
+NSString * const SDLRequestsUnlockScreenNotification;

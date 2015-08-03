@@ -88,4 +88,21 @@
 - (void)onOnHMIStatus:(SDLOnHMIStatus *)notification {}
 - (void)onOnDriverDistraction:(SDLOnDriverDistraction *)notification {}
 
+- (void)onOnLockScreenNotification:(SDLOnLockScreenStatus *)notification {
+    SDLLockScreenStatus *status = [notification lockScreenStatus];
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    
+    // REQUIRED: The app must now show a lock screen.
+    // OPTIONAL: The app can now optionally show a lock screen.
+    // OFF: The app must not have a lock screen anymore.
+    
+    if ([[SDLLockScreenStatus REQUIRED] isEqual:status]) {
+        [center postNotificationName:SDLRequestsLockScreenNotification object:self];
+    } else if ([[SDLLockScreenStatus OPTIONAL] isEqual:status]) {
+        [center postNotificationName:SDLRequestsUnlockScreenNotification object:self];
+    } else {
+        [center postNotificationName:SDLRequestsUnlockScreenNotification object:self];
+    }
+}
+
 @end

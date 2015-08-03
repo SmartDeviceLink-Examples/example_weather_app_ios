@@ -15,6 +15,7 @@
 		69EC642B17312CBCB225BC05 /* libPods-MobileWeather.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B78A7CACDCF35FEB6806E8A /* libPods-MobileWeather.a */; };
 		E402122519F62BF500CEB3B7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E402122419F62BF500CEB3B7 /* Images.xcassets */; };
 		E402122719F689FF00CEB3B7 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E402122619F689FF00CEB3B7 /* Settings.bundle */; };
+		E404D5981B6FAA7900245D2D /* LockScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E404D5971B6FAA7900245D2D /* LockScreen.xib */; };
 		E4059D6219FF7D4800C9996D /* WeatherDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E4059D6119FF7D4800C9996D /* WeatherDataManager.m */; };
 		E4059D6519FF7DA900C9996D /* WeatherService.m in Sources */ = {isa = PBXBuildFile; fileRef = E4059D6419FF7DA900C9996D /* WeatherService.m */; };
 		E4059D6819FF8AF500C9996D /* ForecastIOService.m in Sources */ = {isa = PBXBuildFile; fileRef = E4059D6719FF8AF500C9996D /* ForecastIOService.m */; };
@@ -82,6 +83,7 @@
 		E00DCC58C569108C72253635 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		E402122419F62BF500CEB3B7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E402122619F689FF00CEB3B7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		E404D5971B6FAA7900245D2D /* LockScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LockScreen.xib; sourceTree = "<group>"; };
 		E4059D6019FF7D4800C9996D /* WeatherDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherDataManager.h; sourceTree = "<group>"; };
 		E4059D6119FF7D4800C9996D /* WeatherDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherDataManager.m; sourceTree = "<group>"; };
 		E4059D6319FF7DA900C9996D /* WeatherService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherService.h; sourceTree = "<group>"; };
@@ -369,6 +371,7 @@
 			children = (
 				E436919919F556D800678C1D /* Main.storyboard */,
 				E485B12B1CFF0B6600AEAD02 /* LaunchScreen.storyboard */,
+				E404D5971B6FAA7900245D2D /* LockScreen.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -468,6 +471,7 @@
 			files = (
 				E45EADFC1AE932AA0046D883 /* InfoPlist.strings in Resources */,
 				E402122719F689FF00CEB3B7 /* Settings.bundle in Resources */,
+				E404D5981B6FAA7900245D2D /* LockScreen.xib in Resources */,
 				E44272FB1B00A5FC0018EA4F /* Localizable.strings in Resources */,
 				E436919A19F556D800678C1D /* Main.storyboard in Resources */,
 				E485B12C1CFF0B6600AEAD02 /* LaunchScreen.storyboard in Resources */,

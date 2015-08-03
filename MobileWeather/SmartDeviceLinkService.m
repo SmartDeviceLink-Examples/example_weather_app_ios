@@ -7,6 +7,8 @@
 
 #import "SmartDeviceLinkService.h"
 #import <SmartDeviceLink.h>
+#import "Localization.h"
+#import "WeatherLanguage.h"
 
 @interface SmartDeviceLinkService () <SDLProxyListener>
 @property SDLProxy *proxy;
@@ -14,6 +16,8 @@
 @property NSUInteger textFieldsAvailable;
 @property NSUInteger softButtonsAvailable;
 @property NSArray *templatesAvailable;
+@property SDLLanguage *language;
+@property Localization *localization;
 @end
 
 @implementation SmartDeviceLinkService
@@ -30,6 +34,8 @@
     [self setTextFieldsAvailable:0];
     [self setSoftButtonsAvailable:0];
     [self setTemplatesAvailable:nil];
+    [self setLanguage:nil];
+    [self setLocalization:nil];
 }
 
 - (void)setupProxy {
@@ -89,6 +95,8 @@
     [request setIsMediaApplication:@(NO)];
     [request setLanguageDesired:[SDLLanguage EN_US]];
     [request setHmiDisplayLanguageDesired:[SDLLanguage EN_US]];
+    [request setTtsName:[SDLTTSChunkFactory buildTTSChunksFromSimple:NSLocalizedString(@"app.tts-name", nil)]];
+    [request setVrSynonyms:[NSMutableArray arrayWithObject:NSLocalizedString(@"app.vr-synonym", nil)]];
     SDLSyncMsgVersion *version = [[SDLSyncMsgVersion alloc] init];
     [version setMajorVersion:@(1)];
     [version setMinorVersion:@(0)];
@@ -101,6 +109,15 @@
     if ([[self templatesAvailable] containsObject:layout]) {
         SDLSetDisplayLayout *request = [[SDLSetDisplayLayout alloc] init];
         [request setDisplayLayout:layout];
+        [self sendRequest:request];
+    }
+}
+
+- (void)changeRegistration {
+    if ([self language] != nil && [self localization] != nil) {
+        SDLChangeRegistration *request = [[SDLChangeRegistration alloc] init];
+        [request setLanguage:[self language]];
+        [request setHmiDisplayLanguage:[self language]];
         [self sendRequest:request];
     }
 }
@@ -162,6 +179,23 @@
     
     // set the app display layout to the non-media template
     [self registerDisplayLayout:@"NON-MEDIA"];
+    
+    [self setLanguage:[response language]];
+    
+    NSString *language = [[[response language] value] substringToIndex:2];
+    NSString *region = [[[response language] value] substringFromIndex:3];
+    [self setLocalization:[Localization localizationForLanguage:language forRegion:region]];
+    
+    // inform the app about language change to get new weather data
+    WeatherLanguage *wlanguage = [WeatherLanguage elementWithValue:[language uppercaseString]];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:MobileWeatherLanguageUpdateNotification object:self userInfo:@{ @"language" : wlanguage }];
+    
+    // send a change registration
+    [self changeRegistration];
+    
+    // print out the app name for the language
+    NSLog(@"%@", [[self localization] stringForKey:@"app.name"]);
 }
 
 @end

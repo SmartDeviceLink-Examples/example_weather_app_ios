@@ -99,6 +99,11 @@
                name:MobileWeatherDataUpdatedNotification
              object:nil];
     
+    [[NSNotificationCenter defaultCenter]
+     removeObserver:self
+               name:MobileWeatherUnitChangedNotification
+             object:nil];
+    
     [self teardownProxy];
     [self setupProxy];
 }
@@ -108,6 +113,12 @@
      addObserver:self
         selector:@selector(handleWeatherDataUpdate:)
             name:MobileWeatherDataUpdatedNotification
+          object:nil];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+        selector:@selector(repeatWeatherInformation)
+            name:MobileWeatherUnitChangedNotification
           object:nil];
     
     [self registerApplicationInterface];
@@ -539,6 +550,24 @@
     
     // print out the app name for the language
     NSLog(@"%@", [[self localization] stringForKey:@"app.name"]);
+}
+
+- (void)onPerformInteractionResponse:(SDLPerformInteractionResponse *)response {
+    if (![[response success] boolValue]) {
+        return;
+    }
+    
+    NSUInteger choiceID = [[response choiceID] unsignedIntegerValue];
+    if (choiceID == CHOICE_UNIT_IMPERIAL || choiceID == CHOICE_UNIT_METRIC) {
+        UnitType unit;
+        if (choiceID == CHOICE_UNIT_IMPERIAL) {
+            unit = UnitTypeImperial;
+        } else {
+            unit = UnitTypeMetric;
+        }
+        
+        [[WeatherDataManager sharedManager] setUnit:unit];
+    }
 }
 
 @end

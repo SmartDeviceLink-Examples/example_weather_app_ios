@@ -23,6 +23,8 @@
 @property SDLLanguage *language;
 @property Localization *localization;
 @property BOOL isFirstTimeHmiFull;
+@property NSMutableSet *currentKnownAlerts;
+@property SDLHMILevel *currentHMILevel;
 @end
 
 @implementation SmartDeviceLinkService
@@ -42,6 +44,8 @@
     [self setLanguage:nil];
     [self setLocalization:nil];
     [self setIsFirstTimeHmiFull:NO];
+    [self setCurrentKnownAlerts:[NSMutableSet set]];
+    [self setCurrentHMILevel:nil];
 }
 
 - (void)setupProxy {
@@ -86,11 +90,22 @@
 }
 
 - (void)onProxyClosed {
+    [[NSNotificationCenter defaultCenter]
+     removeObserver:self
+               name:MobileWeatherDataUpdatedNotification
+             object:nil];
+    
     [self teardownProxy];
     [self setupProxy];
 }
 
 - (void)onProxyOpened {
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+        selector:@selector(handleWeatherDataUpdate:)
+            name:MobileWeatherDataUpdatedNotification
+          object:nil];
+    
     [self registerApplicationInterface];
 }
 
@@ -126,6 +141,60 @@
         [request setHmiDisplayLanguage:[self language]];
         [self sendRequest:request];
     }
+}
+
+- (void)handleWeatherDataUpdate:(NSNotification *)notification {
+    // move forward only if HMI level is not NONE
+    SDLHMILevel *hmiLevel = [self currentHMILevel];
+    if ([[SDLHMILevel NONE] isEqual:hmiLevel]) {
+        return;
+    }
+    
+    // get alerts and move forward if the array is not empty
+    NSArray *alerts = [[notification userInfo] objectForKey:@"alerts"];
+    if (alerts == nil && [alerts count] == 0) {
+        return;
+    }
+    
+    // get copies of mutable sets for known and unknown weather alerts
+    NSMutableSet *known = [NSMutableSet setWithSet:[self currentKnownAlerts]];
+    NSMutableSet *unknown = [NSMutableSet setWithArray:alerts];
+    // remove all alerts already known
+    [unknown minusSet:known];
+    // move forward only if we have unknown weather alerts
+    if ([unknown count] == 0) {
+        return;
+    }
+    
+    NSDateFormatter *formatterShow = [[NSDateFormatter alloc] init];
+    [formatterShow setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    [formatterShow setLocale:[[self localization] locale]];
+    [formatterShow setDateFormat:[[self localization] stringForKey:@"weather-alerts.format.date-time.show"]];
+    
+    NSDateFormatter *formatterSpeak = [[NSDateFormatter alloc] init];
+    [formatterSpeak setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    [formatterSpeak setLocale:[[self localization] locale]];
+    [formatterSpeak setDateFormat:[[self localization] stringForKey:@"weather-alerts.format.date-time.speak"]];
+    
+    NSSortDescriptor *sorter = [NSSortDescriptor
+                                sortDescriptorWithKey:@"dateExpires"
+                                ascending:NO];
+    NSArray *unknownSorted = [unknown sortedArrayUsingDescriptors:@[sorter]];
+    // get the latest alert and show this one
+    Alert *alert = [unknownSorted lastObject];
+    
+    NSString *chunk = [[self localization] stringForKey:@"weather-alerts.speak",
+                       [alert alertTitle], [formatterSpeak stringFromDate:[alert dateExpires]]];
+    NSMutableArray *chunks = [SDLTTSChunkFactory buildTTSChunksFromSimple:chunk];
+    
+    // create an alert request
+    SDLAlert *request = [[SDLAlert alloc] init];
+    [request setAlertText1:[alert alertTitle]];
+    [request setAlertText2:[formatterShow stringFromDate:[alert dateExpires]]];
+    [request setTtsChunks:chunks];
+    
+    [self sendRequest:request];
+    [[self currentKnownAlerts] addObject:alert];
 }
 
 - (void)sendWelcomeMessageWithSpeak:(BOOL)withSpeak {
@@ -272,6 +341,8 @@
 }
 
 - (void)onOnHMIStatus:(SDLOnHMIStatus *)notification {
+    [self setCurrentHMILevel:[notification hmiLevel]];
+    
     SDLHMILevel *hmiLevel = [notification hmiLevel];
     // check current HMI level of the app
     if ([[SDLHMILevel FULL] isEqual:hmiLevel]) {

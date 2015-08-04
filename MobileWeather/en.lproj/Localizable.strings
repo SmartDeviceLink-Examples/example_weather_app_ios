@@ -95,3 +95,10 @@
 /****************************/
 /* Softbuttons */
 "sb.current" = "Current";
+
+/****************************/
+/* weather alerts section   */
+"weather-alerts.format.date-time.show" = "MM/d h a";
+"weather-alerts.format.date-time.speak" = "d'. of' MMMM, h a";
+/* %1$ = title, %2$ = date expiration */
+"weather-alerts.speak" = "%1$@ until %2$@";

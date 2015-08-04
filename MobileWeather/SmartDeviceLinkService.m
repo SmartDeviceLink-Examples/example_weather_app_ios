@@ -196,6 +196,18 @@
     }
 }
 
+- (void)repeatWeatherInformation {
+    WeatherDataManager *manager = [WeatherDataManager sharedManager];
+    // later in this tutorial we will add forecasts etc.
+    [self sendWeatherConditions:[manager weatherConditions] withSpeak:YES];
+}
+
+- (void)subscribeRepeatButton {
+    SDLSubscribeButton *request = [[SDLSubscribeButton alloc] init];
+    [request setButtonName:[SDLButtonName PRESET_1]];
+    [self sendRequest:request];
+}
+
 - (void)sendWeatherVoiceCommands {
     SDLAddCommand *request = nil;
     SDLMenuParams *menuparams = nil;
@@ -225,6 +237,7 @@
             // the app is just started by the user. Send everything needed to be done once
             [self sendWelcomeMessageWithSpeak:YES];
             [self sendWeatherVoiceCommands];
+            [self subscribeRepeatButton];
         }
     }
 }
@@ -257,6 +270,12 @@
             [self sendWeatherConditions:[manager weatherConditions] withSpeak:YES];
             break;
         }
+    }
+}
+
+- (void)onOnButtonPress:(SDLOnButtonPress *)notification {
+    if ([[SDLButtonName PRESET_1] isEqual:[notification buttonName]]) {
+        [self repeatWeatherInformation];
     }
 }
 

@@ -83,6 +83,7 @@
 /****************************/
 /* In-App menu commands */
 "cmd.current-conditions" = "Current conditions";
+"cmd.change-units" = "Change units";
 
 /****************************/
 /* VR commands */

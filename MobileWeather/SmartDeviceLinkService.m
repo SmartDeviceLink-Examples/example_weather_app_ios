@@ -10,6 +10,7 @@
 #import "Localization.h"
 #import "WeatherLanguage.h"
 #import "WeatherDataManager.h"
+#import "InfoType.h"
 
 #define CMDID_SHOW_WEATHER_CONDITIONS 101
 #define CMDID_CHANGE_UNITS            105
@@ -29,6 +30,9 @@
 @property BOOL isFirstTimeHmiFull;
 @property NSMutableSet *currentKnownAlerts;
 @property SDLHMILevel *currentHMILevel;
+@property InfoType *currentInfoType;
+@property NSArray  *currentInfoTypeList;
+@property NSInteger currentInfoTypeListIndex;
 @end
 
 @implementation SmartDeviceLinkService
@@ -50,6 +54,9 @@
     [self setIsFirstTimeHmiFull:NO];
     [self setCurrentKnownAlerts:[NSMutableSet set]];
     [self setCurrentHMILevel:nil];
+    [self setCurrentInfoType:nil];
+    [self setCurrentInfoTypeList:nil];
+    [self setCurrentInfoTypeListIndex:-1];
 }
 
 - (void)setupProxy {
@@ -253,6 +260,7 @@
 }
 
 - (void)sendWelcomeMessageWithSpeak:(BOOL)withSpeak {
+    [self setCurrentInfoType:[InfoType NONE]];
     SDLShow *show = [[SDLShow alloc] init];
     [show setSoftButtons:[self buildDefaultSoftButtons]];
     [show setMainField1:[[self localization] stringForKey:@"show.welcome.field1"]];
@@ -271,6 +279,8 @@
 
 - (void)sendWeatherConditions:(WeatherConditions *)conditions withSpeak:(BOOL)withSpeak {
     if (conditions != nil) {
+        [self setCurrentInfoType:[InfoType WEATHER_CONDITIONS]];
+        
         // use these types for unit conversion
         UnitPercentageType percentageType = UnitPercentageDefault;
         UnitTemperatureType temperatureType = UnitTemperatureCelsius;
@@ -325,8 +335,10 @@
 
 - (void)repeatWeatherInformation {
     WeatherDataManager *manager = [WeatherDataManager sharedManager];
-    // later in this tutorial we will add forecasts etc.
-    [self sendWeatherConditions:[manager weatherConditions] withSpeak:YES];
+
+    if ([[InfoType WEATHER_CONDITIONS] isEqual:[self currentInfoType]]) {
+        [self sendWeatherConditions:[manager weatherConditions] withSpeak:YES];
+    }
 }
 
 - (void)subscribeRepeatButton {

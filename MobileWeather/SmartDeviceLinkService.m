@@ -18,6 +18,7 @@
 @property NSArray *templatesAvailable;
 @property SDLLanguage *language;
 @property Localization *localization;
+@property BOOL isFirstTimeHmiFull;
 @end
 
 @implementation SmartDeviceLinkService
@@ -36,6 +37,7 @@
     [self setTemplatesAvailable:nil];
     [self setLanguage:nil];
     [self setLocalization:nil];
+    [self setIsFirstTimeHmiFull:NO];
 }
 
 - (void)setupProxy {
@@ -122,7 +124,33 @@
     }
 }
 
-- (void)onOnHMIStatus:(SDLOnHMIStatus *)notification {}
+- (void)sendWelcomeMessageWithSpeak:(BOOL)withSpeak {
+    SDLShow *show = [[SDLShow alloc] init];
+    [show setMainField1:[[self localization] stringForKey:@"show.welcome.field1"]];
+    [show setMainField2:[[self localization] stringForKey:@"show.welcome.field2"]];
+    [show setMainField3:[[self localization] stringForKey:@"show.welcome.field3"]];
+    [show setMainField4:[[self localization] stringForKey:@"show.welcome.field4"]];
+    [show setAlignment:[SDLTextAlignment CENTERED]];
+    [self sendRequest:show];
+    
+    if (withSpeak) {
+        SDLSpeak *speak = [[SDLSpeak alloc] init];
+        [speak setTtsChunks:[SDLTTSChunkFactory buildTTSChunksFromSimple:[[self localization] stringForKey:@"speak.welcome"]]];
+        [self sendRequest:speak];
+    }
+}
+- (void)onOnHMIStatus:(SDLOnHMIStatus *)notification {
+    SDLHMILevel *hmiLevel = [notification hmiLevel];
+    // check current HMI level of the app
+    if ([[SDLHMILevel FULL] isEqual:hmiLevel]) {
+        if ([self isFirstTimeHmiFull] == NO) {
+            [self setIsFirstTimeHmiFull:YES];
+            // the app is just started by the user. Send everything needed to be done once
+            [self sendWelcomeMessageWithSpeak:YES];
+        }
+    }
+}
+
 - (void)onOnDriverDistraction:(SDLOnDriverDistraction *)notification {}
 
 - (void)onOnLockScreenNotification:(SDLOnLockScreenStatus *)notification {

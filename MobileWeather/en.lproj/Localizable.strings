@@ -53,3 +53,14 @@
 "units.speed.kilometer-hour.full" = "kilometer(s) per hour";
 "units.speed.mile-hour.short" = "mph";
 "units.speed.mile-hour.full" = "mile(s) per hour";
+
+/****************************/
+/* Static show messages */
+"show.welcome.field1" = "Welcome to";
+"show.welcome.field2" = "MobileWeather";
+"show.welcome.field3" = "";
+"show.welcome.field4" = "";
+
+/****************************/
+/* Static speak messages. */
+"speak.welcome" = "welcome to mobile weather";

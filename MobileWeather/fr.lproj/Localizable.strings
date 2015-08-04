@@ -72,10 +72,6 @@
 "alert.no-conditions.prompt" = "Conditions actuelles indisponibles";
 
 /****************************/
-/* Static speak messages. */
-"speak.welcome" = "Bienvenue chez mobail weddair";
-
-/****************************/
 /* Current conditions section. */
 /* %1$ = title, %2$ = temperature, %3$ = humidity,  %4$ = wind speed */
 "conditions.speak" = "actuellement il est %1$@, et %2$@, avec %3$@ humidité, et une vitesse de vent %4$@";
@@ -95,3 +91,7 @@
 "vr.current-conditions" = "conditions actuelles";
 "vr.show-conditions" = "afficher les conditions";
 "vr.show-current-conditions" = "afficher les conditions actuelles";
+
+/****************************/
+/* Softbuttons */
+"sb.current" = "Actuelle";

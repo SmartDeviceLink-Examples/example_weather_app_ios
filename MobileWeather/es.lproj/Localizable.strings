@@ -91,3 +91,7 @@
 "vr.current-conditions" = "condiciones actuales";
 "vr.show-conditions" = "mostrar condiciones";
 "vr.show-current-conditions" = "mostrar condiciones actuales";
+
+/****************************/
+/* Softbuttons */
+"sb.current" = "Actual";

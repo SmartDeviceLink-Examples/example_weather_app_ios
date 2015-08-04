@@ -91,3 +91,7 @@
 "vr.current-conditions" = "aktuelles wetter";
 "vr.show-conditions" = "zeige wetter";
 "vr.show-current-conditions" = "zeige aktuelles wetter";
+
+/****************************/
+/* Softbuttons */
+"sb.current" = "Aktuell";

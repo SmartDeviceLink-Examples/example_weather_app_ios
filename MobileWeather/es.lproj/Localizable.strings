@@ -91,6 +91,10 @@
 "vr.current-conditions" = "condiciones actuales";
 "vr.show-conditions" = "mostrar condiciones";
 "vr.show-current-conditions" = "mostrar condiciones actuales";
+"vr.units" = "unidades";
+"vr.change-units" = "cambiar unidades";
+"vr.metric" = "métrico";
+"vr.imperial" = "imperial";
 
 /****************************/
 /* Softbuttons */
@@ -102,3 +106,15 @@
 "weather-alerts.format.date-time.speak" = "d 'de' MMMM H:mm 'horas'";
 /* %1$ = title, %2$ = date expiration */
 "weather-alerts.speak" = "%1$@ hasta %2$@";
+
+/****************************/
+/* ChoiceSet */
+"choice.units.imperial" = "Imperial";
+"choice.units.metric" = "Métrico";
+
+/****************************/
+/* PerformInteraction  */
+"pi.units.text" = "Cambiar unidades";
+"pi.units.initial-prompt" = "Por favor, elige unidades en métrico o imperial";
+"pi.units.help-prompt" = "métrico, imperial";
+"pi.units.timeout-prompt" = "métrico, imperial";

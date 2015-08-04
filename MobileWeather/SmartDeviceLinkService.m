@@ -13,6 +13,9 @@
 
 #define CMDID_SHOW_WEATHER_CONDITIONS 101
 #define BTNID_SHOW_WEATHER_CONDITIONS 201
+#define CHOICESET_CHANGE_UNITS        300
+#define CHOICE_UNIT_METRIC            301
+#define CHOICE_UNIT_IMPERIAL          302
 
 @interface SmartDeviceLinkService () <SDLProxyListener>
 @property SDLProxy *proxy;
@@ -197,6 +200,33 @@
     [[self currentKnownAlerts] addObject:alert];
 }
 
+- (void)createChangeUnitsInteractionChoiceSet {
+    SDLCreateInteractionChoiceSet *request = [[SDLCreateInteractionChoiceSet alloc] init];
+    NSMutableArray *choiceset = [NSMutableArray arrayWithCapacity:2];
+    SDLChoice *choice;
+    
+    choice = [[SDLChoice alloc] init];
+    [choice setChoiceID:@(CHOICE_UNIT_METRIC)];
+    [choice setMenuName:[[self localization] stringForKey:@"choice.units.metric"]];
+    [choice setVrCommands:[NSMutableArray arrayWithObjects:
+                           [[self localization] stringForKey:@"vr.metric"],
+                           nil]];
+    [choiceset addObject:choice];
+    
+    choice = [[SDLChoice alloc] init];
+    [choice setChoiceID:@(CHOICE_UNIT_IMPERIAL)];
+    [choice setMenuName:[[self localization] stringForKey:@"choice.units.imperial"]];
+    [choice setVrCommands:[NSMutableArray arrayWithObjects:
+                           [[self localization] stringForKey:@"vr.imperial"],
+                           nil]];
+    [choiceset addObject:choice];
+    
+    [request setChoiceSet:choiceset];
+    [request setInteractionChoiceSetID:@(CHOICESET_CHANGE_UNITS)];
+    
+    [self sendRequest:request];
+}
+
 - (void)sendWelcomeMessageWithSpeak:(BOOL)withSpeak {
     SDLShow *show = [[SDLShow alloc] init];
     [show setSoftButtons:[self buildDefaultSoftButtons]];
@@ -353,6 +383,7 @@
             [self sendWeatherVoiceCommands];
             [self subscribeRepeatButton];
             [self sendDefaultGlobalProperties];
+            [self createChangeUnitsInteractionChoiceSet];
         }
     }
 }

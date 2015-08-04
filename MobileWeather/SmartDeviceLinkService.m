@@ -249,6 +249,28 @@
     [self sendRequest:request];
 }
 
+- (void)sendDefaultGlobalProperties {
+    SDLSetGlobalProperties *request = [[SDLSetGlobalProperties alloc] init];
+    NSMutableArray *prompts = [NSMutableArray array];
+    NSMutableArray *helpitems = [NSMutableArray array];
+    SDLVRHelpItem *helpitem;
+    
+    helpitem = [[SDLVRHelpItem alloc] init];
+    [helpitem setPosition:@(1)];
+    [helpitem setText:[[self localization] stringForKey:@"cmd.current-conditions"]];
+    [helpitems addObject:helpitem];
+    [prompts addObject:[[self localization] stringForKey:@"vr.show-current-conditions"]];
+    
+    NSString *promptstring = [prompts componentsJoinedByString:@","];
+    
+    [request setHelpPrompt:[SDLTTSChunkFactory buildTTSChunksFromSimple:promptstring]];
+    [request setTimeoutPrompt:[SDLTTSChunkFactory buildTTSChunksFromSimple:promptstring]];
+    [request setVrHelpTitle:[[self localization] stringForKey:@"app.name"]];
+    [request setVrHelp:helpitems];
+    
+    [self sendRequest:request];
+}
+
 - (void)onOnHMIStatus:(SDLOnHMIStatus *)notification {
     SDLHMILevel *hmiLevel = [notification hmiLevel];
     // check current HMI level of the app
@@ -259,6 +281,7 @@
             [self sendWelcomeMessageWithSpeak:YES];
             [self sendWeatherVoiceCommands];
             [self subscribeRepeatButton];
+            [self sendDefaultGlobalProperties];
         }
     }
 }

@@ -12,6 +12,7 @@
 #import "WeatherDataManager.h"
 
 #define CMDID_SHOW_WEATHER_CONDITIONS 101
+#define CMDID_CHANGE_UNITS            105
 #define BTNID_SHOW_WEATHER_CONDITIONS 201
 #define CHOICESET_CHANGE_UNITS        300
 #define CHOICE_UNIT_METRIC            301
@@ -227,6 +228,20 @@
     [self sendRequest:request];
 }
 
+- (void)performChangeUnitsInteractionWithMode:(SDLInteractionMode *)mode {
+    SDLPerformInteraction *request = [[SDLPerformInteraction alloc] init];
+    [request setInitialText:[[self localization] stringForKey:@"pi.units.text"]];
+    [request setInitialPrompt:[SDLTTSChunkFactory buildTTSChunksFromSimple:[[self localization] stringForKey:@"pi.units.initial-prompt"]]];
+    [request setHelpPrompt:[SDLTTSChunkFactory buildTTSChunksFromSimple:[[self localization] stringForKey:@"pi.units.help-prompt"]]];
+    [request setTimeoutPrompt:[SDLTTSChunkFactory buildTTSChunksFromSimple:[[self localization] stringForKey:@"pi.units.timeout-prompt"]]];
+    [request setInteractionChoiceSetIDList:[NSMutableArray arrayWithObject:@(CHOICESET_CHANGE_UNITS)]];
+    [request setInteractionMode:(mode ? mode : [SDLInteractionMode BOTH])];
+    [request setInteractionLayout:[SDLLayoutMode LIST_ONLY]];
+    [request setTimeout:@(60000)];
+    
+    [self sendRequest:request];
+}
+
 - (void)sendWelcomeMessageWithSpeak:(BOOL)withSpeak {
     SDLShow *show = [[SDLShow alloc] init];
     [show setSoftButtons:[self buildDefaultSoftButtons]];
@@ -348,6 +363,23 @@
     [self sendRequest:request];
 }
 
+- (void)sendChangeUnitsVoiceCommand {
+    SDLAddCommand *request = nil;
+    SDLMenuParams *menuparams = nil;
+    
+    menuparams = [[SDLMenuParams alloc] init];
+    [menuparams setMenuName:[[self localization] stringForKey:@"cmd.change-units"]];
+    [menuparams setPosition:@(5)];
+    request = [[SDLAddCommand alloc] init];
+    [request setMenuParams:menuparams];
+    [request setCmdID:@(CMDID_CHANGE_UNITS)];
+    [request setVrCommands:[NSMutableArray arrayWithObjects:
+                            [[self localization] stringForKey:@"vr.units"],
+                            [[self localization] stringForKey:@"vr.change-units"],
+                            nil]];
+    [self sendRequest:request]; 
+}
+
 - (void)sendDefaultGlobalProperties {
     SDLSetGlobalProperties *request = [[SDLSetGlobalProperties alloc] init];
     NSMutableArray *prompts = [NSMutableArray array];
@@ -359,6 +391,12 @@
     [helpitem setText:[[self localization] stringForKey:@"cmd.current-conditions"]];
     [helpitems addObject:helpitem];
     [prompts addObject:[[self localization] stringForKey:@"vr.show-current-conditions"]];
+    
+    helpitem = [[SDLVRHelpItem alloc] init];
+    [helpitem setPosition:@(2)];
+    [helpitem setText:[[self localization] stringForKey:@"cmd.change-units"]];
+    [helpitems addObject:helpitem];
+    [prompts addObject:[[self localization] stringForKey:@"vr.change-units"]];
     
     NSString *promptstring = [prompts componentsJoinedByString:@","];
     
@@ -381,6 +419,7 @@
             // the app is just started by the user. Send everything needed to be done once
             [self sendWelcomeMessageWithSpeak:YES];
             [self sendWeatherVoiceCommands];
+            [self sendChangeUnitsVoiceCommand];
             [self subscribeRepeatButton];
             [self sendDefaultGlobalProperties];
             [self createChangeUnitsInteractionChoiceSet];
@@ -415,6 +454,17 @@
             // the user has performed the voice command to see the current conditions.
             [self sendWeatherConditions:[manager weatherConditions] withSpeak:YES];
             break;
+        }
+        case CMDID_CHANGE_UNITS: {
+            // the user has performed the voice command to change the units
+            SDLInteractionMode *mode = nil;
+            if ([[notification triggerSource] isEqual:[SDLTriggerSource MENU]]) {
+                mode = [SDLInteractionMode MANUAL_ONLY];
+            } else {
+                mode = [SDLInteractionMode BOTH];
+            }
+            
+            [self performChangeUnitsInteractionWithMode:mode];
         }
     }
 }

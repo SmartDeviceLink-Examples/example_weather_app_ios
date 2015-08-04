@@ -67,10 +67,6 @@
 
 /****************************/
 /* Static alert messages */
-"alert.no-alerts.field1" = "Não há";
-"alert.no-alerts.field2" = "alertas";
-"alert.no-alerts.prompt" = "Não há alertas neste momento";
-
 "alert.no-conditions.field1" = "Condições";
 "alert.no-conditions.field2" = "não disponíveis";
 "alert.no-conditions.prompt" = "condições não disponíveis";
@@ -95,3 +91,7 @@
 "vr.current-conditions" = "condições atuais";
 "vr.show-conditions" = "mostrar condições";
 "vr.show-current-conditions" = "mostrar condições atuais";
+
+/****************************/
+/* Softbuttons */
+"sb.current" = "Current";

@@ -12,6 +12,7 @@
 #import "WeatherDataManager.h"
 
 #define CMDID_SHOW_WEATHER_CONDITIONS 101
+#define BTNID_SHOW_WEATHER_CONDITIONS 201
 
 @interface SmartDeviceLinkService () <SDLProxyListener>
 @property SDLProxy *proxy;
@@ -129,6 +130,7 @@
 
 - (void)sendWelcomeMessageWithSpeak:(BOOL)withSpeak {
     SDLShow *show = [[SDLShow alloc] init];
+    [show setSoftButtons:[self buildDefaultSoftButtons]];
     [show setMainField1:[[self localization] stringForKey:@"show.welcome.field1"]];
     [show setMainField2:[[self localization] stringForKey:@"show.welcome.field2"]];
     [show setMainField3:[[self localization] stringForKey:@"show.welcome.field3"]];
@@ -158,6 +160,7 @@
             speedType = UnitSpeedMileHour;
         }
         SDLShow *showRequest = [[SDLShow alloc] init];
+        [showRequest setSoftButtons:[self buildDefaultSoftButtons]];
         [showRequest setMainField1:[conditions conditionTitle]];
         [showRequest setMainField2:@""];
         [showRequest setMainField3:@""];
@@ -206,6 +209,24 @@
     SDLSubscribeButton *request = [[SDLSubscribeButton alloc] init];
     [request setButtonName:[SDLButtonName PRESET_1]];
     [self sendRequest:request];
+}
+
+
+- (NSMutableArray *)buildDefaultSoftButtons {
+    NSMutableArray *buttons = nil;
+    
+    if ([self softButtonsAvailable] > 0) {
+        buttons = [NSMutableArray array];
+        
+        SDLSoftButton * button = [[SDLSoftButton alloc] init];
+        [button setSoftButtonID:@(BTNID_SHOW_WEATHER_CONDITIONS)];
+        [button setText:[[self localization] stringForKey:@"sb.current"]];
+        [button setType:[SDLSoftButtonType TEXT]];
+        [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
+        [buttons addObject:button];
+    }
+    
+    return buttons;
 }
 
 - (void)sendWeatherVoiceCommands {
@@ -274,8 +295,18 @@
 }
 
 - (void)onOnButtonPress:(SDLOnButtonPress *)notification {
+    WeatherDataManager *manager = [WeatherDataManager sharedManager];
+    
     if ([[SDLButtonName PRESET_1] isEqual:[notification buttonName]]) {
         [self repeatWeatherInformation];
+    } else if ([[SDLButtonName CUSTOM_BUTTON] isEqual:[notification buttonName]]) {
+        NSUInteger command = [[notification customButtonID] unsignedIntegerValue];
+        switch (command) {
+            case BTNID_SHOW_WEATHER_CONDITIONS: {
+                [self sendWeatherConditions:[manager weatherConditions] withSpeak:YES];
+                break;
+            }
+        }
     }
 }
 

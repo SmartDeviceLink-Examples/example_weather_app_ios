@@ -83,3 +83,15 @@
 "conditions.show" = "%1$@, %2$@, %3$@";
 /* This is a regular expression pattern used to get a short version of the condition summary. */
 "conditions.title.short" = "^((possive(l|is)? )?((ligeiramente|muit[oa]) )?\\w[^\\s]+\\w( ((ligeiramente|muit[oa]) )?(forte|(frac|variad)[oa])(s)?)?)";
+
+/****************************/
+/* In-App menu commands */
+"cmd.current-conditions" = "Condições atuais";
+
+/****************************/
+/* VR commands */
+"vr.current" = "Atual";
+"vr.conditions" = "condições";
+"vr.current-conditions" = "condições atuais";
+"vr.show-conditions" = "mostrar condições";
+"vr.show-current-conditions" = "mostrar condições atuais";

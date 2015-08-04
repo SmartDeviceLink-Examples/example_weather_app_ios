@@ -64,3 +64,22 @@
 /****************************/
 /* Static speak messages. */
 "speak.welcome" = "Bienvenue chez mobail weddair";
+
+/****************************/
+/* Static alert messages */
+"alert.no-conditions.field1" = "Conditions";
+"alert.no-conditions.field2" = "Indisponible";
+"alert.no-conditions.prompt" = "Conditions actuelles indisponibles";
+
+/****************************/
+/* Static speak messages. */
+"speak.welcome" = "Bienvenue chez mobail weddair";
+
+/****************************/
+/* Current conditions section. */
+/* %1$ = title, %2$ = temperature, %3$ = humidity,  %4$ = wind speed */
+"conditions.speak" = "actuellement il est %1$@, et %2$@, avec %3$@ humidité, et une vitesse de vent %4$@";
+/* %1$ = temperature, %2$ = humidity, %3$ = wind speed */
+"conditions.show" = "%1$@, %2$@, %3$@";
+/* This is a regular expression pattern used to get a short version of the condition summary. */
+"conditions.title.short" = "^((((très )?faible)|forte)(s?) )?(dégagé|précipitations|bruine|brumeux|nuages épars|nuageux|couvert|pluie|vent(é?)|averses de neige|neige( (fondue|faible))?)( (épar|faible|fort(e?)|mêlée)(s?))?( possible(s?))?";

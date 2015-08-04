@@ -64,3 +64,22 @@
 /****************************/
 /* Static speak messages. */
 "speak.welcome" = "Bem vindo ao mobile weather";
+
+/****************************/
+/* Static alert messages */
+"alert.no-alerts.field1" = "Não há";
+"alert.no-alerts.field2" = "alertas";
+"alert.no-alerts.prompt" = "Não há alertas neste momento";
+
+"alert.no-conditions.field1" = "Condições";
+"alert.no-conditions.field2" = "não disponíveis";
+"alert.no-conditions.prompt" = "condições não disponíveis";
+
+/****************************/
+/* Current conditions section. */
+/* %1$ = title, %2$ = temperature, %3$ = humidity,  %4$ = wind speed */
+"conditions.speak" = "Atualmente está %1$@, e %2$@ com %3$@ de umidade, e uma velocidade do vento de %4$@";
+/* %1$ = temperature, %2$ = humidity, %3$ = wind speed */
+"conditions.show" = "%1$@, %2$@, %3$@";
+/* This is a regular expression pattern used to get a short version of the condition summary. */
+"conditions.title.short" = "^((possive(l|is)? )?((ligeiramente|muit[oa]) )?\\w[^\\s]+\\w( ((ligeiramente|muit[oa]) )?(forte|(frac|variad)[oa])(s)?)?)";

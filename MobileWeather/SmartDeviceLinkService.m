@@ -9,6 +9,7 @@
 #import <SmartDeviceLink.h>
 #import "Localization.h"
 #import "WeatherLanguage.h"
+#import "WeatherDataManager.h"
 
 @interface SmartDeviceLinkService () <SDLProxyListener>
 @property SDLProxy *proxy;
@@ -139,6 +140,60 @@
         [self sendRequest:speak];
     }
 }
+
+- (void)sendWeatherConditions:(WeatherConditions *)conditions withSpeak:(BOOL)withSpeak {
+    if (conditions != nil) {
+        // use these types for unit conversion
+        UnitPercentageType percentageType = UnitPercentageDefault;
+        UnitTemperatureType temperatureType = UnitTemperatureCelsius;
+        UnitSpeedType speedType = UnitSpeedMeterSecond;
+        
+        if ([[WeatherDataManager sharedManager] unit] == UnitTypeMetric) {
+            temperatureType = UnitTemperatureCelsius;
+            speedType = UnitSpeedKiloMeterHour;
+        } else if ([[WeatherDataManager sharedManager] unit] == UnitTypeImperial) {
+            temperatureType = UnitTemperatureFahrenheit;
+            speedType = UnitSpeedMileHour;
+        }
+        SDLShow *showRequest = [[SDLShow alloc] init];
+        [showRequest setMainField1:[conditions conditionTitle]];
+        [showRequest setMainField2:@""];
+        [showRequest setMainField3:@""];
+        [showRequest setMainField4:@""];
+        
+        if ([self textFieldsAvailable] >= 2) {
+            NSString *weathercondition = [[self localization] stringForKey:@"conditions.show",
+                [[conditions temperature] stringValueForUnit:temperatureType shortened:YES localization:[self localization]],
+                [[conditions humidity] stringValueForUnit:percentageType shortened:YES localization:[self localization]],
+                [[conditions windSpeed] stringValueForUnit:speedType shortened:YES localization:[self localization]]];
+            
+            [showRequest setMainField2:weathercondition];
+        }
+        [self sendRequest:showRequest];
+        
+        if (withSpeak) {
+            SDLSpeak *speakRequest = [[SDLSpeak alloc] init];
+            SDLTTSChunk *chunk = [[SDLTTSChunk alloc] init];
+            [chunk setType:[SDLSpeechCapabilities TEXT]];
+            [chunk setText:[[self localization] stringForKey:@"conditions.speak",
+                [conditions conditionTitle],
+                [[conditions temperature] stringValueForUnit:temperatureType shortened:NO localization:[self localization]],
+                [[conditions humidity] stringValueForUnit:percentageType shortened:NO localization:[self localization]],
+                [[conditions windSpeed] stringValueForUnit:speedType shortened:NO localization:[self localization]]]];
+        
+            [speakRequest setTtsChunks:[NSMutableArray arrayWithObject:chunk]];
+            [self sendRequest:speakRequest];
+        }
+    }
+    else {
+        SDLAlert *alertRequest = [[SDLAlert alloc] init];
+        [alertRequest setAlertText1:[[self localization] stringForKey:@"alert.no-conditions.field1"]];
+        [alertRequest setAlertText2:[[self localization] stringForKey:@"alert.no-conditions.field2"]];
+        [alertRequest setTtsChunks:[SDLTTSChunkFactory buildTTSChunksFromSimple:[[self localization] stringForKey:@"alert.no-conditions.prompt"]]];
+        [self sendRequest:alertRequest];
+    }
+}
+
 - (void)onOnHMIStatus:(SDLOnHMIStatus *)notification {
     SDLHMILevel *hmiLevel = [notification hmiLevel];
     // check current HMI level of the app

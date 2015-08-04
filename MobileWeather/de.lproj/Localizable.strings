@@ -64,3 +64,18 @@
 /****************************/
 /* Static speak messages. */
 "speak.welcome" = "Willkommen bei mobail weather.";
+
+/****************************/
+/* Static alert messages */
+"alert.no-conditions.field1" = "Wetterdaten";
+"alert.no-conditions.field2" = "nicht verfügbar";
+"alert.no-conditions.prompt" = "Aktuelle Wetterdaten nicht verfügbar.";
+
+/****************************/
+/* Current conditions section. */
+/* %1$ = title, %2$ = temperature, %3$ = humidity,  %4$ = wind speed */
+"conditions.speak" = "es ist aktuell %1$@, und %2$@ bei %3$@ luftfeuchtigkeit, bei einer windgeschwindigkeit von %4$@";
+/* %1$ = temperature, %2$ = humidity, %3$ = wind speed */
+"conditions.show" = "%1$@, %2$@, %3$@";
+/* This is a regular expression pattern used to get a short version of the condition summary. */
+"conditions.title.short" = "^(((schwer|stark|leicht|wechselnd|¸berwiegend|frisch)(e|er)? )?\\b[^\\s]+\\b)";

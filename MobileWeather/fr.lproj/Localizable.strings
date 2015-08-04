@@ -83,3 +83,15 @@
 "conditions.show" = "%1$@, %2$@, %3$@";
 /* This is a regular expression pattern used to get a short version of the condition summary. */
 "conditions.title.short" = "^((((très )?faible)|forte)(s?) )?(dégagé|précipitations|bruine|brumeux|nuages épars|nuageux|couvert|pluie|vent(é?)|averses de neige|neige( (fondue|faible))?)( (épar|faible|fort(e?)|mêlée)(s?))?( possible(s?))?";
+
+/****************************/
+/* In-App menu commands */
+"cmd.current-conditions" = "Conditions actuelles";
+
+/****************************/
+/* VR commands */
+"vr.current" = "a ce moment";
+"vr.conditions" = "conditions";
+"vr.current-conditions" = "conditions actuelles";
+"vr.show-conditions" = "afficher les conditions";
+"vr.show-current-conditions" = "afficher les conditions actuelles";

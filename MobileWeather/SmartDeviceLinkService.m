@@ -11,6 +11,8 @@
 #import "WeatherLanguage.h"
 #import "WeatherDataManager.h"
 
+#define CMDID_SHOW_WEATHER_CONDITIONS 101
+
 @interface SmartDeviceLinkService () <SDLProxyListener>
 @property SDLProxy *proxy;
 @property BOOL graphicsAvailable;
@@ -194,6 +196,26 @@
     }
 }
 
+- (void)sendWeatherVoiceCommands {
+    SDLAddCommand *request = nil;
+    SDLMenuParams *menuparams = nil;
+    
+    menuparams = [[SDLMenuParams alloc] init];
+    [menuparams setMenuName:[[self localization] stringForKey:@"cmd.current-conditions"]];
+    [menuparams setPosition:@(1)];
+    request = [[SDLAddCommand alloc] init];
+    [request setMenuParams:menuparams];
+    [request setCmdID:@(CMDID_SHOW_WEATHER_CONDITIONS)];
+    [request setVrCommands:[NSMutableArray arrayWithObjects:
+        [[self localization] stringForKey:@"vr.current"],
+        [[self localization] stringForKey:@"vr.conditions"],
+        [[self localization] stringForKey:@"vr.current-conditions"],
+        [[self localization] stringForKey:@"vr.show-conditions"],
+        [[self localization] stringForKey:@"vr.show-current-conditions"],
+        nil]];
+    [self sendRequest:request];
+}
+
 - (void)onOnHMIStatus:(SDLOnHMIStatus *)notification {
     SDLHMILevel *hmiLevel = [notification hmiLevel];
     // check current HMI level of the app
@@ -202,6 +224,7 @@
             [self setIsFirstTimeHmiFull:YES];
             // the app is just started by the user. Send everything needed to be done once
             [self sendWelcomeMessageWithSpeak:YES];
+            [self sendWeatherVoiceCommands];
         }
     }
 }
@@ -222,6 +245,18 @@
         [center postNotificationName:SDLRequestsUnlockScreenNotification object:self];
     } else {
         [center postNotificationName:SDLRequestsUnlockScreenNotification object:self];
+    }
+}
+
+- (void)onOnCommand:(SDLOnCommand *)notification {
+    WeatherDataManager *manager = [WeatherDataManager sharedManager];
+    NSInteger command = [[notification cmdID] integerValue];
+    switch (command) {
+        case CMDID_SHOW_WEATHER_CONDITIONS: {
+            // the user has performed the voice command to see the current conditions.
+            [self sendWeatherConditions:[manager weatherConditions] withSpeak:YES];
+            break;
+        }
     }
 }
 

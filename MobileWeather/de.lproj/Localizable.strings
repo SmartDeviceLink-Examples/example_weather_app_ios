@@ -79,3 +79,15 @@
 "conditions.show" = "%1$@, %2$@, %3$@";
 /* This is a regular expression pattern used to get a short version of the condition summary. */
 "conditions.title.short" = "^(((schwer|stark|leicht|wechselnd|¸berwiegend|frisch)(e|er)? )?\\b[^\\s]+\\b)";
+
+/****************************/
+/* In-App menu commands */
+"cmd.current-conditions" = "Aktuelles Wetter";
+
+/****************************/
+/* VR commands */
+"vr.current" = "aktuell";
+"vr.conditions" = "wetter";
+"vr.current-conditions" = "aktuelles wetter";
+"vr.show-conditions" = "zeige wetter";
+"vr.show-current-conditions" = "zeige aktuelles wetter";

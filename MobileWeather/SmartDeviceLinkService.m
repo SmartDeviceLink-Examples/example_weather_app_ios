@@ -11,6 +11,7 @@
 #import "WeatherLanguage.h"
 #import "WeatherDataManager.h"
 #import "InfoType.h"
+#import "ImageProcessor.h"
 
 #define CMDID_SHOW_WEATHER_CONDITIONS 101
 #define CMDID_SHOW_DAILY_FORECAST     102
@@ -56,6 +57,8 @@
 @property NSInteger currentInfoTypeListIndex;
 @property NSArray *currentForecastChoices;
 @property NSMutableDictionary *pendingSequentialRequests;
+@property NSMutableSet *currentFiles;
+@property NSMutableDictionary *currentFilesPending;
 @end
 
 @implementation SmartDeviceLinkService
@@ -82,6 +85,8 @@
     [self setCurrentInfoTypeListIndex:-1];
     [self setCurrentForecastChoices:nil];
     [self setPendingSequentialRequests:[NSMutableDictionary dictionary]];
+    [self setCurrentFiles:[NSMutableSet set]];
+    [self setCurrentFilesPending:[NSMutableDictionary dictionary]];
 }
 
 - (void)setupProxy {
@@ -108,6 +113,11 @@
 - (void)sendRequest:(SDLRPCRequest *)request {
     if ([request correlationID] == nil) {
         [request setCorrelationID:[self nextCorrelationID]];
+    }
+    
+    if ([request isMemberOfClass:[SDLPutFile class]] || [request isMemberOfClass:[SDLDeleteFile class]]) {
+        NSString *filename = [(id)request syncFileName];
+        [[self currentFilesPending] setObject:filename forKey:[request correlationID]];
     }
     
     [[self proxy] sendRPC:request];
@@ -224,6 +234,41 @@
         [request setLanguage:[self language]];
         [request setHmiDisplayLanguage:[self language]];
         [self sendRequest:request];
+    }
+}
+
+- (SDLPutFile *)buildPutFile:(NSString *)filename ofType:(SDLFileType *)type persistentFile:(BOOL)persistentFile systemFile:(BOOL)systemFile {
+    SDLPutFile *request = nil;
+    
+    if ([self graphicsAvailable]) {
+        NSData *data = [[ImageProcessor sharedProcessor] dataFromConditionImage:filename];
+        if (data) {
+            request = [[SDLPutFile alloc] init];
+            [request setSyncFileName:filename];
+            [request setFileType:type];
+            [request setSystemFile:@(systemFile)];
+            [request setPersistentFile:@(persistentFile)];
+            [request setOffset:@(0)];
+            [request setLength:@(0)];
+            [request setBulkData:data];
+        }
+    }
+    
+    return request;
+}
+
+- (SDLDeleteFile *)buildDeleteFile:(NSString *)filename {
+    SDLDeleteFile *request = nil;
+    if ([self graphicsAvailable]) {
+        request = [[SDLDeleteFile alloc] init];
+        [request setSyncFileName:filename];
+    }
+    return request;
+}
+
+- (void)sendListFiles {
+    if ([self graphicsAvailable]) {
+        [self sendRequest:[[SDLListFiles alloc] init]];
     }
 }
 
@@ -1509,6 +1554,8 @@
     
     // print out the app name for the language
     NSLog(@"%@", [[self localization] stringForKey:@"app.name"]);
+    
+    [self sendListFiles];
 }
 
 - (void)onPerformInteractionResponse:(SDLPerformInteractionResponse *)response {
@@ -1537,6 +1584,44 @@
                 [self setCurrentInfoTypeListIndex:index];
                 break;
             }
+        }
+    }
+}
+
+- (void)onListFilesResponse:(SDLListFilesResponse *)response {
+    [self handleSequentialRequestsForResponse:response];
+    
+    if ([[SDLResult SUCCESS] isEqual:[response resultCode]]) {
+        if ([response filenames]) {
+            [self setCurrentFiles:[NSMutableSet setWithArray:[response filenames]]];
+        } else {
+            [self setCurrentFiles:[NSMutableSet set]];
+        }
+    }
+}
+
+- (void)onPutFileResponse:(SDLPutFileResponse *)response {
+    [self handleSequentialRequestsForResponse:response];
+    
+    NSString *filename = [[self currentFilesPending] objectForKey:[response correlationID]];
+    
+    if (filename) {
+        [[self currentFilesPending] removeObjectForKey:[response correlationID]];
+        if ([[SDLResult SUCCESS] isEqual:[response resultCode]]) {
+            [[self currentFiles] addObject:filename];
+        }
+    }
+}
+
+-(void)onDeleteFileResponse:(SDLDeleteFileResponse*) response {
+    [self handleSequentialRequestsForResponse:response];
+    
+    NSString *filename = [[self currentFilesPending] objectForKey:[response correlationID]];
+    
+    if (filename) {
+        [[self currentFilesPending] removeObjectForKey:[response correlationID]];
+        if ([[SDLResult SUCCESS] isEqual:[response resultCode]]) {
+            [[self currentFiles] removeObject:filename];
         }
     }
 }

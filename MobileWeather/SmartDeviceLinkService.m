@@ -113,6 +113,33 @@
     [[self proxy] sendRPC:request];
 }
 
+- (void)sendRequestArray:(NSArray *)requests sequentially:(BOOL)sequential {
+    if (requests == nil || [requests count] == 0) {
+        return;
+    }
+    
+    if (sequential) {
+        for (NSUInteger index = 0; index < [requests count] - 1; index++) {
+            // get the request to that a sequential request should be performed
+            SDLRPCRequest *request = [requests objectAtIndex:index];
+            // the next request that has to be performed after the current one
+            SDLRPCRequest *next = [requests objectAtIndex:index + 1];
+            
+            // specify a correlation ID for the request
+            [request setCorrelationID:[self nextCorrelationID]];
+            
+            // use this correlation ID to send the next one
+            [[self pendingSequentialRequests] setObject:next forKey:[request correlationID]];
+        }
+        
+        [self sendRequest:[requests objectAtIndex:0]];
+    } else {
+        for (SDLRPCRequest *request in requests) {
+            [self sendRequest:request];
+        }
+    }
+}
+
 - (void)handleSequentialRequestsForResponse:(SDLRPCResponse *)response {
     if (response) {
         NSNumber *correlationID = [response correlationID];

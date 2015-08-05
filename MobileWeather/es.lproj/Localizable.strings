@@ -147,6 +147,14 @@
 "pi.units.initial-prompt" = "Por favor, elige unidades en métrico o imperial";
 "pi.units.help-prompt" = "métrico, imperial";
 "pi.units.timeout-prompt" = "métrico, imperial";
+"pi.daily-forecast.text" = "Elige dia";
+"pi.daily-forecast.initial-prompt" = "por favor, elige un dia del pronóstico";
+"pi.daily-forecast.help-prompt" = "un día de la semana, como lunes, martes, hoy, mañana";
+"pi.daily-forecast.timeout-prompt" = "un día de la semana, hoy, mañana";
+"pi.hourly-forecast.text" = "Elige hora";
+"pi.hourly-forecast.initial-prompt" = "por favor, elige un hora del pronóstico";
+"pi.hourly-forecast.help-prompt" = "un hora, como 11 horas, ahora";
+"pi.hourly-forecast.timeout-prompt" = "un hora, ahora";
 
 /****************************/
 /* Daily forecast section. */

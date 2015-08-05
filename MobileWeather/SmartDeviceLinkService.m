@@ -264,21 +264,22 @@
                                 sortDescriptorWithKey:@"dateExpires"
                                 ascending:NO];
     NSArray *unknownSorted = [unknown sortedArrayUsingDescriptors:@[sorter]];
-    // get the latest alert and show this one
-    Alert *alert = [unknownSorted lastObject];
+    NSMutableArray *requests = [NSMutableArray arrayWithCapacity:[unknownSorted count]];
     
-    NSString *chunk = [[self localization] stringForKey:@"weather-alerts.speak",
-                       [alert alertTitle], [formatterSpeak stringFromDate:[alert dateExpires]]];
-    NSMutableArray *chunks = [SDLTTSChunkFactory buildTTSChunksFromSimple:chunk];
+    for (Alert *alert in unknownSorted) {
+        NSString *chunk = [[self localization] stringForKey:@"weather-alerts.speak", [alert alertTitle], [formatterSpeak stringFromDate:[alert dateExpires]]];
+        NSMutableArray *chunks = [SDLTTSChunkFactory buildTTSChunksFromSimple:chunk];
+        
+        // create an alert request
+        SDLAlert *request = [[SDLAlert alloc] init];
+        [request setAlertText1:[alert alertTitle]];
+        [request setAlertText2:[formatterShow stringFromDate:[alert dateExpires]]];
+        [request setTtsChunks:chunks];
+        [requests addObject:request];
+    }
     
-    // create an alert request
-    SDLAlert *request = [[SDLAlert alloc] init];
-    [request setAlertText1:[alert alertTitle]];
-    [request setAlertText2:[formatterShow stringFromDate:[alert dateExpires]]];
-    [request setTtsChunks:chunks];
-    
-    [self sendRequest:request];
-    [[self currentKnownAlerts] addObject:alert];
+    [self sendRequestArray:requests sequentially:YES];
+    [[self currentKnownAlerts] unionSet:unknown];
     
     InfoType *infoType = [self currentInfoType];
     if ([[InfoType WEATHER_CONDITIONS] isEqual:infoType]) {

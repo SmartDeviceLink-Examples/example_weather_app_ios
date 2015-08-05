@@ -147,6 +147,14 @@
 "pi.units.initial-prompt" = "please select units in metric or imperial";
 "pi.units.help-prompt" = "metric, imperial";
 "pi.units.timeout-prompt" = "metric, imperial";
+"pi.daily-forecast.text" = "Select day";
+"pi.daily-forecast.initial-prompt" = "please select a day of the forecast";
+"pi.daily-forecast.help-prompt" = "a day of week, like monday, tuesday, or today, tomorrow";
+"pi.daily-forecast.timeout-prompt" = "a day of week, today, tomorrow";
+"pi.hourly-forecast.text" = "Select hour";
+"pi.hourly-forecast.initial-prompt" = "please select an hour of the forecast";
+"pi.hourly-forecast.help-prompt" = "an hour, like 11 am, or now";
+"pi.hourly-forecast.timeout-prompt" = "an hour, now";
 
 /****************************/
 /* Daily forecast section. */

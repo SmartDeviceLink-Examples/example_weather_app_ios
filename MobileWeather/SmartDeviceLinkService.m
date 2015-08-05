@@ -34,6 +34,7 @@
 #define CHOICESET_CHANGE_UNITS        300
 #define CHOICE_UNIT_METRIC            301
 #define CHOICE_UNIT_IMPERIAL          302
+#define CHOICESET_LIST                400
 
 @interface SmartDeviceLinkService () <SDLProxyListener>
 @property SDLProxy *proxy;
@@ -49,6 +50,7 @@
 @property InfoType *currentInfoType;
 @property NSArray  *currentInfoTypeList;
 @property NSInteger currentInfoTypeListIndex;
+@property NSArray *currentForecastChoices;
 @end
 
 @implementation SmartDeviceLinkService
@@ -73,6 +75,7 @@
     [self setCurrentInfoType:nil];
     [self setCurrentInfoTypeList:nil];
     [self setCurrentInfoTypeListIndex:-1];
+    [self setCurrentForecastChoices:nil];
 }
 
 - (void)setupProxy {
@@ -275,6 +278,83 @@
     [self sendRequest:request];
 }
 
+- (void)createForecastChoiceSetWithList:(NSArray *)forecasts ofType:(InfoType *)infoType {
+    BOOL isHourlyForecast = [infoType isEqual:[InfoType HOURLY_FORECAST]];
+    
+    NSDateFormatter *dateFormatShow = [[NSDateFormatter alloc] init];
+    [dateFormatShow setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    [dateFormatShow setLocale:[[self localization] locale]];
+    
+    NSDateFormatter *dateFormatSpeak = [[NSDateFormatter alloc] init];
+    [dateFormatSpeak setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    [dateFormatSpeak setLocale:[[self localization] locale]];
+    
+    if (isHourlyForecast) {
+        [dateFormatShow setDateFormat:[[self localization] stringForKey:@"forecast.hourly.choice.show"]];
+        [dateFormatSpeak setDateFormat:[[self localization] stringForKey:@"forecast.hourly.choice.speak"]];
+    } else {
+        [dateFormatShow setDateFormat:[[self localization] stringForKey:@"forecast.daily.choice.show"]];
+        [dateFormatSpeak setDateFormat:[[self localization] stringForKey:@"forecast.daily.choice.speak"]];
+    }
+    
+    SDLCreateInteractionChoiceSet *request = [[SDLCreateInteractionChoiceSet alloc] init];
+    [request setChoiceSet:[NSMutableArray arrayWithCapacity:[forecasts count]]];
+    [request setInteractionChoiceSetID:@(CHOICESET_LIST)];
+    
+    for (Forecast *forecast in forecasts) {
+        SDLChoice *choice = [[SDLChoice alloc] init];
+        [choice setChoiceID:@(CHOICESET_LIST + [[request choiceSet] count] + 1)];
+        [choice setMenuName:[dateFormatShow stringFromDate:[forecast date]]];
+        
+        [choice setVrCommands:[NSMutableArray array]];
+        [[choice vrCommands] addObject:[dateFormatSpeak stringFromDate:[forecast date]]];
+       
+        if (isHourlyForecast) {
+            if ([[request choiceSet] count] == 0) {
+                [[choice vrCommands] addObject:[[self localization] stringForKey:@"vr.now"]];
+            }
+        } else {
+            if ([[request choiceSet] count] == 0) {
+                [[choice vrCommands] addObject:[[self localization] stringForKey:@"vr.today"]];
+            } else if ([[request choiceSet] count] == 1) {
+                [[choice vrCommands] addObject:[[self localization] stringForKey:@"vr.tomorrow"]];
+            }
+        }
+        
+        [[request choiceSet] addObject:choice];
+    }
+    [self setCurrentForecastChoices:[request choiceSet]];
+    [self sendRequest:request];
+}
+
+- (void)deleteForecastChoiceSet {
+    SDLDeleteInteractionChoiceSet *request = [[SDLDeleteInteractionChoiceSet alloc] init];
+    [request setInteractionChoiceSetID:@(CHOICESET_LIST)];
+    [self setCurrentForecastChoices:nil];
+    [self sendRequest:request];
+}
+
+- (void)performForecastInteractionWithMode:(SDLInteractionMode *)mode {
+    SDLPerformInteraction *request = [[SDLPerformInteraction alloc] init];
+    
+    if ([[self currentInfoType] isEqual:[InfoType DAILY_FORECAST]]) {
+        [request setInitialText:[[self localization] stringForKey:@"pi.daily-forecast.text"]];
+        [request setInitialPrompt:[SDLTTSChunkFactory buildTTSChunksFromSimple:[[self localization] stringForKey:@"pi.daily-forecast.initial-prompt"]]];
+        [request setHelpPrompt:[SDLTTSChunkFactory buildTTSChunksFromSimple:[[self localization] stringForKey:@"pi.daily-forecast.help-prompt"]]];
+        [request setTimeoutPrompt:[SDLTTSChunkFactory buildTTSChunksFromSimple:[[self localization] stringForKey:@"pi.daily-forecast.timeout-prompt"]]];
+    } else if ([[self currentInfoType] isEqual:[InfoType HOURLY_FORECAST]]) {
+        [request setInitialText:[[self localization] stringForKey:@"pi.hourly-forecast.text"]];
+        [request setInitialPrompt:[SDLTTSChunkFactory buildTTSChunksFromSimple:[[self localization] stringForKey:@"pi.hourly-forecast.initial-prompt"]]];
+        [request setHelpPrompt:[SDLTTSChunkFactory buildTTSChunksFromSimple:[[self localization] stringForKey:@"pi.hourly-forecast.help-prompt"]]];
+        [request setTimeoutPrompt:[SDLTTSChunkFactory buildTTSChunksFromSimple:[[self localization] stringForKey:@"pi.hourly-forecast.timeout-prompt"]]];
+    }
+    
+    [request setInteractionChoiceSetIDList:[NSMutableArray arrayWithObject:@(CHOICESET_LIST)]];
+    [request setInteractionMode:(mode ? mode : [SDLInteractionMode BOTH])];
+    [request setTimeout:@(60000)];
+    [self sendRequest:request];
+}
+
 - (void)sendWelcomeMessageWithSpeak:(BOOL)withSpeak {
     [self setCurrentInfoType:[InfoType NONE]];
     SDLShow *show = [[SDLShow alloc] init];
@@ -358,6 +438,7 @@
         }
         NSUInteger index = 0;
         if ([infoType isEqual:[self currentInfoType]]) {
+            [self deleteForecastChoiceSet];
             Forecast *oldForecast = [[self currentInfoTypeList]
                                      objectAtIndex:[self currentInfoTypeListIndex]];
             
@@ -373,7 +454,8 @@
             [self deleteWeatherVoiceCommands];
             [self sendListVoiceCommands:infoType];
         }
-        
+
+        [self createForecastChoiceSetWithList:forecasts ofType:infoType];
         [self sendForecastAtIndex:index fromList:forecasts infoType:infoType withSpeak:withSpeak];
         
         [self setCurrentInfoType:infoType];
@@ -520,6 +602,9 @@
 }
 
 - (void)closeListInfoType:(InfoType *)infoType {
+    if ([[InfoType HOURLY_FORECAST] isEqual:infoType] || [[InfoType DAILY_FORECAST] isEqual:infoType]) {
+        [self deleteForecastChoiceSet];
+    }
     [self deleteListVoiceCommands:infoType];
     [self deleteListNextVoiceCommand];
     [self deleteListPreviousVoiceCommand];
@@ -1068,6 +1153,16 @@
             [self closeListInfoType:[self currentInfoType]];
             break;
         }
+        case CMDID_LIST_SHOW_LIST: {
+            SDLInteractionMode * mode = nil;
+            if ([[SDLTriggerSource MENU] isEqual:[notification triggerSource]]) {
+                mode = [SDLInteractionMode MANUAL_ONLY];
+            } else {
+                mode = [SDLInteractionMode BOTH];
+            }
+            [self performForecastInteractionWithMode:mode];
+            break;
+        }
     }
 }
 
@@ -1115,6 +1210,10 @@
             }
             case BTNID_LIST_BACK: {
                 [self closeListInfoType:[self currentInfoType]];
+                break;
+            }
+            case BTNID_LIST_SHOW_LIST: {
+                [self performForecastInteractionWithMode:[SDLInteractionMode MANUAL_ONLY]];
                 break;
             }
         }
@@ -1187,6 +1286,16 @@
         }
         
         [[WeatherDataManager sharedManager] setUnit:unit];
+    } else if ([self currentForecastChoices]) {
+        for (SDLChoice *choice in [self currentForecastChoices]) {
+            NSUInteger listChoiceID = [[choice choiceID] unsignedIntegerValue];
+            if (listChoiceID == choiceID) {
+                NSUInteger index = listChoiceID - CHOICESET_LIST - 1;
+                [self sendForecastAtIndex:index fromList:[self currentInfoTypeList] infoType:[self currentInfoType] withSpeak:YES];
+                [self setCurrentInfoTypeListIndex:index];
+                break;
+            }
+        }
     }
 }
 

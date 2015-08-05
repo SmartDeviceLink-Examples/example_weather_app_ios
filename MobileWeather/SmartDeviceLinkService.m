@@ -496,6 +496,29 @@
     }
 }
 
+- (void)sendShowRequest:(SDLShow *)request withImageNamed:(NSString *)filename {
+    if ([self graphicsAvailable] && filename) {
+        SDLImage *image = [[SDLImage alloc] init];
+        [image setImageType:[SDLImageType DYNAMIC]];
+        [image setValue:filename];
+        if ([[self currentFiles] containsObject:filename]) {
+            [request setGraphic:image];
+            [self sendRequest:request];
+        } else {
+            [self sendRequest:request];
+            
+            SDLPutFile *putfile = [self buildPutFile:filename ofType:[SDLFileType GRAPHIC_PNG] persistentFile:NO systemFile:NO];
+            if (putfile) {
+                SDLShow *showImage = [[SDLShow alloc] init];
+                [showImage setGraphic:image];
+                [self sendRequestArray:@[putfile, showImage] sequentially:YES];
+            }
+        }
+    } else {
+        [self sendRequest:request];
+    }
+}
+
 - (void)sendWeatherConditions:(WeatherConditions *)conditions withSpeak:(BOOL)withSpeak {
     if (conditions != nil) {
         [self setCurrentInfoType:[InfoType WEATHER_CONDITIONS]];
@@ -527,7 +550,8 @@
             
             [showRequest setMainField2:weathercondition];
         }
-        [self sendRequest:showRequest];
+        
+        [self sendShowRequest:showRequest withImageNamed:[conditions conditionIcon]];
         
         if (withSpeak) {
             SDLSpeak *speakRequest = [[SDLSpeak alloc] init];
@@ -676,8 +700,7 @@
         }
     }
 
-    
-    [self sendRequest:showRequest];
+    [self sendShowRequest:showRequest withImageNamed:[forecast conditionIcon]];
     
     if (withSpeak) {
         NSDateFormatter *dateTimeFormatSpeak = [[NSDateFormatter alloc] init];

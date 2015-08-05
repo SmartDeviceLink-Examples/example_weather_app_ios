@@ -424,8 +424,25 @@
     [request setChoiceSet:[NSMutableArray arrayWithCapacity:[forecasts count]]];
     [request setInteractionChoiceSetID:@(CHOICESET_LIST)];
     
+    
+    
+    NSMutableSet *filenames = [NSMutableSet set];
+    
     for (Forecast *forecast in forecasts) {
         SDLChoice *choice = [[SDLChoice alloc] init];
+        if ([self graphicsAvailable] && [forecast conditionIcon]) {
+            NSString *filename = [forecast conditionIcon];
+            SDLImage *image = [[SDLImage alloc] init];
+            [image setImageType:[SDLImageType DYNAMIC]];
+            [image setValue:filename];
+            
+            if ([[self currentFiles] containsObject:filename] == NO) {
+                [filenames addObject:[forecast conditionIcon]];
+            }
+            
+            [choice setImage:image];
+        }
+
         [choice setChoiceID:@(CHOICESET_LIST + [[request choiceSet] count] + 1)];
         [choice setMenuName:[dateFormatShow stringFromDate:[forecast date]]];
         
@@ -446,8 +463,18 @@
         
         [[request choiceSet] addObject:choice];
     }
+    
+    NSMutableArray *requests = [NSMutableArray arrayWithCapacity:[filenames count] + 1];
+    
+    for (NSString *filename in filenames) {
+        SDLPutFile *putfile = [self buildPutFile:filename ofType:[SDLFileType GRAPHIC_PNG] persistentFile:NO systemFile:NO];
+        [requests addObject:putfile];
+    }
+    
+    [requests addObject:request];
+    
     [self setCurrentForecastChoices:[request choiceSet]];
-    [self sendRequest:request];
+    [self sendRequestArray:requests sequentially:YES];
 }
 
 - (void)deleteForecastChoiceSet {

@@ -59,6 +59,7 @@
 @property NSMutableDictionary *pendingSequentialRequests;
 @property NSMutableSet *currentFiles;
 @property NSMutableDictionary *currentFilesPending;
+@property BOOL isAppIconSet;
 @end
 
 @implementation SmartDeviceLinkService
@@ -87,6 +88,7 @@
     [self setPendingSequentialRequests:[NSMutableDictionary dictionary]];
     [self setCurrentFiles:[NSMutableSet set]];
     [self setCurrentFilesPending:[NSMutableDictionary dictionary]];
+    [self setIsAppIconSet:NO];
 }
 
 - (void)setupProxy {
@@ -269,6 +271,22 @@
 - (void)sendListFiles {
     if ([self graphicsAvailable]) {
         [self sendRequest:[[SDLListFiles alloc] init]];
+    }
+}
+
+- (void)setAppIcon {
+    if ([self graphicsAvailable] == YES && [self isAppIconSet] == NO) {
+        NSString *filename = @"AppIcon.png";
+        
+        SDLSetAppIcon *request = [[SDLSetAppIcon alloc] init];
+        [request setSyncFileName:filename];
+        
+        if ([[self currentFiles] containsObject:filename] == NO) {
+            SDLPutFile *putfile = [self buildPutFile:filename ofType:[SDLFileType GRAPHIC_PNG] persistentFile:YES systemFile:NO];
+            [self sendRequestArray:@[putfile, request] sequentially:YES];
+        } else {
+            [self sendRequest:request];
+        }
     }
 }
 
@@ -1598,6 +1616,8 @@
             [self setCurrentFiles:[NSMutableSet set]];
         }
     }
+    
+    [self setAppIcon];
 }
 
 - (void)onPutFileResponse:(SDLPutFileResponse *)response {
@@ -1623,6 +1643,14 @@
         if ([[SDLResult SUCCESS] isEqual:[response resultCode]]) {
             [[self currentFiles] removeObject:filename];
         }
+    }
+}
+
+- (void)onSetAppIconResponse:(SDLSetAppIconResponse *)response {
+    [self handleSequentialRequestsForResponse:response];
+    
+    if ([[SDLResult SUCCESS] isEqual:[response resultCode]]) {
+        [self setIsAppIconSet:YES];
     }
 }
 

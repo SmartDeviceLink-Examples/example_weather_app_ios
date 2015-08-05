@@ -55,6 +55,7 @@
 @property NSArray  *currentInfoTypeList;
 @property NSInteger currentInfoTypeListIndex;
 @property NSArray *currentForecastChoices;
+@property NSMutableDictionary *pendingSequentialRequests;
 @end
 
 @implementation SmartDeviceLinkService
@@ -80,6 +81,7 @@
     [self setCurrentInfoTypeList:nil];
     [self setCurrentInfoTypeListIndex:-1];
     [self setCurrentForecastChoices:nil];
+    [self setPendingSequentialRequests:[NSMutableDictionary dictionary]];
 }
 
 - (void)setupProxy {
@@ -109,6 +111,16 @@
     }
     
     [[self proxy] sendRPC:request];
+}
+
+- (void)handleSequentialRequestsForResponse:(SDLRPCResponse *)response {
+    if (response) {
+        NSNumber *correlationID = [response correlationID];
+        SDLRPCRequest *request = [[self pendingSequentialRequests] objectForKey:correlationID];
+        if (request) {
+            [self sendRequest:request];
+        }
+    }
 }
 
 - (void)dealloc {
@@ -1419,6 +1431,8 @@
 }
 
 - (void)onRegisterAppInterfaceResponse:(SDLRegisterAppInterfaceResponse *)response {
+    [self handleSequentialRequestsForResponse:response];
+    
     // are graphics supported?
     [self setGraphicsAvailable:[[[response displayCapabilities] graphicSupported] boolValue]];
     
@@ -1475,6 +1489,8 @@
 }
 
 - (void)onPerformInteractionResponse:(SDLPerformInteractionResponse *)response {
+    [self handleSequentialRequestsForResponse:response];
+    
     if (![[response success] boolValue]) {
         return;
     }

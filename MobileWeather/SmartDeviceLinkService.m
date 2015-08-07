@@ -24,6 +24,13 @@
 #define CMDID_LIST_DAILY_TODAY        116
 #define CMDID_LIST_DAILY_TOMORROW     117
 #define BTNID_SHOW_WEATHER_CONDITIONS 201
+#define BTNID_SHOW_DAILY_FORECAST     202
+#define BTNID_SHOW_HOURLY_FORECAST    203
+#define BTNID_LIST_NEXT               211
+#define BTNID_LIST_PREVIOUS           212
+#define BTNID_LIST_INACTIVE           213
+#define BTNID_LIST_SHOW_LIST          214
+#define BTNID_LIST_BACK               215
 #define CHOICESET_CHANGE_UNITS        300
 #define CHOICE_UNIT_METRIC            301
 #define CHOICE_UNIT_IMPERIAL          302
@@ -393,7 +400,7 @@
     [request setMainField2:[NSString stringWithFormat:@"%i/%i", (int)index, (int)[forecasts count]]];
     [request setMainField3:@""];
     [request setMainField4:@""];
-    [request setSoftButtons:[NSMutableArray array]];
+    [request setSoftButtons:[self buildListSoftButtons:infoType withPrevious:YES withNext:YES]];
     [self sendRequest:request];
 }
 
@@ -444,8 +451,85 @@
         [buttons addObject:button];
     }
     
+    if ([self softButtonsAvailable] > 1) {
+        SDLSoftButton *button = [[SDLSoftButton alloc] init];
+        [button setSoftButtonID:@(BTNID_SHOW_DAILY_FORECAST)];
+        [button setText:[[self localization] stringForKey:@"sb.daily"]];
+        [button setType:[SDLSoftButtonType TEXT]];
+        [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
+        [buttons addObject:button];
+    }
+    
+    if ([self softButtonsAvailable] > 2) {
+        SDLSoftButton *button = [[SDLSoftButton alloc] init];
+        [button setSoftButtonID:@(BTNID_SHOW_HOURLY_FORECAST)];
+        [button setText:[[self localization] stringForKey:@"sb.hourly"]];
+        [button setType:[SDLSoftButtonType TEXT]];
+        [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
+        [buttons addObject:button];
+    }
+    
     return buttons;
 }
+
+- (NSMutableArray *)buildListSoftButtons:(InfoType *)infoType withPrevious:(BOOL)withPrevious withNext:(BOOL)withNext {
+    NSMutableArray *buttons = nil;
+    
+    if ([self softButtonsAvailable] > 0) {
+        buttons = [NSMutableArray arrayWithCapacity:4];
+        
+        SDLSoftButton *button = [[SDLSoftButton alloc] init];
+        if (withPrevious) {
+            [button setSoftButtonID:@(BTNID_LIST_PREVIOUS)];
+            [button setText:@"<"];
+        } else {
+            [button setSoftButtonID:@(BTNID_LIST_INACTIVE)];
+            [button setText:@"-"];
+        }
+        
+        [button setType:[SDLSoftButtonType TEXT]];
+        [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
+        [buttons addObject:button];
+    }
+    
+    if ([self softButtonsAvailable] > 1) {
+        SDLSoftButton *button = [[SDLSoftButton alloc] init];
+        if (withNext) {
+            [button setSoftButtonID:@(BTNID_LIST_NEXT)];
+            [button setText:@">"];
+        } else {
+            [button setSoftButtonID:@(BTNID_LIST_INACTIVE)];
+            [button setText:@"-"];
+        }
+        
+        [button setType:[SDLSoftButtonType TEXT]];
+        [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
+        [buttons addObject:button];
+    }
+    
+    if ([self softButtonsAvailable] > 2) {
+        SDLSoftButton *button = [[SDLSoftButton alloc] init];
+        if ([[InfoType DAILY_FORECAST] isEqual:infoType] || [[InfoType HOURLY_FORECAST] isEqual:infoType]) {
+            [button setSoftButtonID:@(BTNID_LIST_SHOW_LIST)];
+            [button setText:[[self localization] stringForKey:@"sb.list"]];
+        }
+        [button setType:[SDLSoftButtonType TEXT]];
+        [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
+        [buttons addObject:button];
+    }
+    
+    if ([self softButtonsAvailable] > 3) {
+        SDLSoftButton *button = [[SDLSoftButton alloc] init];
+        [button setSoftButtonID:@(BTNID_LIST_BACK)];
+        [button setText:[[self localization] stringForKey:@"sb.back"]];
+        [button setType:[SDLSoftButtonType TEXT]]; 
+        [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]]; 
+        [buttons addObject:button]; 
+    }
+    
+    return buttons; 
+}
+
 
 - (void)sendWeatherVoiceCommands {
     SDLAddCommand *request = nil;
@@ -818,6 +902,40 @@
         switch (command) {
             case BTNID_SHOW_WEATHER_CONDITIONS: {
                 [self sendWeatherConditions:[manager weatherConditions] withSpeak:YES];
+                break;
+            }
+            case BTNID_SHOW_DAILY_FORECAST: {
+                [self sendForecastList:[manager dailyForecast] infoType:[InfoType DAILY_FORECAST] withSpeak:YES];
+                break;
+            }
+            case BTNID_SHOW_HOURLY_FORECAST: {
+                [self sendForecastList:[manager hourlyForecast] infoType:[InfoType HOURLY_FORECAST] withSpeak:YES];
+                break;
+            }
+            case BTNID_LIST_NEXT: {
+                InfoType *infoType = [self currentInfoType];
+                if ([self currentInfoTypeListIndex] + 1 < [[self currentInfoTypeList] count]) {
+                    NSInteger index = [self currentInfoTypeListIndex] + 1;
+                    if ([infoType isEqual:[InfoType DAILY_FORECAST]] || [infoType isEqual:[InfoType HOURLY_FORECAST]]) {
+                        [self sendForecastAtIndex:index fromList:[self currentInfoTypeList] infoType:infoType withSpeak:YES];
+                    }
+                    [self setCurrentInfoTypeListIndex:index];
+                }
+                break;
+            }
+            case BTNID_LIST_PREVIOUS: {
+                InfoType *infoType = [self currentInfoType];
+                if ([self currentInfoTypeListIndex] > 0) {
+                    NSInteger index = [self currentInfoTypeListIndex] - 1;
+                    if ([infoType isEqual:[InfoType DAILY_FORECAST]] || [infoType isEqual:[InfoType HOURLY_FORECAST]]) {
+                        [self sendForecastAtIndex:index fromList:[self currentInfoTypeList] infoType:infoType withSpeak:YES];
+                    }
+                    [self setCurrentInfoTypeListIndex:index];
+                }
+                break;
+            }
+            case BTNID_LIST_BACK: {
+                [self closeListInfoType:[self currentInfoType]];
                 break;
             }
         }

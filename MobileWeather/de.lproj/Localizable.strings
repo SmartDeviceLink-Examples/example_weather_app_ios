@@ -124,6 +124,10 @@
 /****************************/
 /* Softbuttons */
 "sb.current" = "Aktuell";
+"sb.daily" = "Täglich";
+"sb.hourly" = "Stündl.";
+"sb.list" = "Liste";
+"sb.back" = "Zurück";
 
 /****************************/
 /* weather alerts section */

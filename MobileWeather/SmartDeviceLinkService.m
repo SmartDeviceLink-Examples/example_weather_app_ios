@@ -652,13 +652,57 @@
 }
 
 - (void)sendAlertAtIndex:(NSUInteger)index fromList:(NSArray *)alerts withSpeak:(BOOL)withSpeak {
-    SDLShow *request = [[SDLShow alloc] init];
-    [request setMainField1:@"Weather alert"];
-    [request setMainField2:[NSString stringWithFormat:@"%i/%i", (int)index, (int)[alerts count]]];
-    [request setMainField3:@""];
-    [request setMainField4:@""];
-    [request setSoftButtons:[self buildListSoftButtons:[InfoType ALERTS] withPrevious:YES withNext:YES]];
-    [self sendRequest:request];
+    Alert *alert = [alerts objectAtIndex:index];
+    [[self currentKnownAlerts] addObject:alert];
+
+    NSDateFormatter *dateTimeFormatShow = [[NSDateFormatter alloc] init];
+    [dateTimeFormatShow setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    [dateTimeFormatShow setLocale:[[self localization] locale]];
+    [dateTimeFormatShow setDateFormat:[[self localization] stringForKey:@"weather-alerts.format.date-time.show"]];
+    
+    NSString *dateTimeStringShow = [dateTimeFormatShow stringFromDate:[alert dateExpires]];
+
+    if ([self updateListVoiceCommandsWithNewIndex:index
+                                        ofNewList:alerts
+                                     withOldIndex:[self currentInfoTypeListIndex]
+                                        ofOldList:[self currentInfoTypeList]]) {
+        [self sendListGlobalProperties:[InfoType ALERTS]
+                          withPrevious:(index != 0)
+                              withNext:(index + 1 != [alerts count])];
+    }
+
+    SDLShow *showRequest = [[SDLShow alloc] init];
+    [showRequest setSoftButtons:
+     [self buildListSoftButtons:[InfoType ALERTS] withPrevious:(index != 0) withNext:(index + 1 != [alerts count])]];
+    
+    if ([self textFieldsAvailable] == 1) {
+        [showRequest setMainField1:[alert alertTitle]];
+        [showRequest setMainField2:@""];
+    }
+    else {
+        [showRequest setMainField1:dateTimeStringShow];
+        [showRequest setMainField2:[alert alertTitle]];
+    }
+    
+    [showRequest setMainField3:@""];
+    [showRequest setMainField4:@""];
+    
+    [self sendRequest:showRequest];
+    
+    if (withSpeak) {
+        NSDateFormatter *dateTimeFormatSpeak = [[NSDateFormatter alloc] init];
+        [dateTimeFormatSpeak setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+        [dateTimeFormatSpeak setLocale:[[self localization] locale]];
+        [dateTimeFormatSpeak setDateFormat:[[self localization] stringForKey:@"weather-alerts.format.date-time.speak"]];
+        
+        NSString *dateTimeStringSpeak = [dateTimeFormatSpeak stringFromDate:[alert dateExpires]];
+        
+        SDLSpeak *speakRequest = [[SDLSpeak alloc] init];
+        NSString *speakString = [NSString stringWithFormat:[[self localization] stringForKey:@"weather-alerts.speak"], [alert alertTitle], dateTimeStringSpeak];
+        
+        [speakRequest setTtsChunks:[SDLTTSChunkFactory buildTTSChunksFromSimple:speakString]];
+        [self sendRequest:speakRequest];
+    }
 }
 
 - (void)sendAlertMessageAtIndex:(NSUInteger)index {

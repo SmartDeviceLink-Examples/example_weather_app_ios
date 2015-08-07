@@ -706,6 +706,19 @@
 }
 
 - (void)sendAlertMessageAtIndex:(NSUInteger)index {
+    Alert *alert = [[self currentInfoTypeList] objectAtIndex:index];
+    
+    NSString *description = [alert alertDescription];
+    
+    if ([description length] > 500) {
+        description = [[description substringToIndex:497] stringByAppendingString:@"..."];
+    }
+    
+    SDLScrollableMessage *message = [[SDLScrollableMessage alloc] init];
+    [message setScrollableMessageBody:description];
+    [message setTimeout:@(60000)];
+    
+    [self sendRequest:message];
 }
 
 - (void)closeListInfoType:(InfoType *)infoType {

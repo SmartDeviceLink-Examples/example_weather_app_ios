@@ -689,6 +689,10 @@
                          fromList:[self currentInfoTypeList]
                          infoType:infoType
                         withSpeak:YES];
+    } else if ([[InfoType ALERTS] isEqual:infoType]) {
+        [self sendAlertAtIndex:[self currentInfoTypeListIndex]
+                      fromList:[self currentInfoTypeList]
+                     withSpeak:YES];
     }
 }
 
@@ -1193,6 +1197,10 @@
             [self sendForecastList:[manager hourlyForecast] infoType:[InfoType HOURLY_FORECAST] withSpeak:YES];
             break;
         }
+        case CMDID_SHOW_ALERTS: {
+            [self sendAlertList:[manager alerts] withSpeak:YES];
+            break;
+        }
         case CMDID_CHANGE_UNITS: {
             // the user has performed the voice command to change the units
             SDLInteractionMode *mode = nil;
@@ -1210,6 +1218,8 @@
                 NSInteger index = [self currentInfoTypeListIndex] + 1;
                 if ([infoType isEqual:[InfoType DAILY_FORECAST]] || [infoType isEqual:[InfoType HOURLY_FORECAST]]) {
                     [self sendForecastAtIndex:index fromList:[self currentInfoTypeList] infoType:infoType withSpeak:YES];
+                } else if ([infoType isEqual:[InfoType ALERTS]]) {
+                    [self sendAlertAtIndex:index fromList:[self currentInfoTypeList] withSpeak:YES];
                 }
                 [self setCurrentInfoTypeListIndex:index];
             }
@@ -1221,6 +1231,8 @@
                 NSInteger index = [self currentInfoTypeListIndex] - 1;
                 if ([infoType isEqual:[InfoType DAILY_FORECAST]] || [infoType isEqual:[InfoType HOURLY_FORECAST]]) {
                     [self sendForecastAtIndex:index fromList:[self currentInfoTypeList] infoType:infoType withSpeak:YES];
+                } else if ([infoType isEqual:[InfoType ALERTS]]) {
+                    [self sendAlertAtIndex:index fromList:[self currentInfoTypeList] withSpeak:YES];
                 }
                 [self setCurrentInfoTypeListIndex:index];
             }
@@ -1253,6 +1265,10 @@
                 mode = [SDLInteractionMode BOTH];
             }
             [self performForecastInteractionWithMode:mode];
+            break;
+        }
+        case CMDID_LIST_SHOW_MESSAGE: {
+            [self sendAlertMessageAtIndex:[self currentInfoTypeListIndex]];
             break;
         }
     }

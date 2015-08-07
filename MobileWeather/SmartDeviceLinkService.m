@@ -414,9 +414,14 @@
 
 - (void)repeatWeatherInformation {
     WeatherDataManager *manager = [WeatherDataManager sharedManager];
-
-    if ([[InfoType WEATHER_CONDITIONS] isEqual:[self currentInfoType]]) {
+    InfoType *infoType = [self currentInfoType];
+    if ([[InfoType WEATHER_CONDITIONS] isEqual:infoType]) {
         [self sendWeatherConditions:[manager weatherConditions] withSpeak:YES];
+    } else if ([[InfoType DAILY_FORECAST] isEqual:infoType] || [[InfoType HOURLY_FORECAST] isEqual:infoType]) {
+        [self sendForecastAtIndex:[self currentInfoTypeListIndex]
+                         fromList:[self currentInfoTypeList]
+                         infoType:infoType
+                        withSpeak:YES];
     }
 }
 
@@ -741,6 +746,14 @@
             [self sendWeatherConditions:[manager weatherConditions] withSpeak:YES];
             break;
         }
+        case CMDID_SHOW_DAILY_FORECAST: {
+            [self sendForecastList:[manager dailyForecast] infoType:[InfoType DAILY_FORECAST] withSpeak:YES];
+            break;
+        }
+        case CMDID_SHOW_HOURLY_FORECAST: {
+            [self sendForecastList:[manager hourlyForecast] infoType:[InfoType HOURLY_FORECAST] withSpeak:YES];
+            break;
+        }
         case CMDID_CHANGE_UNITS: {
             // the user has performed the voice command to change the units
             SDLInteractionMode *mode = nil;
@@ -751,6 +764,47 @@
             }
             
             [self performChangeUnitsInteractionWithMode:mode];
+        }
+        case CMDID_LIST_NEXT: {
+            InfoType *infoType = [self currentInfoType];
+            if ([self currentInfoTypeListIndex] + 1 < [[self currentInfoTypeList] count]) {
+                NSInteger index = [self currentInfoTypeListIndex] + 1;
+                if ([infoType isEqual:[InfoType DAILY_FORECAST]] || [infoType isEqual:[InfoType HOURLY_FORECAST]]) {
+                    [self sendForecastAtIndex:index fromList:[self currentInfoTypeList] infoType:infoType withSpeak:YES];
+                }
+                [self setCurrentInfoTypeListIndex:index];
+            }
+            break;
+        }
+        case CMDID_LIST_PREVIOUS: {
+            InfoType *infoType = [self currentInfoType];
+            if ([self currentInfoTypeListIndex] > 0) {
+                NSInteger index = [self currentInfoTypeListIndex] - 1;
+                if ([infoType isEqual:[InfoType DAILY_FORECAST]] || [infoType isEqual:[InfoType HOURLY_FORECAST]]) {
+                    [self sendForecastAtIndex:index fromList:[self currentInfoTypeList] infoType:infoType withSpeak:YES];
+                }
+                [self setCurrentInfoTypeListIndex:index];
+            }
+            break;
+        }
+        case CMDID_LIST_HOURLY_NOW: {
+            [self sendForecastAtIndex:0 fromList:[self currentInfoTypeList] infoType:[self currentInfoType] withSpeak:YES];
+            [self setCurrentInfoTypeListIndex:0];
+            break;
+        }
+        case CMDID_LIST_DAILY_TODAY: {
+            [self sendForecastAtIndex:0 fromList:[self currentInfoTypeList] infoType:[self currentInfoType] withSpeak:YES];
+            [self setCurrentInfoTypeListIndex:0];
+            break;
+        }
+        case CMDID_LIST_DAILY_TOMORROW: {
+            [self sendForecastAtIndex:1 fromList:[self currentInfoTypeList] infoType:[self currentInfoType] withSpeak:YES];
+            [self setCurrentInfoTypeListIndex:1];
+            break;
+        }
+        case CMDID_LIST_BACK: {
+            [self closeListInfoType:[self currentInfoType]];
+            break;
         }
     }
 }

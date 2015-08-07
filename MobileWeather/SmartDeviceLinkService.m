@@ -28,11 +28,13 @@
 #define BTNID_SHOW_WEATHER_CONDITIONS 201
 #define BTNID_SHOW_DAILY_FORECAST     202
 #define BTNID_SHOW_HOURLY_FORECAST    203
+#define BTNID_SHOW_ALERTS             204
 #define BTNID_LIST_NEXT               211
 #define BTNID_LIST_PREVIOUS           212
 #define BTNID_LIST_INACTIVE           213
 #define BTNID_LIST_SHOW_LIST          214
 #define BTNID_LIST_BACK               215
+#define BTNID_LIST_SHOW_MESSAGE       216
 #define CHOICESET_CHANGE_UNITS        300
 #define CHOICE_UNIT_METRIC            301
 #define CHOICE_UNIT_IMPERIAL          302
@@ -655,7 +657,7 @@
     [request setMainField2:[NSString stringWithFormat:@"%i/%i", (int)index, (int)[alerts count]]];
     [request setMainField3:@""];
     [request setMainField4:@""];
-    [request setSoftButtons:[NSMutableArray array]];
+    [request setSoftButtons:[self buildListSoftButtons:[InfoType ALERTS] withPrevious:YES withNext:YES]];
     [self sendRequest:request];
 }
 
@@ -734,6 +736,15 @@
         [buttons addObject:button];
     }
     
+    if ([self softButtonsAvailable] > 3) {
+        SDLSoftButton *button = [[SDLSoftButton alloc] init];
+        [button setSoftButtonID:@(BTNID_SHOW_ALERTS)];
+        [button setText:[[self localization] stringForKey:@"sb.alerts"]];
+        [button setType:[SDLSoftButtonType TEXT]];
+        [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
+        [buttons addObject:button];
+    }
+    
     return buttons;
 }
 
@@ -777,7 +788,11 @@
         if ([[InfoType DAILY_FORECAST] isEqual:infoType] || [[InfoType HOURLY_FORECAST] isEqual:infoType]) {
             [button setSoftButtonID:@(BTNID_LIST_SHOW_LIST)];
             [button setText:[[self localization] stringForKey:@"sb.list"]];
+        } else if ([[InfoType ALERTS] isEqual:infoType]) {
+            [button setSoftButtonID:@(BTNID_LIST_SHOW_MESSAGE)];
+            [button setText:[[self localization] stringForKey:@"sb.message"]];
         }
+
         [button setType:[SDLSoftButtonType TEXT]];
         [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
         [buttons addObject:button];
@@ -1294,6 +1309,10 @@
                 [self sendForecastList:[manager hourlyForecast] infoType:[InfoType HOURLY_FORECAST] withSpeak:YES];
                 break;
             }
+            case BTNID_SHOW_ALERTS: {
+                [self sendAlertList:[manager alerts] withSpeak:YES];
+                break;
+            }
             case BTNID_LIST_NEXT: {
                 InfoType *infoType = [self currentInfoType];
                 if ([self currentInfoTypeListIndex] + 1 < [[self currentInfoTypeList] count]) {
@@ -1322,6 +1341,10 @@
             }
             case BTNID_LIST_SHOW_LIST: {
                 [self performForecastInteractionWithMode:[SDLInteractionMode MANUAL_ONLY]];
+                break;
+            }
+            case BTNID_LIST_SHOW_MESSAGE: {
+                [self sendAlertMessageAtIndex:[self currentInfoTypeListIndex]];
                 break;
             }
         }

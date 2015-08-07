@@ -136,7 +136,9 @@
 "sb.current" = "Actuelle";
 "sb.daily" = "Quotid.";
 "sb.hourly" = "Horaire";
+"sb.alerts" = "Alertes";
 "sb.list" = "Liste";
+"sb.message" = "Messages";
 "sb.back" = "Retour";
 
 /****************************/

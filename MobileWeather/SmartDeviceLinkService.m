@@ -768,6 +768,18 @@
     
     helpitem = [[SDLVRHelpItem alloc] init];
     [helpitem setPosition:@(2)];
+    [helpitem setText:[[self localization] stringForKey:@"cmd.daily-forecast"]];
+    [helpitems addObject:helpitem];
+    [prompts addObject:[[self localization] stringForKey:@"vr.daily-forecast"]];
+    
+    helpitem = [[SDLVRHelpItem alloc] init];
+    [helpitem setPosition:@(3)];
+    [helpitem setText:[[self localization] stringForKey:@"cmd.hourly-forecast"]];
+    [helpitems addObject:helpitem];
+    [prompts addObject:[[self localization] stringForKey:@"vr.hourly-forecast"]];
+    
+    helpitem = [[SDLVRHelpItem alloc] init];
+    [helpitem setPosition:@(4)];
     [helpitem setText:[[self localization] stringForKey:@"cmd.change-units"]];
     [helpitems addObject:helpitem];
     [prompts addObject:[[self localization] stringForKey:@"vr.change-units"]];
@@ -780,6 +792,58 @@
     [request setVrHelp:helpitems];
     
     [self sendRequest:request];
+}
+
+- (void)sendListGlobalProperties:(InfoType *)infoType withPrevious:(BOOL)withPrevious withNext:(BOOL)withNext {
+    SDLSetGlobalProperties *request = [[SDLSetGlobalProperties alloc] init];
+    NSMutableArray *prompts = [NSMutableArray array];
+    NSMutableArray *items = [NSMutableArray array];
+    SDLVRHelpItem *helpitem;
+    NSUInteger position = 1;
+    
+    if (withPrevious) {
+        helpitem = [[SDLVRHelpItem alloc] init];
+        [helpitem setPosition:@(position++)];
+        [helpitem setText:[[self localization] stringForKey:@"cmd.previous"]];
+        [items addObject:helpitem];
+        [prompts addObject:[[self localization] stringForKey:@"vr.previous"]];
+    }
+    
+    if (withNext) {
+        helpitem = [[SDLVRHelpItem alloc] init];
+        [helpitem setPosition:@(position++)];
+        [helpitem setText:[[self localization] stringForKey:@"cmd.next"]];
+        [items addObject:helpitem];
+        [prompts addObject:[[self localization] stringForKey:@"vr.next"]];
+    }
+    
+    helpitem = [[SDLVRHelpItem alloc] init];
+    [helpitem setPosition:@(position++)];
+    [helpitem setText:[[self localization] stringForKey:@"cmd.back"]];
+    [items addObject:helpitem];
+    [prompts addObject:[[self localization] stringForKey:@"vr.back"]];
+    
+    if ([[InfoType DAILY_FORECAST] isEqual:infoType] || [[InfoType HOURLY_FORECAST] isEqual:infoType]) {
+        helpitem = [[SDLVRHelpItem alloc] init];
+        [helpitem setPosition:@(position++)];
+        [helpitem setText:[[self localization] stringForKey:@"cmd.show-list"]];
+        [items addObject:helpitem];
+        [prompts addObject:[[self localization] stringForKey:@"vr.show-list"]];
+    }
+    
+    helpitem = [[SDLVRHelpItem alloc] init];
+    [helpitem setPosition:@(position++)];
+    [helpitem setText:[[self localization] stringForKey:@"cmd.change-units"]];
+    [items addObject:helpitem];
+    [prompts addObject:[[self localization] stringForKey:@"vr.change-units"]];
+    
+    NSString *promptstring = [prompts componentsJoinedByString:@","];
+    
+    [request setHelpPrompt:[SDLTTSChunkFactory buildTTSChunksFromSimple:promptstring]];
+    [request setTimeoutPrompt:[SDLTTSChunkFactory buildTTSChunksFromSimple:promptstring]];
+    [request setVrHelpTitle:[[self localization] stringForKey:@"app.name"]];
+    [request setVrHelp:items];
+    [self sendRequest:request]; 
 }
 
 - (void)onOnHMIStatus:(SDLOnHMIStatus *)notification {

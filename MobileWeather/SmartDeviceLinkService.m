@@ -389,19 +389,134 @@
 }
 
 - (void)sendForecastAtIndex:(NSUInteger)index fromList:(NSArray *)forecasts infoType:(InfoType *)infoType withSpeak:(BOOL)withSpeak {
-    SDLShow *request = [[SDLShow alloc] init];
+    BOOL isHourlyForecast = [infoType isEqual:[InfoType HOURLY_FORECAST]];
+    Forecast *forecast = [forecasts objectAtIndex:index];
     
-    if ([infoType isEqual:[InfoType DAILY_FORECAST]]) {
-        [request setMainField1:@"Daily forecast"];
+    NSDateFormatter *dateTimeFormatShow = [[NSDateFormatter alloc] init];
+    [dateTimeFormatShow setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    [dateTimeFormatShow setLocale:[[self localization] locale]];
+    
+    NSDateFormatter *weekDayFormatShow = [[NSDateFormatter alloc] init];
+    [weekDayFormatShow setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    [weekDayFormatShow setLocale:[[self localization] locale]];
+    
+    if (isHourlyForecast) {
+        [dateTimeFormatShow setDateFormat:[[self localization] stringForKey:@"forecast.hourly.format.date-time.show"]];
+        [weekDayFormatShow setDateFormat:[[self localization] stringForKey:@"forecast.hourly.format.week-day.show"]];
     } else {
-        [request setMainField1:@"Hourly forecast"];
+        [dateTimeFormatShow setDateFormat:[[self localization] stringForKey:@"forecast.daily.format.date-time.show"]];
+        [weekDayFormatShow setDateFormat:[[self localization] stringForKey:@"forecast.daily.format.week-day.show"]];
     }
     
-    [request setMainField2:[NSString stringWithFormat:@"%i/%i", (int)index, (int)[forecasts count]]];
-    [request setMainField3:@""];
-    [request setMainField4:@""];
-    [request setSoftButtons:[self buildListSoftButtons:infoType withPrevious:YES withNext:YES]];
-    [self sendRequest:request];
+    NSString *conditionTitleShow = [forecast conditionTitle];
+    NSString *dateTimeStringShow = [dateTimeFormatShow stringFromDate:[forecast date]];
+    NSString *weekDayStringShow = [weekDayFormatShow stringFromDate:[forecast date]];
+    
+    // get the range for a shortened title.
+    NSRange conditionTitleShowShortRange =
+    [conditionTitleShow rangeOfString:[[self localization] stringForKey:@"conditions.title.short"]
+                              options:NSRegularExpressionSearch|NSCaseInsensitiveSearch];
+    
+    // have we found a shortened title?
+    if (conditionTitleShowShortRange.location != NSNotFound) {
+        conditionTitleShow = [conditionTitleShow substringWithRange:conditionTitleShowShortRange];
+    }
+    
+    UnitPercentageType percentageType = UnitPercentageDefault;
+    UnitTemperatureType temperatureType = UnitTemperatureCelsius;
+    
+    if ([[WeatherDataManager sharedManager] unit] == UnitTypeImperial) {
+        temperatureType = UnitTemperatureFahrenheit;
+    }
+    if ([self updateListVoiceCommandsWithNewIndex:index
+                                        ofNewList:forecasts
+                                     withOldIndex:[self currentInfoTypeListIndex]
+                                        ofOldList:[self currentInfoTypeList]]) {
+        [self sendListGlobalProperties:infoType
+                          withPrevious:(index != 0)
+                              withNext:(index + 1 != [forecasts count])];
+    }
+    
+    SDLShow *showRequest = [[SDLShow alloc] init];
+    [showRequest setSoftButtons:
+      [self buildListSoftButtons:infoType
+                    withPrevious:(index != 0)
+                        withNext:(index + 1 != [forecasts count])]];
+    [showRequest setMainField1:@""];
+    [showRequest setMainField2:@""];
+    [showRequest setMainField3:@""];
+    [showRequest setMainField4:@""];
+    
+    if (isHourlyForecast) {
+        [showRequest setMainField1:[[self localization] stringForKey:@"forecast.hourly.show.field1",
+            dateTimeStringShow, conditionTitleShow]];
+        
+        if ([self textFieldsAvailable] >= 2) {
+            [showRequest setMainField2:[[self localization] stringForKey:@"forecast.hourly.show.field2",
+                [[forecast temperature] stringValueForUnit:temperatureType shortened:YES localization:[self localization]],
+                [[forecast humidity] stringValueForUnit:percentageType shortened:YES localization:[self localization]],
+                [[forecast precipitationChance] stringValueForUnit:percentageType shortened:YES localization:[self localization]]]];
+        }
+    } else {
+        [showRequest setMainField1:[[self localization] stringForKey:@"forecast.daily.show.field1",
+            weekDayStringShow, conditionTitleShow]];
+        
+        if ([self textFieldsAvailable] >= 2) {
+            [showRequest setMainField2:[[self localization] stringForKey:@"forecast.daily.show.field2",
+                [[forecast lowTemperature] doubleValueForUnit:temperatureType],
+                [[forecast highTemperature] doubleValueForUnit:temperatureType],
+                [[forecast highTemperature] nameForUnit:temperatureType shortened:YES localization:[self localization]],
+                [[forecast humidity] stringValueForUnit:percentageType shortened:YES localization:[self localization]],
+                [[forecast precipitationChance] stringValueForUnit:percentageType shortened:YES localization:[self localization]]]];
+        }
+    }
+
+    
+    [self sendRequest:showRequest];
+    
+    if (withSpeak) {
+        NSDateFormatter *dateTimeFormatSpeak = [[NSDateFormatter alloc] init];
+        [dateTimeFormatSpeak setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+        [dateTimeFormatSpeak setLocale:[[self localization] locale]];
+        
+        NSDateFormatter *weekDayFormatSpeak = [[NSDateFormatter alloc] init];
+        [weekDayFormatSpeak setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+        [weekDayFormatSpeak setLocale:[[self localization] locale]];
+        
+        if (isHourlyForecast) {
+            [dateTimeFormatSpeak setDateFormat:[[self localization] stringForKey:@"forecast.hourly.format.date-time.speak"]];
+            [weekDayFormatSpeak setDateFormat:[[self localization] stringForKey:@"forecast.hourly.format.week-day.speak"]];
+        } else {
+            [dateTimeFormatSpeak setDateFormat:[[self localization] stringForKey:@"forecast.daily.format.date-time.speak"]];
+            [weekDayFormatSpeak setDateFormat:[[self localization] stringForKey:@"forecast.daily.format.week-day.speak"]];
+        }
+        
+        NSString *dateTimeStringSpeak = [dateTimeFormatSpeak stringFromDate:[forecast date]];
+        NSString *weekDayStringSpeak = [weekDayFormatSpeak stringFromDate:[forecast date]];
+        NSString *speakString;
+        
+        if (isHourlyForecast) {
+            speakString = [[self localization] stringForKey:@"forecast.hourly.speak",
+                dateTimeStringSpeak,
+                [forecast conditionTitle],
+                [[forecast temperature] stringValueForUnit:temperatureType shortened:NO localization:[self localization]],
+                [[forecast humidity] stringValueForUnit:percentageType shortened:NO localization:[self localization]],
+                [[forecast precipitationChance] stringValueForUnit:percentageType shortened:NO localization:[self localization]]];
+        } else {
+            speakString = [[self localization] stringForKey:@"forecast.daily.speak",
+                weekDayStringSpeak,
+                [forecast conditionTitle],
+                [[forecast lowTemperature] doubleValueForUnit:temperatureType],
+                [[forecast highTemperature] doubleValueForUnit:temperatureType],
+                [[forecast highTemperature] nameForUnit:temperatureType shortened:NO localization:[self localization]],
+                [[forecast humidity] stringValueForUnit:percentageType shortened:NO localization:[self localization]],
+                [[forecast precipitationChance] stringValueForUnit:percentageType shortened:NO localization:[self localization]]];
+        }
+        
+        SDLSpeak *speakRequest = [[SDLSpeak alloc] init];
+        [speakRequest setTtsChunks:[SDLTTSChunkFactory buildTTSChunksFromSimple:speakString]];
+        [self sendRequest:speakRequest];
+    }
 }
 
 - (void)closeListInfoType:(InfoType *)infoType {

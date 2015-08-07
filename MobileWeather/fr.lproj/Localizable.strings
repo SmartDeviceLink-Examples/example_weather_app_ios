@@ -147,3 +147,33 @@
 "pi.units.initial-prompt" = "Selectionnez les unités en métrique ou impérial s.v.p.";
 "pi.units.help-prompt" = "métrique, impérial";
 "pi.units.timeout-prompt" = "métrique, impérial";
+
+/****************************/
+/* Daily forecast section. */
+"forecast.daily.choice.show" = "EEEE";
+"forecast.daily.choice.speak" = "EEEE";
+"forecast.daily.format.date-time.show" = "dd.MM";
+"forecast.daily.format.date-time.speak" = "d'e 'MMMM";
+"forecast.daily.format.week-day.show" = "E";
+"forecast.daily.format.week-day.speak" = "EEEE";
+/* %1$ = week-day, %2$ = title (shortened) */
+"forecast.daily.show.field1" = "%1$@: %2$@";
+/* %1$ = min temperature, %2$ = max temperature, %3$ = temperature unit, %4$ = humidity, %5$ = precipitation chance */
+"forecast.daily.show.field2" = "%1$.0f - %2$.0f %3$@, %4$@, %5$@";
+/* %1$ = week-day, %2$ = title, %3$ = min temperature, %4$ = max temperature, %5$ = temperature unit, %6$ = humidity, %7$ = precipitation chance */
+"forecast.daily.speak" = "%1$@ %2$@, de %3$.0f à %4$.0f %5$@, avec %6$@ humidité, et %7$@ de chance sur précipitation";
+
+/****************************/
+/* Hourly forecast section. */
+"forecast.hourly.choice.show" = "dd.MM HH'h'00";
+"forecast.hourly.choice.speak" = "H' horloge'";
+"forecast.hourly.format.date-time.show" = "HH'h'00";
+"forecast.hourly.format.date-time.speak" = "H' horloge'";
+"forecast.hourly.format.week-day.show" = "E";
+"forecast.hourly.format.week-day.speak" = "EEEE";
+/* %1$ = date-time, %2$ = title (shortened) */
+"forecast.hourly.show.field1" = "%1$@: %2$@";
+/* %1$ = temperature, %2$ = humidity, %3$ = precipitation chance */
+"forecast.hourly.show.field2" = "%1$@, %2$@, %3$@";
+/* %1$ = date-time, %2$ = title, %3$ = temperature, %4$ = humidity, %5$ = precipitation chance */
+"forecast.hourly.speak" = "à %1$@ %2$@, et %3$@, avec %4$@ humidité, et %5$@ de chance sur précipitation";

@@ -1141,6 +1141,12 @@
         [helpitem setText:[[self localization] stringForKey:@"cmd.show-list"]];
         [items addObject:helpitem];
         [prompts addObject:[[self localization] stringForKey:@"vr.show-list"]];
+    } else if ([[InfoType ALERTS] isEqual:infoType]) {
+        helpitem = [[SDLVRHelpItem alloc] init];
+        [helpitem setPosition:@(position++)];
+        [helpitem setText:[[self localization] stringForKey:@"cmd.show-message"]];
+        [items addObject:helpitem];
+        [prompts addObject:[[self localization] stringForKey:@"vr.show-message"]];
     }
     
     helpitem = [[SDLVRHelpItem alloc] init];

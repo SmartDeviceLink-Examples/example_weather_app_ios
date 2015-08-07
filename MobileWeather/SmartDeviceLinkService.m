@@ -236,6 +236,18 @@
     
     [self sendRequest:request];
     [[self currentKnownAlerts] addObject:alert];
+    
+    InfoType *infoType = [self currentInfoType];
+    if ([[InfoType WEATHER_CONDITIONS] isEqual:infoType]) {
+        WeatherConditions *conditions = [[notification userInfo] objectForKey:@"weatherConditions"];
+        [self sendWeatherConditions:conditions withSpeak:NO];
+    } else if ([[InfoType DAILY_FORECAST] isEqual:infoType]) {
+        NSArray *forecast = [[notification userInfo] objectForKey:@"dailyForecast"];
+        [self sendForecastList:forecast infoType:infoType withSpeak:NO];
+    } else if ([[InfoType HOURLY_FORECAST] isEqual:infoType]) {
+        NSArray *forecast = [[notification userInfo] objectForKey:@"hourlyForecast"];
+        [self sendForecastList:forecast infoType:infoType withSpeak:NO];
+    }
 }
 
 - (void)createChangeUnitsInteractionChoiceSet {

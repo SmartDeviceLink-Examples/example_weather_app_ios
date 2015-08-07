@@ -13,7 +13,16 @@
 #import "InfoType.h"
 
 #define CMDID_SHOW_WEATHER_CONDITIONS 101
+#define CMDID_SHOW_DAILY_FORECAST     102
+#define CMDID_SHOW_HOURLY_FORECAST    103
 #define CMDID_CHANGE_UNITS            105
+#define CMDID_LIST_NEXT               111
+#define CMDID_LIST_PREVIOUS           112
+#define CMDID_LIST_SHOW_LIST          113
+#define CMDID_LIST_BACK               114
+#define CMDID_LIST_HOURLY_NOW         115
+#define CMDID_LIST_DAILY_TODAY        116
+#define CMDID_LIST_DAILY_TOMORROW     117
 #define BTNID_SHOW_WEATHER_CONDITIONS 201
 #define CHOICESET_CHANGE_UNITS        300
 #define CHOICE_UNIT_METRIC            301
@@ -347,7 +356,6 @@
     [self sendRequest:request];
 }
 
-
 - (NSMutableArray *)buildDefaultSoftButtons {
     NSMutableArray *buttons = nil;
     
@@ -383,6 +391,48 @@
         [[self localization] stringForKey:@"vr.show-current-conditions"],
         nil]];
     [self sendRequest:request];
+    
+    menuparams = [[SDLMenuParams alloc] init];
+    [menuparams setMenuName:[[self localization] stringForKey:@"cmd.daily-forecast"]];
+    [menuparams setPosition:@(2)];
+    request = [[SDLAddCommand alloc] init];
+    [request setMenuParams:menuparams];
+    [request setCmdID:@(CMDID_SHOW_DAILY_FORECAST)];
+    [request setVrCommands:[NSMutableArray arrayWithObjects:
+        [[self localization] stringForKey:@"vr.daily"],
+        [[self localization] stringForKey:@"vr.daily-forecast"],
+        [[self localization] stringForKey:@"vr.show-daily-forecast"],
+        nil]];
+    [self sendRequest:request];
+    
+    menuparams = [[SDLMenuParams alloc] init];
+    [menuparams setMenuName:[[self localization] stringForKey:@"cmd.hourly-forecast"]];
+    [menuparams setPosition:@(3)];
+    request = [[SDLAddCommand alloc] init];
+    [request setMenuParams:menuparams];
+    [request setCmdID:@(CMDID_SHOW_HOURLY_FORECAST)];
+    [request setVrCommands:[NSMutableArray arrayWithObjects:
+        [[self localization] stringForKey:@"vr.hourly"],
+        [[self localization] stringForKey:@"vr.hourly-forecast"],
+        [[self localization] stringForKey:@"vr.show-hourly-forecast"],
+        nil]];
+    [self sendRequest:request];
+}
+
+- (void)deleteWeatherVoiceCommands {
+    SDLDeleteCommand *request = nil;
+    
+    request = [[SDLDeleteCommand alloc] init];
+    [request setCmdID:@(CMDID_SHOW_WEATHER_CONDITIONS)];
+    [self sendRequest:request];
+    
+    request = [[SDLDeleteCommand alloc] init];
+    [request setCmdID:@(CMDID_SHOW_DAILY_FORECAST)];
+    [self sendRequest:request];
+    
+    request = [[SDLDeleteCommand alloc] init];
+    [request setCmdID:@(CMDID_SHOW_HOURLY_FORECAST)];
+    [self sendRequest:request];
 }
 
 - (void)sendChangeUnitsVoiceCommand {
@@ -399,7 +449,151 @@
                             [[self localization] stringForKey:@"vr.units"],
                             [[self localization] stringForKey:@"vr.change-units"],
                             nil]];
-    [self sendRequest:request]; 
+    [self sendRequest:request];
+}
+
+- (void)sendListVoiceCommands:(InfoType *)infoType {
+    SDLAddCommand *request;
+    SDLMenuParams *menuparams;
+    
+    if ([[InfoType DAILY_FORECAST] isEqual:infoType] || [[InfoType HOURLY_FORECAST] isEqual:infoType]) {
+        menuparams = [[SDLMenuParams alloc] init];
+        [menuparams setMenuName:[[self localization] stringForKey:@"cmd.show-list"]];
+        [menuparams setPosition:@(3)];
+        request = [[SDLAddCommand alloc] init];
+        [request setMenuParams:menuparams];
+        [request setCmdID:@(CMDID_LIST_SHOW_LIST)];
+        [request setVrCommands:[NSMutableArray arrayWithObjects:
+                                [[self localization] stringForKey:@"vr.list"],
+                                [[self localization] stringForKey:@"vr.show-list"],
+                                nil]];
+        [self sendRequest:request];
+    }
+    
+    menuparams = [[SDLMenuParams alloc] init];
+    [menuparams setMenuName:[[self localization] stringForKey:@"cmd.back"]];
+    [menuparams setPosition:@(4)];
+    request = [[SDLAddCommand alloc] init];
+    [request setMenuParams:menuparams];
+    [request setCmdID:@(CMDID_LIST_BACK)];
+    [request setVrCommands:[NSMutableArray arrayWithObject:[[self localization] stringForKey:@"vr.back"]]];
+    [self sendRequest:request];
+    
+    if ([[InfoType HOURLY_FORECAST] isEqual:infoType]) {
+        request = [[SDLAddCommand alloc] init];
+        [request setCmdID:@(CMDID_LIST_HOURLY_NOW)];
+        [request setVrCommands:[NSMutableArray arrayWithObject:[[self localization] stringForKey:@"vr.now"]]];
+        [self sendRequest:request];
+    } else {
+        request = [[SDLAddCommand alloc] init];
+        [request setCmdID:@(CMDID_LIST_DAILY_TODAY)];
+        [request setVrCommands:[NSMutableArray arrayWithObject:[[self localization] stringForKey:@"vr.today"]]];
+        [self sendRequest:request];
+        
+        request = [[SDLAddCommand alloc] init];
+        [request setCmdID:@(CMDID_LIST_DAILY_TOMORROW)];
+        [request setVrCommands:[NSMutableArray arrayWithObject:[[self localization] stringForKey:@"vr.tomorrow"]]];
+        [self sendRequest:request];
+    }
+}
+
+- (void)deleteListVoiceCommands:(InfoType *)infoType {
+    SDLDeleteCommand *request;
+    
+    if ([[InfoType DAILY_FORECAST] isEqual:infoType] || [[InfoType HOURLY_FORECAST] isEqual:infoType]) {
+        request = [[SDLDeleteCommand alloc] init];
+        [request setCmdID:@(CMDID_LIST_SHOW_LIST)];
+        [self sendRequest:request];
+    }
+    
+    request = [[SDLDeleteCommand alloc] init];
+    [request setCmdID:@(CMDID_LIST_BACK)];
+    [self sendRequest:request];
+    
+    if ([infoType isEqual:[InfoType HOURLY_FORECAST]]) {
+        request = [[SDLDeleteCommand alloc] init];
+        [request setCmdID:@(CMDID_LIST_HOURLY_NOW)];
+        [self sendRequest:request];
+    } else {
+        request = [[SDLDeleteCommand alloc] init];
+        [request setCmdID:@(CMDID_LIST_DAILY_TODAY)];
+        [self sendRequest:request];
+        
+        request = [[SDLDeleteCommand alloc] init];
+        [request setCmdID:@(CMDID_LIST_DAILY_TOMORROW)];
+        [self sendRequest:request];
+    }
+}
+
+- (void)sendListNextVoiceCommand {
+    SDLMenuParams *menuparams = [[SDLMenuParams alloc] init];
+    [menuparams setMenuName:[[self localization] stringForKey:@"cmd.next"]];
+    [menuparams setPosition:@(1)];
+    SDLAddCommand *request = [[SDLAddCommand alloc] init];
+    [request setMenuParams:menuparams];
+    [request setCmdID:@(CMDID_LIST_NEXT)];
+    [request setVrCommands:[NSMutableArray arrayWithObject:[[self localization] stringForKey:@"vr.next"]]];
+    [self sendRequest:request];
+}
+
+- (void)deleteListNextVoiceCommand {
+    SDLDeleteCommand *request = [[SDLDeleteCommand alloc] init];
+    [request setCmdID:@(CMDID_LIST_NEXT)];
+    [self sendRequest:request];
+}
+
+- (void)sendListPreviousVoiceCommand {
+    SDLMenuParams *menuparams = [[SDLMenuParams alloc] init];
+    [menuparams setMenuName:[[self localization] stringForKey:@"cmd.previous"]];
+    [menuparams setPosition:@(2)];
+    SDLAddCommand *request = [[SDLAddCommand alloc] init];
+    [request setMenuParams:menuparams];
+    [request setCmdID:@(CMDID_LIST_PREVIOUS)];
+    [request setVrCommands:[NSMutableArray arrayWithObject:[[self localization] stringForKey:@"vr.previous"]]];
+    [self sendRequest:request];
+}
+
+- (void)deleteListPreviousVoiceCommand {
+    SDLDeleteCommand *request = [[SDLDeleteCommand alloc] init];
+    [request setCmdID:@(CMDID_LIST_PREVIOUS)];
+    [self sendRequest:request];
+}
+
+- (BOOL)updateListVoiceCommandsWithNewIndex:(NSInteger)newIndex
+                                  ofNewList:(NSArray *)newList
+                               withOldIndex:(NSInteger)oldIndex
+                                  ofOldList:(NSArray *)oldList {
+    BOOL newIsFirst, newIsLast, oldIsFirst, oldIsLast, modified;
+    
+    modified = NO;
+    newIsFirst = (newIndex == 0);
+    newIsLast = (newIndex + 1 == [newList count]);
+    
+    if (oldIndex == -1) {
+        oldIsFirst = YES;
+        oldIsLast = YES;
+    } else {
+        oldIsFirst = (oldIndex == 0);
+        oldIsLast = (oldIndex + 1 == [oldList count]);
+    }
+    
+    if (newIsFirst == NO && oldIsFirst == YES) {
+        [self sendListPreviousVoiceCommand];
+        modified = YES;
+    } else if (newIsFirst == YES && oldIsFirst == NO) {
+        [self deleteListPreviousVoiceCommand];
+        modified = YES;
+    }
+    
+    if (newIsLast == NO && oldIsLast == YES) {
+        [self sendListNextVoiceCommand];
+        modified = YES;
+    } else if (newIsLast == YES && oldIsLast == NO) {
+        [self deleteListNextVoiceCommand];
+        modified = YES;
+    }
+    
+    return modified;
 }
 
 - (void)sendDefaultGlobalProperties {

@@ -83,7 +83,13 @@
 /****************************/
 /* In-App menu commands */
 "cmd.current-conditions" = "Aktuelles Wetter";
+"cmd.daily-forecast" = "Tägliche Vorhersage";
+"cmd.hourly-forecast" = "Stündliche Vorhersage";
 "cmd.change-units" = "Einheiten ändern";
+"cmd.next" = "Nächstes";
+"cmd.previous" = "Voriges";
+"cmd.show-list" = "Liste anzeigen";
+"cmd.back" = "Zurück";
 
 /****************************/
 /* VR commands */
@@ -92,10 +98,24 @@
 "vr.current-conditions" = "aktuelles wetter";
 "vr.show-conditions" = "zeige wetter";
 "vr.show-current-conditions" = "zeige aktuelles wetter";
+"vr.daily" = "täglich";
+"vr.daily-forecast" = "tägliche wettervorhersage";
+"vr.show-daily-forecast" = "zeige tägliche wettervorhersage";
+"vr.hourly" = "stündlich";
+"vr.hourly-forecast" = "stündliche wettervorhersage";
+"vr.show-hourly-forecast" = "zeige stündliche wettervorhersage";
 "vr.units" = "einheiten";
 "vr.change-units" = "einheiten ändern";
 "vr.metric" = "metrisch";
 "vr.imperial" = "imperial";
+"vr.next" = "nächstes";
+"vr.previous" = "voriges";
+"vr.back" = "zurück";
+"vr.list" = "liste";
+"vr.show-list" = "zeige liste";
+"vr.now" = "jetzt";
+"vr.today" = "heute";
+"vr.tomorrow" = "morgen";
 
 /****************************/
 /* Softbuttons */

@@ -15,6 +15,7 @@
 #define CMDID_SHOW_WEATHER_CONDITIONS 101
 #define CMDID_SHOW_DAILY_FORECAST     102
 #define CMDID_SHOW_HOURLY_FORECAST    103
+#define CMDID_SHOW_ALERTS             104
 #define CMDID_CHANGE_UNITS            105
 #define CMDID_LIST_NEXT               111
 #define CMDID_LIST_PREVIOUS           112
@@ -23,6 +24,7 @@
 #define CMDID_LIST_HOURLY_NOW         115
 #define CMDID_LIST_DAILY_TODAY        116
 #define CMDID_LIST_DAILY_TOMORROW     117
+#define CMDID_LIST_SHOW_MESSAGE       118
 #define BTNID_SHOW_WEATHER_CONDITIONS 201
 #define BTNID_SHOW_DAILY_FORECAST     202
 #define BTNID_SHOW_HOURLY_FORECAST    203
@@ -787,6 +789,18 @@
         [[self localization] stringForKey:@"vr.show-hourly-forecast"],
         nil]];
     [self sendRequest:request];
+    
+    menuparams = [[SDLMenuParams alloc] init];
+    [menuparams setMenuName:[[self localization] stringForKey:@"cmd.alerts"]];
+    [menuparams setPosition:@(4)];
+    request = [[SDLAddCommand alloc] init];
+    [request setMenuParams:menuparams];
+    [request setCmdID:@(CMDID_SHOW_ALERTS)];
+    [request setVrCommands:[NSMutableArray arrayWithObjects:
+                            [[self localization] stringForKey:@"vr.alerts"],
+                            [[self localization] stringForKey:@"vr.show-alerts"],
+                            nil]];
+    [self sendRequest:request];
 }
 
 - (void)deleteWeatherVoiceCommands {
@@ -802,6 +816,10 @@
     
     request = [[SDLDeleteCommand alloc] init];
     [request setCmdID:@(CMDID_SHOW_HOURLY_FORECAST)];
+    [self sendRequest:request];
+    
+    request = [[SDLDeleteCommand alloc] init];
+    [request setCmdID:@(CMDID_SHOW_ALERTS)];
     [self sendRequest:request];
 }
 
@@ -836,6 +854,18 @@
         [request setVrCommands:[NSMutableArray arrayWithObjects:
                                 [[self localization] stringForKey:@"vr.list"],
                                 [[self localization] stringForKey:@"vr.show-list"],
+                                nil]];
+        [self sendRequest:request];
+    } else if ([[InfoType ALERTS] isEqual:infoType]) {
+        menuparams = [[SDLMenuParams alloc] init];
+        [menuparams setMenuName:[[self localization] stringForKey:@"cmd.show-message"]];
+        [menuparams setPosition:@(3)];
+        request = [[SDLAddCommand alloc] init];
+        [request setMenuParams:menuparams];
+        [request setCmdID:@(CMDID_LIST_SHOW_MESSAGE)];
+        [request setVrCommands:[NSMutableArray arrayWithObjects:
+                                [[self localization] stringForKey:@"vr.message"],
+                                [[self localization] stringForKey:@"vr.show-message"],
                                 nil]];
         [self sendRequest:request];
     }
@@ -873,6 +903,10 @@
     if ([[InfoType DAILY_FORECAST] isEqual:infoType] || [[InfoType HOURLY_FORECAST] isEqual:infoType]) {
         request = [[SDLDeleteCommand alloc] init];
         [request setCmdID:@(CMDID_LIST_SHOW_LIST)];
+        [self sendRequest:request];
+    } else if ([[InfoType ALERTS] isEqual:infoType]) {
+        request = [[SDLDeleteCommand alloc] init];
+        [request setCmdID:@(CMDID_LIST_SHOW_MESSAGE)];
         [self sendRequest:request];
     }
     

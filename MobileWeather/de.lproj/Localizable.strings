@@ -89,10 +89,12 @@
 "cmd.current-conditions" = "Aktuelles Wetter";
 "cmd.daily-forecast" = "Tägliche Vorhersage";
 "cmd.hourly-forecast" = "Stündliche Vorhersage";
+"cmd.alerts" = "Warnungen";
 "cmd.change-units" = "Einheiten ändern";
 "cmd.next" = "Nächstes";
 "cmd.previous" = "Voriges";
 "cmd.show-list" = "Liste anzeigen";
+"cmd.show-message" = "Meldung anzeigen";
 "cmd.back" = "Zurück";
 
 /****************************/
@@ -120,6 +122,10 @@
 "vr.now" = "jetzt";
 "vr.today" = "heute";
 "vr.tomorrow" = "morgen";
+"vr.alerts" = "warnungen";
+"vr.show-alerts" = "zeige warnungen";
+"vr.message" = "meldung";
+"vr.show-message" = "zeige meldung";
 
 /****************************/
 /* Softbuttons */

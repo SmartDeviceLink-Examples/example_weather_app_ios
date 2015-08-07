@@ -89,10 +89,12 @@
 "cmd.current-conditions" = "Condições atuais";
 "cmd.daily-forecast" = "Previsão diàrio";
 "cmd.hourly-forecast" = "Previsão de hora em hora";
+"cmd.alerts" = "Alertas";
 "cmd.change-units" = "Mudar unidades";
 "cmd.next" = "Seguiente";
 "cmd.previous" = "Anterior";
 "cmd.show-list" = "Mostrar lista";
+"cmd.show-message" = "Mostrar mensagem";
 "cmd.back" = "Atrás";
 
 /****************************/
@@ -120,6 +122,10 @@
 "vr.now" = "agora";
 "vr.today" = "hoje";
 "vr.tomorrow" = "Amanhã";
+"vr.alerts" = "alertas";
+"vr.show-alerts" = "mostrar alertas";
+"vr.message" = "mensagem";
+"vr.show-message" = "mostrar mensagem";
 
 /****************************/
 /* Softbuttons */

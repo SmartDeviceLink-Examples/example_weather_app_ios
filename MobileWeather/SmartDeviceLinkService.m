@@ -251,6 +251,9 @@
     } else if ([[InfoType HOURLY_FORECAST] isEqual:infoType]) {
         NSArray *forecast = [[notification userInfo] objectForKey:@"hourlyForecast"];
         [self sendForecastList:forecast infoType:infoType withSpeak:NO];
+    } else if ([[InfoType ALERTS] isEqual:infoType]) {
+        NSArray *alerts = [[notification userInfo] objectForKey:@"alerts"];
+        [self sendAlertList:alerts withSpeak:NO];
     }
 }
 

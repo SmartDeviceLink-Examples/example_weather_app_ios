@@ -83,7 +83,13 @@
 /****************************/
 /* In-App menu commands */
 "cmd.current-conditions" = "Condiciones actuales";
+"cmd.daily-forecast" = "Pronóstico diario";
+"cmd.hourly-forecast" = "Pronóstico por hora";
 "cmd.change-units" = "Cambiar unidades";
+"cmd.next" = "Siguiente";
+"cmd.previous" = "Anterior";
+"cmd.show-list" = "Mostrar lista";
+"cmd.back" = "Atrás";
 
 /****************************/
 /* VR commands */
@@ -92,10 +98,24 @@
 "vr.current-conditions" = "condiciones actuales";
 "vr.show-conditions" = "mostrar condiciones";
 "vr.show-current-conditions" = "mostrar condiciones actuales";
+"vr.daily" = "diario";
+"vr.daily-forecast" = "pronóstico diario";
+"vr.show-daily-forecast" = "mostrar pronóstico diario";
+"vr.hourly" = "por hora";
+"vr.hourly-forecast" = "pronóstico por hora";
+"vr.show-hourly-forecast" = "mostrar pronóstico por hora";
 "vr.units" = "unidades";
 "vr.change-units" = "cambiar unidades";
 "vr.metric" = "métrico";
 "vr.imperial" = "imperial";
+"vr.next" = "siguiente";
+"vr.previous" = "anterior";
+"vr.back" = "atrás";
+"vr.list" = "lista";
+"vr.show-list" = "mostrar lista";
+"vr.now" = "ahora";
+"vr.today" = "hoy";
+"vr.tomorrow" = "mañana";
 
 /****************************/
 /* Softbuttons */

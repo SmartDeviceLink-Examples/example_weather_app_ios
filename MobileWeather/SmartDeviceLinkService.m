@@ -616,6 +616,53 @@
     }
 }
 
+- (void)sendAlertList:(NSArray *)alerts withSpeak:(BOOL)withSpeak {
+    if (alerts && [alerts count] > 0) {
+        NSUInteger index = 0;
+        
+        if ([[InfoType ALERTS] isEqual:[self currentInfoType]]) {
+            Alert *oldAlert = [[self currentInfoTypeList] objectAtIndex:[self currentInfoTypeListIndex]];
+            
+            for (NSUInteger newindex = 0; newindex < [alerts count]; newindex++) {
+                Alert *newAlert = [alerts objectAtIndex:index];
+                
+                if ([newAlert isEqualToAlert:oldAlert]) {
+                    index = newindex;
+                    break;
+                }
+            }
+        } else {
+            [self deleteWeatherVoiceCommands];
+            [self sendListVoiceCommands:[InfoType ALERTS]];
+        }
+        
+        [self sendAlertAtIndex:index fromList:alerts withSpeak:withSpeak];
+        
+        [self setCurrentInfoType:[InfoType ALERTS]];
+        [self setCurrentInfoTypeList:alerts];
+        [self setCurrentInfoTypeListIndex:index];
+    } else {
+        SDLAlert *alertRequest = [[SDLAlert alloc] init];
+        [alertRequest setAlertText1:[[self localization] stringForKey:@"alert.no-alerts.field1"]];
+        [alertRequest setAlertText2:[[self localization] stringForKey:@"alert.no-alerts.field2"]];
+        [alertRequest setTtsChunks:[SDLTTSChunkFactory buildTTSChunksFromSimple:[[self localization] stringForKey:@"alert.no-alerts.prompt"]]];
+        [self sendRequest:alertRequest];
+    }
+}
+
+- (void)sendAlertAtIndex:(NSUInteger)index fromList:(NSArray *)alerts withSpeak:(BOOL)withSpeak {
+    SDLShow *request = [[SDLShow alloc] init];
+    [request setMainField1:@"Weather alert"];
+    [request setMainField2:[NSString stringWithFormat:@"%i/%i", (int)index, (int)[alerts count]]];
+    [request setMainField3:@""];
+    [request setMainField4:@""];
+    [request setSoftButtons:[NSMutableArray array]];
+    [self sendRequest:request];
+}
+
+- (void)sendAlertMessageAtIndex:(NSUInteger)index {
+}
+
 - (void)closeListInfoType:(InfoType *)infoType {
     if ([[InfoType HOURLY_FORECAST] isEqual:infoType] || [[InfoType DAILY_FORECAST] isEqual:infoType]) {
         [self deleteForecastChoiceSet];
@@ -744,7 +791,6 @@
     
     return buttons; 
 }
-
 
 - (void)sendWeatherVoiceCommands {
     SDLAddCommand *request = nil;

@@ -75,6 +75,10 @@
 "alert.no-forecast.field2" = "nicht verfügbar";
 "alert.no-forecast.prompt" = "Wettervorhersage nicht Verfügbar.";
 
+"alert.no-alerts.field1" = "Keine";
+"alert.no-alerts.field2" = "Warnungen";
+"alert.no-alerts.prompt" = "Zur Zeit liegen keine Wetterwarnungen vor.";
+
 /****************************/
 /* Current conditions section. */
 /* %1$ = title, %2$ = temperature, %3$ = humidity,  %4$ = wind speed */

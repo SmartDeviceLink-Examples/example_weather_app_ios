@@ -342,6 +342,75 @@
     }
 }
 
+- (void)sendForecastList:(NSArray *)forecasts infoType:(InfoType *)infoType withSpeak:(BOOL)withSpeak {
+    if (forecasts && [forecasts count] > 0) {
+        if ([infoType isEqual:[InfoType DAILY_FORECAST]]) {
+            forecasts = [forecasts subarrayWithRange:NSMakeRange(0, MIN([forecasts count], 7))];
+        } else if ([infoType isEqual:[InfoType HOURLY_FORECAST]]) {
+            forecasts = [forecasts subarrayWithRange:NSMakeRange(0, MIN([forecasts count], 24))];
+        }
+        NSUInteger index = 0;
+        if ([infoType isEqual:[self currentInfoType]]) {
+            Forecast *oldForecast = [[self currentInfoTypeList]
+                                     objectAtIndex:[self currentInfoTypeListIndex]];
+            
+            for (NSUInteger newindex = 0; newindex < [forecasts count]; newindex++) {
+                Forecast *newForecast = [forecasts objectAtIndex:index];
+                
+                if ([[newForecast date] isEqualToDate:[oldForecast date]]) {
+                    index = newindex;
+                    break;
+                }
+            }
+        } else {
+            [self deleteWeatherVoiceCommands];
+            [self sendListVoiceCommands:infoType];
+        }
+        
+        [self sendForecastAtIndex:index fromList:forecasts infoType:infoType withSpeak:withSpeak];
+        
+        [self setCurrentInfoType:infoType];
+        [self setCurrentInfoTypeList:forecasts];
+        [self setCurrentInfoTypeListIndex:index];
+    } else {
+        SDLAlert *alertRequest = [[SDLAlert alloc] init];
+        [alertRequest setAlertText1:[[self localization] stringForKey:@"alert.no-forecast.field1"]];
+        [alertRequest setAlertText2:[[self localization] stringForKey:@"alert.no-forecast.field2"]];
+        [alertRequest setTtsChunks:[SDLTTSChunkFactory buildTTSChunksFromSimple:[[self localization] stringForKey:@"alert.no-forecast.prompt"]]];
+        [self sendRequest:alertRequest];
+    }
+}
+
+- (void)sendForecastAtIndex:(NSUInteger)index fromList:(NSArray *)forecasts infoType:(InfoType *)infoType withSpeak:(BOOL)withSpeak {
+    SDLShow *request = [[SDLShow alloc] init];
+    
+    if ([infoType isEqual:[InfoType DAILY_FORECAST]]) {
+        [request setMainField1:@"Daily forecast"];
+    } else {
+        [request setMainField1:@"Hourly forecast"];
+    }
+    
+    [request setMainField2:[NSString stringWithFormat:@"%i/%i", (int)index, (int)[forecasts count]]];
+    [request setMainField3:@""];
+    [request setMainField4:@""];
+    [request setSoftButtons:[NSMutableArray array]];
+    [self sendRequest:request];
+}
+
+- (void)closeListInfoType:(InfoType *)infoType {
+    [self deleteListVoiceCommands:infoType];
+    [self deleteListNextVoiceCommand];
+    [self deleteListPreviousVoiceCommand];
+    
+    [self setCurrentInfoType:[InfoType NONE]];
+    [self setCurrentInfoTypeList:nil];
+    [self setCurrentInfoTypeListIndex:-1];
+    
+    [self sendWelcomeMessageWithSpeak:NO];
+    [self sendWeatherVoiceCommands];
+    [self sendDefaultGlobalProperties];
+}
+
 - (void)repeatWeatherInformation {
     WeatherDataManager *manager = [WeatherDataManager sharedManager];
 

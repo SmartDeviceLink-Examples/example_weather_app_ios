@@ -71,6 +71,10 @@
 "alert.no-conditions.field2" = "Indisponible";
 "alert.no-conditions.prompt" = "Conditions actuelles indisponibles";
 
+"alert.no-forecast.field1" = "Prévision";
+"alert.no-forecast.field2" = "Indisponible";
+"alert.no-forecast.prompt" = "Prévisions indisponibles";
+
 /****************************/
 /* Current conditions section. */
 /* %1$ = title, %2$ = temperature, %3$ = humidity,  %4$ = wind speed */

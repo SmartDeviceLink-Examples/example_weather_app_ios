@@ -71,6 +71,10 @@
 "alert.no-conditions.field2" = "não disponíveis";
 "alert.no-conditions.prompt" = "condições não disponíveis";
 
+"alert.no-forecast.field1" = "Previsão";
+"alert.no-forecast.field2" = "não disponível";
+"alert.no-forecast.prompt" = "Previsão não disponível";
+
 /****************************/
 /* Current conditions section. */
 /* %1$ = title, %2$ = temperature, %3$ = humidity,  %4$ = wind speed */

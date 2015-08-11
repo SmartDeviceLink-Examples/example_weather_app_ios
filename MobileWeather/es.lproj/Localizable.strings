@@ -1,0 +1,55 @@
+/*
+ Localizable.strings
+ MobileWeather
+ 
+ Copyright (c) 2013-2015 Ford Motor Company. All rights reserved.
+ */
+
+/****************************/
+/* general */
+"app.name" = "MobileWeather";
+"app.tts-name" = "móbail wécer";
+"app.vr-synonym" = "móbail wécer";
+
+/****************************/
+/* imperial/metric units */
+/* %1$ = "minus" or "", %2$ = formatted value string, %3$ = unit name (with respect to plural rules) */
+"units.format" = "%1$@ %2$@ %3$@";
+
+"units.imperial" = "imperial";
+"units.metric" = "metric";
+"units.negative" = "minus";
+"units.positive" = "plus";
+
+"units.temp.degree.short" = "°";
+"units.temp.degree.full" = "grado(s)";
+"units.temp.fahrenheit.short" = "°F";
+"units.temp.fahrenheit.full" = "grado(s) Fahrenheit";
+"units.temp.celsius.short" = "°C";
+"units.temp.celsius.full" = "grado(s) Celsius";
+
+/** To present a % character you need to put two %% into the string. */
+"units.percent.default.short" = "%%";
+"units.percent.default.full" = "por ciento";
+"units.percent.factor.short" = "";
+"units.percent.factort.full" = "";
+
+"units.length.meter.short" = "m";
+"units.length.meter.full" = "metro(s)";
+"units.length.millimeter.short" = "mm";
+"units.length.millimeter.full" = "milímetro(s)";
+"units.length.kilometer.short" = "km";
+"units.length.kilometer.full" = "kilómetro(s)";
+"units.length.mile.short" = "mi";
+"units.length.mile.full" = "milla(s)";
+"units.length.yard.short" = "yd";
+"units.length.yard.full" = "yarda(s)";
+"units.length.inch.short" = "in";
+"units.length.inch.full" = "pulgada(s)";
+
+"units.speed.meter-second.short" = "m/s";
+"units.speed.meter-second.full" = "metro(s) por segundo";
+"units.speed.kilometer-hour.short" = "km/h";
+"units.speed.kilometer-hour.full" = "kilómetro(s) por hora";
+"units.speed.mile-hour.short" = "mph";
+"units.speed.mile-hour.full" = "milla(s) por hora";

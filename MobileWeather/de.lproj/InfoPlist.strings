@@ -1,0 +1,9 @@
+/* 
+ InfoPlist.strings
+ MobileWeather
+
+ Copyright (c) 2013-2015 Ford Motor Company. All rights reserved.
+ */
+
+"NSLocationAlwaysUsageDescription" = "Dies ermöglicht es der App, Wetterdaten zu Ihrer aktuellen Position zu abzurufen.";
+"NSLocationUsageDescription" = "Dies ermöglicht es der App, Wetterdaten zu Ihrer aktuellen Position zu abzurufen.";

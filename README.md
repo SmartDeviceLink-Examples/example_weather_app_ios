@@ -1,8 +1,4 @@
-# sdl_mobileweather_tutorial_ios
-Heath, Aaron,
-
-Just wanted to give you a brief summary about the gitflow of the tutorial repository.
-
+# iOS Mobile Weather Tutorial
 Branch: master
 The master branch contains the MobileWeather app without any SDL related code. The idea is to keep the master branch be the original app. When new features will be added to the native app they should be commited or merged into the maste branch. As for other repositories we can follow the original branching model shown at http://nvie.com/posts/a-successful-git-branching-model/.
 

@@ -1,8 +1,8 @@
 # iOS Mobile Weather Tutorial
-**Branch: master**
+**Branch: master**  
 The master branch contains the MobileWeather app without any SDL related code. The idea is to keep the master branch be the original app. When new features will be added to the native app they should be commited or merged into the maste branch. As for other repositories we can follow the original branching model shown at http://nvie.com/posts/a-successful-git-branching-model/.
 
-**Branch: tutorial-{version} (e.g. tutorial-2.0)**
+**Branch: tutorial-{version} (e.g. tutorial-2.0)**  
 The actual tutorial for SDL is always based on one commit of the master branch. Each step of the tutorial is covered by one commit of this branch. All commits of the latest tutorial branch (currently tutorial-2.0) are also tagged with step-x.y where “x” is the section number and “y” is the step number (e.g. step-1.1). All commits covering the last step of a section are also tagged with section-x where “x” is the section number (e.g. section-1). This way an app developer can check out each step or a whole section very easy.
 
 *Example*  

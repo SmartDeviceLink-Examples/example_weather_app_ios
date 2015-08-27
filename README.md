@@ -6,15 +6,18 @@ The master branch contains the MobileWeather app without any SDL related code. T
 The actual tutorial for SDL is always based on one commit of the master branch. Each step of the tutorial is covered by one commit of this branch. All commits of the latest tutorial branch (currently tutorial-2.0) are also tagged with step-x.y where “x” is the section number and “y” is the step number (e.g. step-1.1). All commits covering the last step of a section are also tagged with section-x where “x” is the section number (e.g. section-1). This way an app developer can check out each step or a whole section very easy.
 
 *Example*  
-&nbsp;&nbsp;&nbsp;o  
-&nbsp;&nbsp;&nbsp;|\  
-&nbsp;&nbsp;&nbsp;|&nbsp;\  
-&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;o step-1.1  
-&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|  
-&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;o step-1.2  
-&nbsp;&nbsp;&nbsp;o&nbsp;&nbsp;|  
-&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;o (tutorial-2.0) step-1.3, section-1  
-&nbsp;&nbsp;&nbsp;o
+
+```
+o  
+|\  
+| \  
+|  o step-1.1  
+|  |  
+|  o step-1.2  
+o  |  
+|  o (tutorial-2.0) step-1.3, section-1  
+o
+```
    
 **Append more steps at the end of the current step**  
 New steps can be easily added at the end of the current tutorial by adding more commits to the existing tutorial.
@@ -30,23 +33,25 @@ When new code has been added to the original app in the master branch you need t
 
 
 *Example*  
-o   
-|\    
-|&nbsp;\   
-|&nbsp;&nbsp;&nbsp;o   
-|&nbsp;&nbsp;&nbsp;|  
-|&nbsp;&nbsp;&nbsp;o   
-o&nbsp;&nbsp;|   
-|&nbsp;&nbsp;&nbsp;o (tutorial-2.0)   
-o   
-&nbsp;\  
-&nbsp;&nbsp;\  
-&nbsp;&nbsp;&nbsp;o step-1.1  
-&nbsp;&nbsp;&nbsp;|  
-&nbsp;&nbsp;&nbsp;o step-1.2  
-&nbsp;&nbsp;&nbsp;|  
-&nbsp;&nbsp;&nbsp;o (tutorial-2.1) step-1.3, section-1
 
+```
+o
+|\
+| \
+|  o
+|  |
+|  o
+o  |
+|  o (tutorial-2.0)
+o
+ \
+  \
+   o step-1.1
+   |
+   o step-1.2
+   |
+   o (tutorial-2.1) step-1.3, section-1
+```
 
 **Modify an existing step or add a step in the middle of the tutorial**  
 To modify or to add new steps in the middle of the tutorial you need to do the following steps:  
@@ -60,14 +65,17 @@ To modify or to add new steps in the middle of the tutorial you need to do the f
 8.	Push the new tutorial branch with the recreated tags to origin
 
 *Example*  
-&nbsp;&nbsp;&nbsp;o  
-&nbsp;&nbsp;&nbsp;|\  
-&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;\  
-&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;o step-1.1  
-&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;|  
-&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;o step-1.2  
-&nbsp;&nbsp;&nbsp;o&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;\  
-&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;o&nbsp;&nbsp;&nbsp;\  
-&nbsp;&nbsp;&nbsp;o&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;o &nbsp;step-1.3  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;o (tutorial-2.1) step-1.4, section-1  
+
+```
+o
+|\
+| \
+|  o step-1.1
+|  |
+|  o step-1.2
+o  |\
+|  o \
+o     o  step-1.3
+      |
+      o (tutorial-2.1) step-1.4, section-1
+```

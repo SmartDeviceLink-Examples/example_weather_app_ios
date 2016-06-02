@@ -10,4 +10,9 @@
 
 @interface SmartDeviceLinkService : NSObject
 
++ (instancetype)sharedService;
+
+- (void)start;
+- (void)stop;
+
 @end

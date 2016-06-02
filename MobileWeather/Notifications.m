@@ -13,3 +13,6 @@ NSString * const MobileWeatherLanguageUpdateNotification = @"MobileWeatherLangua
 NSString * const MobileWeatherDataUpdatedNotification = @"MobileWeatherDataUpdatedNotification";
 NSString * const MobileWeatherServiceLoadedNotification = @"MobileWeatherServiceLoadedNotification";
 NSString * const MobileWeatherUnitChangedNotification = @"MobileWeatherUnitChangedNotification";
+
+NSString * const SDLRequestsLockScreenNotification = @"SDLRequestsLockScreenNotification";
+NSString * const SDLRequestsUnlockScreenNotification = @"SDLRequestsUnlockScreenNotification";

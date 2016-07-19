@@ -22,10 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - SDLUploadFileOperation
 
-@interface SDLUploadFileOperation () {
-    BOOL executing;
-    BOOL finished;
-}
+@interface SDLUploadFileOperation ()
 
 @property (strong, nonatomic) SDLFileWrapper *fileWrapper;
 @property (weak, nonatomic) id<SDLConnectionManagerType> connectionManager;
@@ -33,7 +30,10 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@implementation SDLUploadFileOperation
+@implementation SDLUploadFileOperation {
+    BOOL executing;
+    BOOL finished;
+}
 
 - (instancetype)initWithFile:(SDLFileWrapper *)file connectionManager:(id<SDLConnectionManagerType>)connectionManager {
     self = [super init];
@@ -49,13 +49,17 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)start {
-    if (self.isCancelled || self.isFinished || !self.isExecuting) {
+    if (self.isCancelled) {
         [self willChangeValueForKey:@"isFinished"];
         finished = YES;
         [self didChangeValueForKey:@"isFinished"];
         
         return;
     }
+    
+    [self willChangeValueForKey:@"isExecuting"];
+    executing = YES;
+    [self didChangeValueForKey:@"isExecuting"];
     
     [self sdl_sendPutFiles:[self.class sdl_splitFile:self.fileWrapper.file] withCompletion:self.fileWrapper.completionHandler];
 }
@@ -71,13 +75,13 @@ NS_ASSUME_NONNULL_BEGIN
     
     // When the putfiles all complete, run this block
     dispatch_group_notify(putFileGroup, dispatch_get_main_queue(), ^{
-        [self sdl_finishOperation];
-        
         if (streamError != nil) {
             completion(NO, bytesAvailable, streamError);
         } else {
             completion(YES, bytesAvailable, nil);
         }
+        
+        [self sdl_finishOperation];
     });
     
     for (SDLPutFile *putFile in putFiles) {

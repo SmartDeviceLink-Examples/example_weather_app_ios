@@ -1,40 +1,38 @@
 //
-//  SDLDeleteFileOperation.m
+//  SDLListFilesOperation.m
 //  SmartDeviceLink-iOS
 //
-//  Created by Joel Fischer on 5/11/16.
+//  Created by Joel Fischer on 5/25/16.
 //  Copyright © 2016 smartdevicelink. All rights reserved.
 //
 
-#import "SDLDeleteFileOperation.h"
+#import "SDLListFilesOperation.h"
 
 #import "SDLConnectionManagerType.h"
-#import "SDLDeleteFile.h"
-#import "SDLDeleteFileResponse.h"
+#import "SDLListFiles.h"
+#import "SDLListFilesResponse.h"
 #import "SDLRPCRequestFactory.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SDLDeleteFileOperation ()
+@interface SDLListFilesOperation ()
 
-@property (copy, nonatomic) NSString *fileName;
 @property (weak, nonatomic) id<SDLConnectionManagerType> connectionManager;
-@property (copy, nonatomic, nullable) SDLFileManagerDeleteCompletion completionHandler;
+@property (copy, nonatomic, nullable) SDLFileManagerListFilesCompletion completionHandler;
 
 @end
 
 
-@implementation SDLDeleteFileOperation {
+@implementation SDLListFilesOperation {
     BOOL executing;
     BOOL finished;
 }
 
-- (instancetype)initWithFileName:(NSString *)fileName connectionManager:(id<SDLConnectionManagerType>)connectionManager completionHandler:(nullable SDLFileManagerDeleteCompletion)completionHandler {
+- (instancetype)initWithConnectionManager:(id<SDLConnectionManagerType>)connectionManager completionHandler:(nullable SDLFileManagerListFilesCompletion)completionHandler {
     self = [super init];
     if (!self) { return nil; }
     
-    _fileName = fileName;
     _connectionManager = connectionManager;
     _completionHandler = completionHandler;
     
@@ -54,25 +52,24 @@ NS_ASSUME_NONNULL_BEGIN
     executing = YES;
     [self didChangeValueForKey:@"isExecuting"];
     
-    [self sdl_deleteFile];
+    [self sdl_listFiles];
 }
 
-- (void)sdl_deleteFile {
-    SDLDeleteFile *deleteFile = [SDLRPCRequestFactory buildDeleteFileWithName:self.fileName correlationID:@0];
+- (void)sdl_listFiles {
+    SDLListFiles *listFiles = [SDLRPCRequestFactory buildListFilesWithCorrelationID:@0];
     
-    typeof(self) weakself = self;
-    [self.connectionManager sendRequest:deleteFile withCompletionHandler:^(__kindof SDLRPCRequest *request, __kindof SDLRPCResponse *response, NSError *error) {
-        // Pull out the parameters
-        SDLDeleteFileResponse *deleteFileResponse = (SDLDeleteFileResponse *)response;
-        BOOL success = [deleteFileResponse.success boolValue];
-        NSUInteger bytesAvailable = [deleteFileResponse.spaceAvailable unsignedIntegerValue];
+    __weak typeof(self) weakSelf = self;
+    [self.connectionManager sendRequest:listFiles withCompletionHandler:^(__kindof SDLRPCRequest *request, __kindof SDLRPCResponse *response, NSError *error) {
+        SDLListFilesResponse *listFilesResponse = (SDLListFilesResponse *)response;
+        BOOL success = [listFilesResponse.success boolValue];
+        NSUInteger bytesAvailable = [listFilesResponse.spaceAvailable unsignedIntegerValue];
+        NSArray<NSString *> *fileNames = [NSArray arrayWithArray:listFilesResponse.filenames];
         
-        // Callback
-        if (weakself.completionHandler != nil) {
-            weakself.completionHandler(success, bytesAvailable, error);
+        if (weakSelf.completionHandler != nil) {
+            weakSelf.completionHandler(success, bytesAvailable, fileNames, error);
         }
         
-        [self sdl_finishOperation];
+        [weakSelf sdl_finishOperation];
     }];
 }
 
@@ -84,6 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self didChangeValueForKey:@"isFinished"];
     [self didChangeValueForKey:@"isExecuting"];
 }
+
 
 #pragma mark Property Overrides
 
@@ -100,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (nullable NSString *)name {
-    return self.fileName;
+    return @"List Files";
 }
 
 - (NSOperationQueuePriority)queuePriority {

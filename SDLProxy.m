@@ -45,7 +45,7 @@
 typedef void (^URLSessionTaskCompletionHandler)(NSData *data, NSURLResponse *response, NSError *error);
 typedef void (^URLSessionDownloadTaskCompletionHandler)(NSURL *location, NSURLResponse *response, NSError *error);
 
-NSString *const SDLProxyVersion = @"4.1.2";
+NSString *const SDLProxyVersion = @"4.1.3";
 const float startSessionTime = 10.0;
 const float notifyProxyClosedDelay = 0.1;
 const int POLICIES_CORRELATION_ID = 65535;
@@ -70,7 +70,14 @@ const int POLICIES_CORRELATION_ID = 65535;
         _lsm = [[SDLLockScreenManager alloc] init];
         _alreadyDestructed = NO;
 
-        _mutableProxyListeners = [NSMutableSet setWithObject:theDelegate];
+        if ([_mutableProxyListeners count] > 0) {
+            [_mutableProxyListeners addObject:theDelegate];
+        }
+        else
+        {
+            _mutableProxyListeners = [NSMutableSet setWithObject:theDelegate];
+        }
+        
         _protocol = protocol;
         _transport = transport;
         _transport.delegate = protocol;

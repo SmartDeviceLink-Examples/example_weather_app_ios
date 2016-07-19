@@ -11,6 +11,7 @@
 #import "SDLHMILevel.h"
 #import "SDLHMIPermissions.h"
 #import "SDLNotificationConstants.h"
+#import "SDLOnHMIStatus.h"
 #import "SDLPermissionFilter.h"
 #import "SDLPermissionItem.h"
 #import "SDLStateMachine.h"
@@ -37,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
         return nil;
     }
     
-    _currentHMILevel = nil;
+    _currentHMILevel = [SDLHMILevel NONE];
     _permissions = [NSMutableDictionary<SDLPermissionRPCName *, SDLPermissionItem *> dictionary];
     _filters = [NSMutableArray<SDLPermissionFilter *> array];
     
@@ -170,7 +171,6 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - SDL Notification Observers
 
 - (void)sdl_permissionsDidChange:(NSNotification *)notification {
-    NSAssert([notification.userInfo[SDLNotificationUserInfoNotificationObject] isKindOfClass:[NSArray class]], @"The SDLPermissionManager permissions  observer got something other than an array of permissions level");
     if (![notification.userInfo[SDLNotificationUserInfoNotificationObject] isKindOfClass:[NSArray class]]) {
         return;
     }
@@ -213,13 +213,10 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)sdl_hmiLevelDidChange:(NSNotification *)notification {
-    NSAssert([notification.userInfo[SDLNotificationUserInfoNotificationObject] isKindOfClass:[SDLHMILevel class]], @"The SDLPermissionManager HMI level observer got something other than a HMI level");
-    if (![notification.userInfo[SDLNotificationUserInfoNotificationObject] isKindOfClass:[SDLHMILevel class]]) {
-        return;
-    }
+    SDLOnHMIStatus *hmiStatus = notification.userInfo[SDLNotificationUserInfoNotificationObject];
     
     SDLHMILevel *oldHMILevel = [self.currentHMILevel copy];
-    self.currentHMILevel = notification.userInfo[SDLNotificationUserInfoNotificationObject];
+    self.currentHMILevel = hmiStatus.hmiLevel;
     NSArray *filters = [self.filters copy];
     
     

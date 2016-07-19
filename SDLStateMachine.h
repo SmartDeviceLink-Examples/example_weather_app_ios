@@ -10,6 +10,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+typedef NSString SDLStateMachineTransitionType;
+extern SDLStateMachineTransitionType *const SDLStateMachineTransitionTypeWillLeave;
+extern SDLStateMachineTransitionType *const SDLStateMachineTransitionTypeWillTransition;
+extern SDLStateMachineTransitionType *const SDLStateMachineTransitionTypeDidTransition;
+extern SDLStateMachineTransitionType *const SDLStateMachineTransitionTypeDidEnter;
+
+typedef NSString SDLStateMachineNotificationInfoKey;
+extern SDLStateMachineNotificationInfoKey *const SDLStateMachineNotificationInfoKeyType;
+extern SDLStateMachineNotificationInfoKey *const SDLStateMachineNotificationInfoKeyOldState;
+extern SDLStateMachineNotificationInfoKey *const SDLStateMachineNotificationInfoKeyNewState;
+
 typedef NSString SDLState;
 typedef NSArray<SDLState *> SDLAllowableStateTransitions;
 
@@ -32,7 +44,7 @@ typedef NSArray<SDLState *> SDLAllowableStateTransitions;
 @property (copy, nonatomic, readonly) SDLState *currentState;
 @property (weak, nonatomic, readonly) id target;
 
-
+@property (copy, nonatomic, readonly) NSString *transitionNotificationName;
 /**
  *  Create a new state machine with these parameters
  *

@@ -292,6 +292,7 @@
 		6E04EF311CF4EF2200115C2F /* LockScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E04EF2F1CF4EF2200115C2F /* LockScreenViewController.m */; };
 		6E04EF321CF4EF2200115C2F /* LockScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E04EF301CF4EF2200115C2F /* LockScreenViewController.xib */; };
 		6E691A0B1CF34FEE0068FA9B /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E691A0A1CF34FEE0068FA9B /* ExternalAccessory.framework */; };
+		6E765D081D3D248000FD4241 /* SDLListFilesOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E765D071D3D248000FD4241 /* SDLListFilesOperation.m */; };
 		6EF1FC581CF5EF3F009BE8E9 /* SmartDeviceLinkService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EF1FC571CF5EF3F009BE8E9 /* SmartDeviceLinkService.m */; };
 		E402122519F62BF500CEB3B7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E402122419F62BF500CEB3B7 /* Images.xcassets */; };
 		E402122719F689FF00CEB3B7 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E402122619F689FF00CEB3B7 /* Settings.bundle */; };
@@ -918,9 +919,11 @@
 		6E04EF2F1CF4EF2200115C2F /* LockScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LockScreenViewController.m; sourceTree = "<group>"; };
 		6E04EF301CF4EF2200115C2F /* LockScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LockScreenViewController.xib; sourceTree = "<group>"; };
 		6E691A0A1CF34FEE0068FA9B /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		6E765D061D3D248000FD4241 /* SDLListFilesOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLListFilesOperation.h; sourceTree = "<group>"; };
+		6E765D071D3D248000FD4241 /* SDLListFilesOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLListFilesOperation.m; sourceTree = "<group>"; };
 		6EAFB7D21CF4D46200CCE560 /* bundle1.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = bundle1.o; path = usr/lib/bundle1.o; sourceTree = SDKROOT; };
-		6EF1FC561CF5EF3F009BE8E9 /* SmartDeviceLinkService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmartDeviceLinkService.h; path = MobileWeather/SmartDeviceLinkService.h; sourceTree = "<group>"; };
-		6EF1FC571CF5EF3F009BE8E9 /* SmartDeviceLinkService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmartDeviceLinkService.m; path = MobileWeather/SmartDeviceLinkService.m; sourceTree = "<group>"; };
+		6EF1FC561CF5EF3F009BE8E9 /* SmartDeviceLinkService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartDeviceLinkService.h; sourceTree = "<group>"; };
+		6EF1FC571CF5EF3F009BE8E9 /* SmartDeviceLinkService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartDeviceLinkService.m; sourceTree = "<group>"; };
 		E402122419F62BF500CEB3B7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E402122619F689FF00CEB3B7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		E4059D6019FF7D4800C9996D /* WeatherDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherDataManager.h; sourceTree = "<group>"; };
@@ -1079,6 +1082,8 @@
 		6E04EF2D1CF4E92900115C2F /* SmartDeviceLink */ = {
 			isa = PBXGroup;
 			children = (
+				6E765D061D3D248000FD4241 /* SDLListFilesOperation.h */,
+				6E765D071D3D248000FD4241 /* SDLListFilesOperation.m */,
 				6E04EAC51CF4E5B600115C2F /* EAAccessory+SDLProtocols.h */,
 				6E04EAC61CF4E5B600115C2F /* EAAccessory+SDLProtocols.m */,
 				6E04EAC71CF4E5B600115C2F /* EAAccessoryManager+SDLProtocols.h */,
@@ -2081,6 +2086,7 @@
 				6E04EE901CF4E5BB00115C2F /* SDLSetDisplayLayoutResponse.m in Sources */,
 				6E04EE921CF4E5BB00115C2F /* SDLSetGlobalProperties.m in Sources */,
 				6E04EE941CF4E5BB00115C2F /* SDLSetGlobalPropertiesResponse.m in Sources */,
+				6E765D081D3D248000FD4241 /* SDLListFilesOperation.m in Sources */,
 				6E04EE961CF4E5BB00115C2F /* SDLSetMediaClockTimer.m in Sources */,
 				6E04EE981CF4E5BB00115C2F /* SDLSetMediaClockTimerResponse.m in Sources */,
 				6E04EE9A1CF4E5BB00115C2F /* SDLShow.m in Sources */,

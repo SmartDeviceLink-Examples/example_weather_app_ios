@@ -14,8 +14,7 @@
 #import "SDLFile.h"
 #import "SDLFileWrapper.h"
 #import "SDLGlobals.h"
-#import "SDLListFiles.h"
-#import "SDLListFilesResponse.h"
+#import "SDLListFilesOperation.h"
 #import "SDLManager.h"
 #import "SDLNotificationConstants.h"
 #import "SDLPutFile.h"
@@ -77,7 +76,7 @@ NSString *const SDLFileManagerStateReady = @"Ready";
 
 #pragma mark - Setup / Shutdown
 
-- (void)startManagerWithCompletionHandler:(SDLFileManagerStartupCompletion)completionHandler {
+- (void)startManagerWithCompletionHandler:(nullable SDLFileManagerStartupCompletion)completionHandler {
     if ([self.currentState isEqualToString:SDLFileManagerStateShutdown]) {
         self.startupCompletionHandler = completionHandler;
         [self.stateMachine transitionToState:SDLFileManagerStateFetchingInitialList];
@@ -95,15 +94,26 @@ NSString *const SDLFileManagerStateReady = @"Ready";
 #pragma mark - Getters
 
 - (NSSet<SDLFileName *> *)remoteFileNames {
-    return [self.mutableRemoteFileNames copy];
+    return [NSSet setWithSet:self.mutableRemoteFileNames];
 }
 
 - (NSString *)currentState {
     return self.stateMachine.currentState;
 }
 
-- (NSUInteger)pendingTransactionsCount {
-    return self.transactionQueue.operationCount;
+- (NSArray<__kindof NSOperation *> *)pendingTransactions {
+    return self.transactionQueue.operations;
+}
+
+- (BOOL)suspended {
+    return self.transactionQueue.suspended;
+}
+
+
+#pragma mark Setters
+
+- (void)setSuspended:(BOOL)suspended {
+    self.transactionQueue.suspended = suspended;
 }
 
 
@@ -125,28 +135,44 @@ NSString *const SDLFileManagerStateReady = @"Ready";
 }
 
 - (void)didEnterStateFetchingInitialList {
-    SDLListFiles *listFiles = [SDLRPCRequestFactory buildListFilesWithCorrelationID:@0];
-    
     __weak typeof(self) weakSelf = self;
-    [self.connectionManager sendRequest:listFiles withCompletionHandler:^(__kindof SDLRPCRequest *request, __kindof SDLRPCResponse *response, NSError *error) {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        
+    [self sdl_listRemoteFilesWithCompletionHandler:^(BOOL success, NSUInteger bytesAvailable, NSArray<NSString *> * _Nonnull fileNames, NSError * _Nullable error) {
+        // If there was an error, we'll pass the error to the startup handler and cancel out
         if (error != nil) {
-            self.startupCompletionHandler(NO, error);
-            [self.stateMachine transitionToState:SDLFileManagerStateShutdown];
+            weakSelf.startupCompletionHandler(NO, error);
+            [weakSelf.stateMachine transitionToState:SDLFileManagerStateShutdown];
             BLOCK_RETURN;
         }
         
-        SDLListFilesResponse *listFilesResponse = (SDLListFilesResponse *)response;
-        [strongSelf.mutableRemoteFileNames addObjectsFromArray:listFilesResponse.filenames];
-        strongSelf.bytesAvailable = [listFilesResponse.spaceAvailable unsignedIntegerValue];
-        
-        [strongSelf.stateMachine transitionToState:SDLFileManagerStateReady];
+        // If no error, make sure we're in the ready state
+        [weakSelf.stateMachine transitionToState:SDLFileManagerStateReady];
     }];
 }
 
 - (void)didEnterStateReady {
-    self.startupCompletionHandler(YES, nil);
+    if (self.startupCompletionHandler != nil) {
+        self.startupCompletionHandler(YES, nil);
+    }
+}
+
+
+#pragma mark - Private Listing Remote Files
+
+- (void)sdl_listRemoteFilesWithCompletionHandler:(SDLFileManagerListFilesCompletion)completion {
+    __weak typeof(self) weakSelf = self;
+    SDLListFilesOperation *listOperation = [[SDLListFilesOperation alloc] initWithConnectionManager:self.connectionManager completionHandler:^(BOOL success, NSUInteger bytesAvailable, NSArray<NSString *> * _Nonnull fileNames, NSError * _Nullable error) {
+        if (error != nil || !success) {
+            BLOCK_RETURN;
+        }
+        
+        // If there was no error, set our properties and call back to the startup completion handler
+        [weakSelf.mutableRemoteFileNames addObjectsFromArray:fileNames];
+        weakSelf.bytesAvailable = bytesAvailable;
+        
+        completion(success, bytesAvailable, fileNames, error);
+    }];
+    
+    [self.transactionQueue addOperation:listOperation];
 }
 
 
@@ -166,6 +192,8 @@ NSString *const SDLFileManagerStateReady = @"Ready";
         if (success) {
             [strongSelf.mutableRemoteFileNames removeObject:name];
         }
+        
+        completion(YES, self.bytesAvailable, nil);
     }];
     
     [self.transactionQueue addOperation:deleteOperation];

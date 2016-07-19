@@ -23,7 +23,6 @@ SDLStateMachineNotificationInfoKey *const SDLStateMachineNotificationInfoKeyOldS
 SDLStateMachineNotificationInfoKey *const SDLStateMachineNotificationInfoKeyNewState = @"newState";
 
 
-
 @interface SDLStateMachine ()
 
 @property (copy, nonatomic, readwrite) SDLState *currentState;
@@ -101,6 +100,9 @@ SDLStateMachineNotificationInfoKey *const SDLStateMachineNotificationInfoKeyNewS
     return [self.currentState isEqualToString:state];
 }
 
+
+#pragma mark - Helpers
+
 /**
  *  Determine if a state transition is valid. Returns YES if the state transition dictionary's fromState key contains toState in its value array, or if fromState and toState are the same state.
  *
@@ -117,8 +119,8 @@ SDLStateMachineNotificationInfoKey *const SDLStateMachineNotificationInfoKeyNewS
     return NO;
 }
 
-+ (NSString *)sdl_notificationNameForTargetClass:(Class)targetClass selector:(SEL)selector {
-    return [NSString stringWithFormat:@"com.sdl.notification.statemachine.%@.%@", [targetClass class], NSStringFromSelector(selector)];
+- (NSString *)transitionNotificationName {
+    return [NSString stringWithFormat:@"com.sdl.notification.statemachine.%@", [self.target class]];
 }
 
 @end

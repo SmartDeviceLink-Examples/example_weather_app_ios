@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark Lifecycle
 
-- (instancetype)initWithAppName:(NSString *)appName appId:(NSString *)appId {
+- (instancetype)initDefaultConfigurationWithAppName:(NSString *)appName appId:(NSString *)appId {
     self = [super init];
     if (!self) {
         return nil;
@@ -38,19 +38,22 @@ NS_ASSUME_NONNULL_BEGIN
     _appType = [SDLAppHMIType DEFAULT];
     _language = [SDLLanguage EN_US];
     _languagesSupported = @[_language];
+    _appIcon = nil;
+    _initialDisplayLayout = nil;
     _shortAppName = nil;
     _ttsName = nil;
-    _voiceRecognitionSynonyms = @[];
+    _voiceRecognitionSynonyms = @[appName];
     
     return self;
 }
 
 + (SDLLifecycleConfiguration *)defaultConfigurationWithAppName:(NSString *)appName appId:(NSString *)appId {
-    return [[self alloc] initWithAppName:appName appId:appId];
+    return [[self alloc] initDefaultConfigurationWithAppName:appName appId:appId];
 }
 
 + (SDLLifecycleConfiguration *)debugConfigurationWithAppName:(NSString *)appName appId:(NSString *)appId ipAddress:(NSString *)ipAddress port:(NSString *)port {
-    SDLLifecycleConfiguration *config = [[self alloc] initWithAppName:appName appId:appId];
+    SDLLifecycleConfiguration *config = [[self alloc] initDefaultConfigurationWithAppName:appName appId:appId];
+    config.tcpDebugMode = YES;
     config.tcpDebugIPAddress = ipAddress;
     config.tcpDebugPort = port;
     
@@ -91,25 +94,19 @@ NS_ASSUME_NONNULL_BEGIN
     _appType = appType;
 }
 
-- (void)setPersistentFiles:(NSArray<SDLFile *> *)persistentFiles {
-    for (SDLFile *file in persistentFiles) {
-        if (!file.persistent) {
-            @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:NSLocalizedString(@"SDLLifecycleConfiguration persistentFiles must all be persistent; non-persistent file found", nil) userInfo:@{@"Error": file}];
-        }
-    }
-}
-
 
 #pragma mark NSCopying
 
 - (id)copyWithZone:(nullable NSZone *)zone {
-    SDLLifecycleConfiguration *newConfig = [[self.class allocWithZone:zone] initWithAppName:_appName appId:_appId];
+    SDLLifecycleConfiguration *newConfig = [[self.class allocWithZone:zone] initDefaultConfigurationWithAppName:_appName appId:_appId];
     newConfig -> _tcpDebugMode = _tcpDebugMode;
     newConfig -> _tcpDebugIPAddress = _tcpDebugIPAddress;
     newConfig -> _tcpDebugPort = _tcpDebugPort;
     newConfig -> _appType = _appType;
     newConfig -> _language = _language;
     newConfig -> _languagesSupported = _languagesSupported;
+    newConfig -> _appIcon = _appIcon;
+    newConfig -> _initialDisplayLayout = _initialDisplayLayout;
     newConfig -> _shortAppName = _shortAppName;
     newConfig -> _ttsName = _ttsName;
     newConfig -> _voiceRecognitionSynonyms = _voiceRecognitionSynonyms;

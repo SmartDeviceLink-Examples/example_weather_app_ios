@@ -8,6 +8,7 @@
 
 #import "SDLFileManager.h"
 
+#import "SDLConnectionManagerType.h"
 #import "SDLDebugTool.h"
 #import "SDLDeleteFileOperation.h"
 #import "SDLError.h"
@@ -61,7 +62,6 @@ NSString *const SDLFileManagerStateReady = @"Ready";
     
     _connectionManager = manager;
     _bytesAvailable = 0;
-    _allowOverwrite = NO;
     
     _mutableRemoteFileNames = [NSMutableSet set];
     _transactionQueue = [[NSOperationQueue alloc] init];
@@ -76,7 +76,7 @@ NSString *const SDLFileManagerStateReady = @"Ready";
 
 #pragma mark - Setup / Shutdown
 
-- (void)startManagerWithCompletionHandler:(nullable SDLFileManagerStartupCompletion)completionHandler {
+- (void)startWithCompletionHandler:(nullable SDLFileManagerStartupCompletion)completionHandler {
     if ([self.currentState isEqualToString:SDLFileManagerStateShutdown]) {
         self.startupCompletionHandler = completionHandler;
         [self.stateMachine transitionToState:SDLFileManagerStateFetchingInitialList];
@@ -204,7 +204,7 @@ NSString *const SDLFileManagerStateReady = @"Ready";
 
 - (void)uploadFile:(SDLFile *)file completionHandler:(nullable SDLFileManagerUploadCompletion)completion {
     // Check our overwrite settings and error out if it would overwrite
-    if (self.allowOverwrite == NO && [self.remoteFileNames containsObject:file.name]) {
+    if (file.overwrite == NO && [self.remoteFileNames containsObject:file.name]) {
         if (completion != nil) {
             completion(NO, self.bytesAvailable, [NSError sdl_fileManager_cannotOverwriteError]);
         }
@@ -221,9 +221,21 @@ NSString *const SDLFileManagerStateReady = @"Ready";
 }
 
 - (void)sdl_uploadFile:(SDLFile *)file completionHandler:(nullable SDLFileManagerUploadCompletion)completion {
+    __block NSString *fileName = file.name;
+    __block SDLFileManagerUploadCompletion uploadCompletion = [completion copy];
+    
+    __weak typeof(self) weakSelf = self;
     SDLFileWrapper *fileWrapper = [SDLFileWrapper wrapperWithFile:file completionHandler:^(BOOL success, NSUInteger bytesAvailable, NSError * _Nullable error) {
-        [self.class sdl_deleteTemporaryFile:file.fileURL];
-        completion(success, bytesAvailable, error);
+        [weakSelf.class sdl_deleteTemporaryFile:file.fileURL];
+        
+        if (bytesAvailable != 0) {
+            weakSelf.bytesAvailable = bytesAvailable;
+        }
+        if (success) {
+            [weakSelf.mutableRemoteFileNames addObject:fileName];
+        }
+        
+        uploadCompletion(success, bytesAvailable, error);
     }];
     
     SDLUploadFileOperation *uploadOperation = [[SDLUploadFileOperation alloc] initWithFile:fileWrapper connectionManager:self.connectionManager];

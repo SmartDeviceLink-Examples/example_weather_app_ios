@@ -108,7 +108,11 @@
         tcpConfig.tcpDebugPort = @"2776";
         tcpConfig.tcpDebugIPAddress = @"19.56.17.63";
 
-        SDLConfiguration *config = [[SDLConfiguration alloc] initWithLifecycle:tcpConfig lockScreen:nil];
+//        SDLConfiguration *config = [[SDLConfiguration alloc] initWithLifecycle:tcpConfig lockScreen:nil];
+        
+        SDLConfiguration *config = [[SDLConfiguration alloc] init];
+        
+        [SDLLockScreenConfiguration disabledConfiguration];
         
         self.manager = [[SDLManager alloc] initWithConfiguration:config delegate:self];
         

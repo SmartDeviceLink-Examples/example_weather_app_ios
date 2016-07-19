@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (copy, nonatomic) NSMutableDictionary<SDLPermissionRPCName *, SDLPermissionItem *> *permissions;
 @property (copy, nonatomic) NSMutableArray<SDLPermissionFilter *> *filters;
-@property (copy, nonatomic) SDLHMILevel *currentHMILevel;
+@property (copy, nonatomic, nullable) SDLHMILevel *currentHMILevel;
 
 @end
 
@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
         return nil;
     }
     
-    _currentHMILevel = [SDLHMILevel NONE];
+    _currentHMILevel = nil;
     _permissions = [NSMutableDictionary<SDLPermissionRPCName *, SDLPermissionItem *> dictionary];
     _filters = [NSMutableArray<SDLPermissionFilter *> array];
     
@@ -71,6 +71,10 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (SDLPermissionGroupStatus)groupStatusOfRPCs:(NSArray<SDLPermissionRPCName *> *)rpcNames {
+    if (self.currentHMILevel == nil) {
+        return SDLPermissionGroupStatusUnknown;
+    }
+    
     return [self.class sdl_groupStatusOfRPCs:rpcNames withPermissions:[self.permissions copy] hmiLevel:self.currentHMILevel];
 }
 
@@ -171,11 +175,12 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - SDL Notification Observers
 
 - (void)sdl_permissionsDidChange:(NSNotification *)notification {
-    if (![notification.userInfo[SDLNotificationUserInfoNotificationObject] isKindOfClass:[NSArray class]]) {
+    NSAssert([notification.userInfo[SDLNotificationUserInfoObject] isKindOfClass:[NSArray class]], @"The SDLPermissionManager permissions  observer got something other than an array of permissions level");
+    if (![notification.userInfo[SDLNotificationUserInfoObject] isKindOfClass:[NSArray class]]) {
         return;
     }
     
-    NSArray<SDLPermissionItem *> *newPermissionItems = notification.userInfo[SDLNotificationUserInfoNotificationObject];
+    NSArray<SDLPermissionItem *> *newPermissionItems = notification.userInfo[SDLNotificationUserInfoObject];
     NSArray<SDLPermissionFilter *> *filters = [self.filters copy];
     
     // We can eliminate calling those filters who had no permission changes, so we'll filter down and see which had permissions that changed
@@ -213,7 +218,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)sdl_hmiLevelDidChange:(NSNotification *)notification {
-    SDLOnHMIStatus *hmiStatus = notification.userInfo[SDLNotificationUserInfoNotificationObject];
+    SDLOnHMIStatus *hmiStatus = notification.userInfo[SDLNotificationUserInfoObject];
     
     SDLHMILevel *oldHMILevel = [self.currentHMILevel copy];
     self.currentHMILevel = hmiStatus.hmiLevel;

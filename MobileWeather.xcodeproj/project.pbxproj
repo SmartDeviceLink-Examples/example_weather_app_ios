@@ -291,6 +291,10 @@
 		6E04EF2B1CF4E5BB00115C2F /* SDLWiperStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E04ECF71CF4E5BA00115C2F /* SDLWiperStatus.m */; };
 		6E04EF311CF4EF2200115C2F /* LockScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E04EF2F1CF4EF2200115C2F /* LockScreenViewController.m */; };
 		6E04EF321CF4EF2200115C2F /* LockScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E04EF301CF4EF2200115C2F /* LockScreenViewController.xib */; };
+		6E4FFD121D3EAB5D008A237C /* SDLLockScreenPresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4FFD091D3EAB5D008A237C /* SDLLockScreenPresenter.m */; };
+		6E4FFD131D3EAB5D008A237C /* SDLLockScreenStatusManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4FFD0B1D3EAB5D008A237C /* SDLLockScreenStatusManager.m */; };
+		6E4FFD141D3EAB5D008A237C /* SDLNotificationDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4FFD0E1D3EAB5D008A237C /* SDLNotificationDispatcher.m */; };
+		6E4FFD151D3EAB5D008A237C /* SDLResponseDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4FFD101D3EAB5D008A237C /* SDLResponseDispatcher.m */; };
 		6E691A0B1CF34FEE0068FA9B /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E691A0A1CF34FEE0068FA9B /* ExternalAccessory.framework */; };
 		6E765D081D3D248000FD4241 /* SDLListFilesOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E765D071D3D248000FD4241 /* SDLListFilesOperation.m */; };
 		6EF1FC581CF5EF3F009BE8E9 /* SmartDeviceLinkService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EF1FC571CF5EF3F009BE8E9 /* SmartDeviceLinkService.m */; };
@@ -918,6 +922,16 @@
 		6E04EF2E1CF4EF2200115C2F /* LockScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LockScreenViewController.h; sourceTree = "<group>"; };
 		6E04EF2F1CF4EF2200115C2F /* LockScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LockScreenViewController.m; sourceTree = "<group>"; };
 		6E04EF301CF4EF2200115C2F /* LockScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LockScreenViewController.xib; sourceTree = "<group>"; };
+		6E4FFD081D3EAB5D008A237C /* SDLLockScreenPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLLockScreenPresenter.h; sourceTree = "<group>"; };
+		6E4FFD091D3EAB5D008A237C /* SDLLockScreenPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLLockScreenPresenter.m; sourceTree = "<group>"; };
+		6E4FFD0A1D3EAB5D008A237C /* SDLLockScreenStatusManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLLockScreenStatusManager.h; sourceTree = "<group>"; };
+		6E4FFD0B1D3EAB5D008A237C /* SDLLockScreenStatusManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLLockScreenStatusManager.m; sourceTree = "<group>"; };
+		6E4FFD0C1D3EAB5D008A237C /* SDLManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLManagerDelegate.h; sourceTree = "<group>"; };
+		6E4FFD0D1D3EAB5D008A237C /* SDLNotificationDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLNotificationDispatcher.h; sourceTree = "<group>"; };
+		6E4FFD0E1D3EAB5D008A237C /* SDLNotificationDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLNotificationDispatcher.m; sourceTree = "<group>"; };
+		6E4FFD0F1D3EAB5D008A237C /* SDLResponseDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLResponseDispatcher.h; sourceTree = "<group>"; };
+		6E4FFD101D3EAB5D008A237C /* SDLResponseDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLResponseDispatcher.m; sourceTree = "<group>"; };
+		6E4FFD111D3EAB5D008A237C /* SDLViewControllerPresentable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLViewControllerPresentable.h; sourceTree = "<group>"; };
 		6E691A0A1CF34FEE0068FA9B /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		6E765D061D3D248000FD4241 /* SDLListFilesOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLListFilesOperation.h; sourceTree = "<group>"; };
 		6E765D071D3D248000FD4241 /* SDLListFilesOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLListFilesOperation.m; sourceTree = "<group>"; };
@@ -1082,6 +1096,16 @@
 		6E04EF2D1CF4E92900115C2F /* SmartDeviceLink */ = {
 			isa = PBXGroup;
 			children = (
+				6E4FFD081D3EAB5D008A237C /* SDLLockScreenPresenter.h */,
+				6E4FFD091D3EAB5D008A237C /* SDLLockScreenPresenter.m */,
+				6E4FFD0A1D3EAB5D008A237C /* SDLLockScreenStatusManager.h */,
+				6E4FFD0B1D3EAB5D008A237C /* SDLLockScreenStatusManager.m */,
+				6E4FFD0C1D3EAB5D008A237C /* SDLManagerDelegate.h */,
+				6E4FFD0D1D3EAB5D008A237C /* SDLNotificationDispatcher.h */,
+				6E4FFD0E1D3EAB5D008A237C /* SDLNotificationDispatcher.m */,
+				6E4FFD0F1D3EAB5D008A237C /* SDLResponseDispatcher.h */,
+				6E4FFD101D3EAB5D008A237C /* SDLResponseDispatcher.m */,
+				6E4FFD111D3EAB5D008A237C /* SDLViewControllerPresentable.h */,
 				6E765D061D3D248000FD4241 /* SDLListFilesOperation.h */,
 				6E765D071D3D248000FD4241 /* SDLListFilesOperation.m */,
 				6E04EAC51CF4E5B600115C2F /* EAAccessory+SDLProtocols.h */,
@@ -1912,6 +1936,7 @@
 				6E04ED2B1CF4E5BA00115C2F /* SDLBodyInformation.m in Sources */,
 				6E04ED2D1CF4E5BA00115C2F /* SDLButtonCapabilities.m in Sources */,
 				6E04ED2F1CF4E5BA00115C2F /* SDLButtonEventMode.m in Sources */,
+				6E4FFD151D3EAB5D008A237C /* SDLResponseDispatcher.m in Sources */,
 				6E04ED311CF4E5BA00115C2F /* SDLButtonName.m in Sources */,
 				6E04ED331CF4E5BA00115C2F /* SDLButtonPressMode.m in Sources */,
 				6E04ED351CF4E5BA00115C2F /* SDLCarModeStatus.m in Sources */,
@@ -1926,6 +1951,7 @@
 				6E04ED481CF4E5BA00115C2F /* SDLConsoleController.m in Sources */,
 				6E04ED4A1CF4E5BA00115C2F /* SDLCreateInteractionChoiceSet.m in Sources */,
 				6E04ED4C1CF4E5BA00115C2F /* SDLCreateInteractionChoiceSetResponse.m in Sources */,
+				6E4FFD141D3EAB5D008A237C /* SDLNotificationDispatcher.m in Sources */,
 				6E04ED4E1CF4E5BA00115C2F /* SDLDebugTool.m in Sources */,
 				6E04ED521CF4E5BA00115C2F /* SDLDeleteCommand.m in Sources */,
 				6E04ED541CF4E5BA00115C2F /* SDLDeleteCommandResponse.m in Sources */,
@@ -2095,6 +2121,7 @@
 				6E04EEA01CF4E5BB00115C2F /* SDLShowResponse.m in Sources */,
 				6E04EEA21CF4E5BB00115C2F /* SDLSingleTireStatus.m in Sources */,
 				6E04EEA41CF4E5BB00115C2F /* SDLSiphonServer.m in Sources */,
+				6E4FFD131D3EAB5D008A237C /* SDLLockScreenStatusManager.m in Sources */,
 				6E04EEA61CF4E5BB00115C2F /* SDLSlider.m in Sources */,
 				6E04EEA81CF4E5BB00115C2F /* SDLSliderResponse.m in Sources */,
 				6E04EEAA1CF4E5BB00115C2F /* SDLSoftButton.m in Sources */,
@@ -2135,6 +2162,7 @@
 				6E04EEF11CF4E5BB00115C2F /* SDLTTSChunkFactory.m in Sources */,
 				6E04EEF31CF4E5BB00115C2F /* SDLTurn.m in Sources */,
 				6E04EF311CF4EF2200115C2F /* LockScreenViewController.m in Sources */,
+				6E4FFD121D3EAB5D008A237C /* SDLLockScreenPresenter.m in Sources */,
 				6E04EEF51CF4E5BB00115C2F /* SDLUnregisterAppInterface.m in Sources */,
 				6E04EEF71CF4E5BB00115C2F /* SDLUnregisterAppInterfaceResponse.m in Sources */,
 				6E04EEF91CF4E5BB00115C2F /* SDLUnsubscribeButton.m in Sources */,

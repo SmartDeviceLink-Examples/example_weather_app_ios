@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "SDLConnectionManagerType.h"
 #import "SDLFileManagerConstants.h"
 
 @class SDLFile;
+@protocol SDLConnectionManagerType;
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -52,12 +52,7 @@ typedef void (^SDLFileManagerStartupCompletion)(BOOL success, NSError *__nullabl
 @property (copy, nonatomic, readonly) NSArray<__kindof NSOperation *> *pendingTransactions;
 
 /**
- *  Allow the file manager to overwrite files on the remote system with the same name as an uploaded file. If NO, this can be overridden per file by calling forceUploadFile:completionHandler:
- */
-@property (assign, nonatomic) BOOL allowOverwrite;
-
-/**
- *  Whether or not the file manager is suspended. If suspended, the file manager can continue to queue uploads and deletes, but will not actually perform any of those until it is no longer suspended. This can be used for
+ *  Whether or not the file manager is suspended. If suspended, the file manager can continue to queue uploads and deletes, but will not actually perform any of those until it is no longer suspended. This can be used for throttling down the file manager if other, important operations are taking place over the accessory connection.
  */
 @property (assign, nonatomic) BOOL suspended;
 
@@ -66,7 +61,7 @@ typedef void (^SDLFileManagerStartupCompletion)(BOOL success, NSError *__nullabl
  *
  *  @return nil
  */
-- (instancetype)init __unavailable;
+- (instancetype)init NS_UNAVAILABLE;
 
 /**
  *  Creates a new file manager with a specified connection manager
@@ -82,7 +77,7 @@ typedef void (^SDLFileManagerStartupCompletion)(BOOL success, NSError *__nullabl
  *
  *  @param completionHandler The handler called when the manager is set up or failed to set up with an error. Use weak self when accessing self from the completion handler.
  */
-- (void)startManagerWithCompletionHandler:(nullable SDLFileManagerStartupCompletion)completionHandler;
+- (void)startWithCompletionHandler:(nullable SDLFileManagerStartupCompletion)completionHandler;
 
 /**
  *  Cancels all file manager operations and deletes all associated data.
@@ -104,14 +99,6 @@ typedef void (^SDLFileManagerStartupCompletion)(BOOL success, NSError *__nullabl
  *  @param completion An optional completion handler that sends an error should one occur.
  */
 - (void)uploadFile:(SDLFile *)file completionHandler:(nullable SDLFileManagerUploadCompletion)completion;
-
-/**
- *  Upload a file to the remote file system. If a file with the [SDLFile name] already exists, and allowOverwrite is NO, this method will still overwrite the file.
- *
- *  @param file       An SDLFile that contains metadata about the file to be sent
- *  @param completion An optional completion handler that sends an error should one occur.
- */
-- (void)forceUploadFile:(SDLFile *)file completionHandler:(nullable SDLFileManagerUploadCompletion)completion;
 
 /**
  *  A URL to the directory where temporary files are stored. When an SDLFile is created with NSData, it writes to a temporary file until the file manager finishes uploading it.

@@ -18,8 +18,8 @@
 #import "SDLJsonEncoder.h"
 #import "SDLLanguage.h"
 #import "SDLLayoutMode.h"
-#import "SDLLockScreenManager.h"
-#import "SDLLockScreenManager.h"
+#import "SDLLockScreenStatusManager.h"
+#import "SDLLockScreenStatusManager.h"
 #import "SDLNames.h"
 #import "SDLOnHMIStatus.h"
 #import "SDLOnSystemRequest.h"
@@ -45,14 +45,14 @@
 typedef void (^URLSessionTaskCompletionHandler)(NSData *data, NSURLResponse *response, NSError *error);
 typedef void (^URLSessionDownloadTaskCompletionHandler)(NSURL *location, NSURLResponse *response, NSError *error);
 
-NSString *const SDLProxyVersion = @"4.1.3";
+NSString *const SDLProxyVersion = @"4.1.4";
 const float startSessionTime = 10.0;
 const float notifyProxyClosedDelay = 0.1;
 const int POLICIES_CORRELATION_ID = 65535;
 
 
 @interface SDLProxy () {
-    SDLLockScreenManager *_lsm;
+    SDLLockScreenStatusManager *_lsm;
 }
 
 @property (strong, nonatomic) NSMutableSet *mutableProxyListeners;
@@ -67,17 +67,10 @@ const int POLICIES_CORRELATION_ID = 65535;
 - (instancetype)initWithTransport:(SDLAbstractTransport *)transport protocol:(SDLAbstractProtocol *)protocol delegate:(NSObject<SDLProxyListener> *)theDelegate {
     if (self = [super init]) {
         _debugConsoleGroupName = @"default";
-        _lsm = [[SDLLockScreenManager alloc] init];
+        _lsm = [[SDLLockScreenStatusManager alloc] init];
         _alreadyDestructed = NO;
 
-        if ([_mutableProxyListeners count] > 0) {
-            [_mutableProxyListeners addObject:theDelegate];
-        }
-        else
-        {
-            _mutableProxyListeners = [NSMutableSet setWithObject:theDelegate];
-        }
-        
+        _mutableProxyListeners = [NSMutableSet setWithObject:theDelegate];
         _protocol = protocol;
         _transport = transport;
         _transport.delegate = protocol;

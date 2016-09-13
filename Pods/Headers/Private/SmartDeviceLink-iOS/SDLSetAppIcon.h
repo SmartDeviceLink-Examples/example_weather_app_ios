@@ -1,0 +1,1 @@
+../../../SmartDeviceLink-iOS/SmartDeviceLink/SDLSetAppIcon.h

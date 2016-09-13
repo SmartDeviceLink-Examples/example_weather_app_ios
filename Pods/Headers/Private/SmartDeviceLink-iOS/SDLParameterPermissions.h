@@ -1,0 +1,1 @@
+../../../SmartDeviceLink-iOS/SmartDeviceLink/SDLParameterPermissions.h

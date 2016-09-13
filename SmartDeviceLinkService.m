@@ -6,7 +6,7 @@
 //
 
 #import "SmartDeviceLinkService.h"
-#import <SmartDeviceLink.h>
+#import <SmartDeviceLink/SmartDeviceLink.h>
 #import "Localization.h"
 #import "WeatherLanguage.h"
 #import "WeatherDataManager.h"

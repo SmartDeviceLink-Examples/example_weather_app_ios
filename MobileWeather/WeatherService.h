@@ -5,11 +5,12 @@
 //  Copyright (c) 2013-2015 Ford Motor Company. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "WeatherLocation.h"
-#import "Alert.h"
-#import "UnitType.h"
-#import "WeatherLanguage.h"
+@import UIKit;
+
+@class Alert;
+@class WeatherLanguage;
+@class WeatherLocation;
+
 
 @interface WeatherService : NSObject
 

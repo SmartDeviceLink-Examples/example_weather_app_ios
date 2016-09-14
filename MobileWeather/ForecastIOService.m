@@ -6,9 +6,16 @@
 //
 
 #import "ForecastIOService.h"
+
+#import "GPSLocation.h"
+#import "Notifications.h"
 #import "HttpConnection.h"
 #import "WeatherConditions.h"
 #import "ForecastIOProcessor.h"
+#import "WeatherLocation.h"
+#import "Alert.h"
+#import "UnitType.h"
+#import "WeatherLanguage.h"
 
 #define FORECASTIO_BASE_URL @"https://api.forecast.io/forecast"
 #define FORECASTIO_UNIT @"units=si"

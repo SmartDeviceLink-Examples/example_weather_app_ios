@@ -7,6 +7,10 @@
 
 #import <Foundation/Foundation.h>
 #import "UnitNumber.h"
+#import "UnitType.h"
+
+@class Localization;
+
 
 @interface TemperatureNumber : UnitNumber
 

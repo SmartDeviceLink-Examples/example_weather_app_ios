@@ -6,12 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "WeatherLocation.h"
-#import "WeatherConditions.h"
-#import "WeatherLanguage.h"
-#import "Forecast.h"
-#import "Alert.h"
+
 #import "UnitType.h"
+
+@class WeatherConditions;
+@class WeatherLanguage;
+@class WeatherLocation;
+
 
 @interface WeatherDataManager : NSObject
 

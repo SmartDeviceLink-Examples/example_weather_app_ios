@@ -7,6 +7,10 @@
 
 #import "TemperatureNumber.h"
 
+#import "UnitConverter.h"
+#import "Localization.h"
+
+
 @implementation TemperatureNumber
 
 - (UnitTemperatureType)temperatureUnit {

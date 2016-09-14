@@ -6,7 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GPSLocation.h"
+
+@class GPSLocation;
+
 
 @interface WeatherLocation : NSObject
 

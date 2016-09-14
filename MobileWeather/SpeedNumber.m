@@ -7,6 +7,9 @@
 
 #import "SpeedNumber.h"
 
+#import "UnitConverter.h"
+#import "Localization.h"
+
 @implementation SpeedNumber
 
 - (UnitSpeedType)speedUnit {

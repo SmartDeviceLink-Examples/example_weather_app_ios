@@ -7,6 +7,10 @@
 
 #import "LengthNumber.h"
 
+#import "Localization.h"
+#import "UnitConverter.h"
+
+
 @implementation LengthNumber
 
 - (UnitLengthType)lengthUnit {

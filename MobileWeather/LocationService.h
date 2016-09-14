@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "WeatherLocation.h"
 
 @interface LocationService : NSObject
 

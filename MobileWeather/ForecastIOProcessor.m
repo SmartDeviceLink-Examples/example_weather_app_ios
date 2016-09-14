@@ -6,8 +6,15 @@
 //
 
 #import "ForecastIOProcessor.h"
+
+#import "Forecast.h"
 #import "UnitConverter.h"
 #import "Alert.h"
+#import "WeatherConditions.h"
+#import "PercentageNumber.h"
+#import "TemperatureNumber.h"
+#import "SpeedNumber.h"
+#import "LengthNumber.h"
 
 #define KEY_CURRENTLY @"currently"
 #define KEY_HOURLY @"hourly"

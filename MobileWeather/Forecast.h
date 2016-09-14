@@ -6,10 +6,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TemperatureNumber.h"
-#import "LengthNumber.h"
-#import "SpeedNumber.h"
-#import "PercentageNumber.h"
+
+@class TemperatureNumber;
+@class SpeedNumber;
+@class LengthNumber;
+@class PercentageNumber;
 
 @interface Forecast : NSObject
 

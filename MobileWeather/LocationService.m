@@ -5,8 +5,13 @@
 //  Copyright (c) 2013-2015 Ford Motor Company. All rights reserved.
 //
 
-#import "LocationService.h"
 #import <CoreLocation/CoreLocation.h>
+
+#import "GPSLocation.h"
+#import "Notifications.h"
+#import "LocationService.h"
+#import "WeatherLocation.h"
+
 
 #define MIN_TIME_BETWEEN_LOCATION_UPDATES 120.0
 

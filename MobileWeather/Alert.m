@@ -7,6 +7,8 @@
 
 #import "Alert.h"
 
+#import "AlertType.h"
+
 @implementation Alert
 
 - (BOOL)isEqual:(id)object {

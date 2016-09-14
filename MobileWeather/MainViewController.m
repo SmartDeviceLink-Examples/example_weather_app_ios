@@ -6,10 +6,19 @@
 //
 
 #import "MainViewController.h"
+
+#import "Notifications.h"
 #import "ImageProcessor.h"
+#import "PercentageNumber.h"
+#import "TemperatureNumber.h"
+#import "SpeedNumber.h"
 #import "WeatherService.h"
 #import "WeatherDataManager.h"
 #import "UnitConverter.h"
+#import "WeatherConditions.h"
+#import "WeatherLanguage.h"
+#import "WeatherLocation.h"
+
 
 @interface MainViewController ()
 

@@ -6,8 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "UnitConverter.h"
-#import "Localization.h"
+
 
 @interface UnitNumber : NSObject
 

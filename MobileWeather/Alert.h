@@ -6,7 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AlertType.h"
+
+@class AlertType;
+
 
 @interface Alert : NSObject
 

@@ -6,7 +6,14 @@
 //
 
 #import "WeatherDataManager.h"
+
+#import "Notifications.h"
 #import "Settings.h"
+#import "WeatherLocation.h"
+#import "WeatherConditions.h"
+#import "WeatherLanguage.h"
+#import "Forecast.h"
+#import "Alert.h"
 
 @interface WeatherDataManager()
 
@@ -36,7 +43,7 @@
         // copy the unit value that is saved in the settings app.
         [self setLastKnownUnit:[self unit]];
         
-        [center addObserver:self selector:@selector(handleLocationUdpate:) name:MobileWeatherLocationUpdateNotification object:nil];
+        [center addObserver:self selector:@selector(handleLocationUpdate:) name:MobileWeatherLocationUpdateNotification object:nil];
         [center addObserver:self selector:@selector(handleWeatherDataUpdate:) name:MobileWeatherDataUpdatedNotification object:nil];
         [center addObserver:self selector:@selector(handleUserDefaultsUpdate:) name:NSUserDefaultsDidChangeNotification object:nil];
     }
@@ -48,7 +55,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)handleLocationUdpate:(NSNotification *)notification {
+- (void)handleLocationUpdate:(NSNotification *)notification {
     WeatherLocation *location = [[notification userInfo] objectForKey:@"location"];
     [self setCurrentLocation:location];
 }

@@ -7,6 +7,9 @@
 
 #import "PercentageNumber.h"
 
+#import "Localization.h"
+#import "UnitConverter.h"
+
 @implementation PercentageNumber
 
 - (UnitPercentageType)percentageUnit {

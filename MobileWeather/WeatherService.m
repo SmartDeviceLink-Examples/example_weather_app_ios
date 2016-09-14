@@ -6,7 +6,10 @@
 //
 
 #import "WeatherService.h"
+
+#import "Notifications.h"
 #import "Settings.h"
+#import "WeatherLanguage.h"
 
 @interface WeatherService () <UIAlertViewDelegate>
 

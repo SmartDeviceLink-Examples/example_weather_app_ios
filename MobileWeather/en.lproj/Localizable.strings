@@ -53,3 +53,147 @@
 "units.speed.kilometer-hour.full" = "kilometer(s) per hour";
 "units.speed.mile-hour.short" = "mph";
 "units.speed.mile-hour.full" = "mile(s) per hour";
+
+/****************************/
+/* Static show messages */
+"show.welcome.field1" = "Welcome to";
+"show.welcome.field2" = "MobileWeather";
+"show.welcome.field3" = "";
+"show.welcome.field4" = "";
+
+/****************************/
+/* Static speak messages. */
+"speak.welcome" = "welcome to mobile weather";
+
+/****************************/
+/* Static alert messages */
+"alert.no-conditions.field1" = "Conditions";
+"alert.no-conditions.field2" = "Not Available";
+"alert.no-conditions.prompt" = "current conditions not available";
+
+"alert.no-forecast.field1" = "Forecast";
+"alert.no-forecast.field2" = "Not Available";
+"alert.no-forecast.prompt" = "forecast not available";
+
+"alert.no-alerts.field1" = "No";
+"alert.no-alerts.field2" = "Alerts";
+"alert.no-alerts.prompt" = "no alerts at this time";
+
+/****************************/
+/* Current conditions section. */
+/* %1$ = title, %2$ = temperature, %3$ = humidity,  %4$ = wind speed */
+"conditions.speak" = "it is currently %1$@, and %2$@ with %3$@ humidity, and a wind speed of %4$@";
+/* %1$ = temperature, %2$ = humidity, %3$ = wind speed */
+"conditions.show" = "%1$@, %2$@, %3$@";
+/* This is a regular expression pattern used to get a short version of the condition summary. */
+"conditions.title.short" = "^((possible )?((light|heavy|dangerously|partly|mostly|mixed) )?\\b[^\\s]+\\b)";
+
+/****************************/
+/* In-App menu commands */
+"cmd.current-conditions" = "Current conditions";
+"cmd.daily-forecast" = "Daily forecast";
+"cmd.hourly-forecast" = "Hourly forecast";
+"cmd.alerts" = "Alerts";
+"cmd.change-units" = "Change units";
+"cmd.next" = "Next";
+"cmd.previous" = "Previous";
+"cmd.show-list" = "Show list";
+"cmd.show-message" = "Show message";
+"cmd.back" = "Back";
+
+/****************************/
+/* VR commands */
+"vr.current" = "current";
+"vr.conditions" = "conditions";
+"vr.current-conditions" = "current conditions";
+"vr.show-conditions" = "show conditions";
+"vr.show-current-conditions" = "show current conditions";
+"vr.daily" = "daily";
+"vr.daily-forecast" = "daily forecast";
+"vr.show-daily-forecast" = "show daily forecast";
+"vr.hourly" = "hourly";
+"vr.hourly-forecast" = "hourly forecast";
+"vr.show-hourly-forecast" = "show hourly forecast";
+"vr.units" = "units";
+"vr.change-units" = "change units";
+"vr.metric" = "metric";
+"vr.imperial" = "imperial";
+"vr.next" = "next";
+"vr.previous" = "previous";
+"vr.back" = "back";
+"vr.list" = "list";
+"vr.show-list" = "show list";
+"vr.now" = "now";
+"vr.today" = "today";
+"vr.tomorrow" = "tomorrow";
+"vr.alerts" = "alerts";
+"vr.show-alerts" = "show alerts";
+"vr.message" = "message";
+"vr.show-message" = "show message";
+
+/****************************/
+/* Softbuttons */
+"sb.current" = "Current";
+"sb.daily" = "Daily";
+"sb.hourly" = "Hourly";
+"sb.alerts" = "Alerts";
+"sb.list" = "List";
+"sb.message" = "Message";
+"sb.back" = "Back";
+
+/****************************/
+/* weather alerts section   */
+"weather-alerts.format.date-time.show" = "MM/d h a";
+"weather-alerts.format.date-time.speak" = "d'. of' MMMM, h a";
+/* %1$ = title, %2$ = date expiration */
+"weather-alerts.speak" = "%1$@ until %2$@";
+
+/****************************/
+/* ChoiceSet */
+"choice.units.imperial" = "Imperial";
+"choice.units.metric" = "Metric";
+
+/****************************/
+/* PerformInteraction  */
+"pi.units.text" = "Change units";
+"pi.units.initial-prompt" = "please select units in metric or imperial";
+"pi.units.help-prompt" = "metric, imperial";
+"pi.units.timeout-prompt" = "metric, imperial";
+"pi.daily-forecast.text" = "Select day";
+"pi.daily-forecast.initial-prompt" = "please select a day of the forecast";
+"pi.daily-forecast.help-prompt" = "a day of week, like monday, tuesday, or today, tomorrow";
+"pi.daily-forecast.timeout-prompt" = "a day of week, today, tomorrow";
+"pi.hourly-forecast.text" = "Select hour";
+"pi.hourly-forecast.initial-prompt" = "please select an hour of the forecast";
+"pi.hourly-forecast.help-prompt" = "an hour, like 11 am, or now";
+"pi.hourly-forecast.timeout-prompt" = "an hour, now";
+
+/****************************/
+/* Daily forecast section. */
+"forecast.daily.choice.show" = "EEEE";
+"forecast.daily.choice.speak" = "EEEE";
+"forecast.daily.format.date-time.show" = "MM/d";
+"forecast.daily.format.date-time.speak" = "MMMM d";
+"forecast.daily.format.week-day.show" = "E";
+"forecast.daily.format.week-day.speak" = "EEEE";
+/* %1$ = week-day, %2$ = title (shortened) */
+"forecast.daily.show.field1" = "%1$@: %2$@";
+/* %1$ = min temperature, %2$ = max temperature, %3$ = temperature unit, %4$ = humidity, %5$ = precipitation chance */
+"forecast.daily.show.field2" = "%1$.0f - %2$.0f %3$@, %4$@, %5$@";
+/* %1$ = week-day, %2$ = title, %3$ = min temperature, %4$ = max temperature, %5$ = temperature unit, %6$ = humidity, %7$ = precipitation chance */
+"forecast.daily.speak" = "%1$@ it will be %2$@, from %3$.0f to %4$.0f %5$@ with %6$@ humidity, and %7$@ precipitation chance";
+
+/****************************/
+/* Hourly forecast section. */
+"forecast.hourly.choice.show" = "MM/d h a";
+"forecast.hourly.choice.speak" = "h a";
+"forecast.hourly.format.date-time.show" = "h a";
+"forecast.hourly.format.date-time.speak" = "h a";
+"forecast.hourly.format.week-day.show" = "E";
+"forecast.hourly.format.week-day.speak" = "EEEE";
+/* %1$ = date-time, %2$ = title (shortened) */
+"forecast.hourly.show.field1" = "%1$@: %2$@";
+/* %1$ = temperature, %2$ = humidity, %3$ = precipitation chance */
+"forecast.hourly.show.field2" = "%1$@, %2$@, %3$@";
+/* %1$ = date-time, %2$ = title, %3$ = temperature, %4$ = humidity, %5$ = precipitation chance */
+"forecast.hourly.speak" = "at %1$@ it will be %2$@, and %3$@ with %4$@ humidity, and %5$@ precipitation chance";

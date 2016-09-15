@@ -53,3 +53,147 @@
 "units.speed.kilometer-hour.full" = "kilómetro(s) por hora";
 "units.speed.mile-hour.short" = "mph";
 "units.speed.mile-hour.full" = "milla(s) por hora";
+
+/****************************/
+/* Static show messages */
+"show.welcome.field1" = "Bienvenido a";
+"show.welcome.field2" = "MobileWeather";
+"show.welcome.field3" = "";
+"show.welcome.field4" = "";
+
+/****************************/
+/* Static speak messages. */
+"speak.welcome" = "bienvenido a móbail wécer";
+
+/****************************/
+/* Static alert messages */
+"alert.no-conditions.field1" = "Condiciones";
+"alert.no-conditions.field2" = "no disponibles";
+"alert.no-conditions.prompt" = "condiciones actuales no disponibles";
+
+"alert.no-conditions.field1" = "Condiciones";
+"alert.no-conditions.field2" = "no disponibles";
+"alert.no-conditions.prompt" = "condiciones actuales no disponibles";
+
+"alert.no-alerts.field1" = "No";
+"alert.no-alerts.field2" = "Alertas";
+"alert.no-alerts.prompt" = "Actualmente no hay alertas";
+
+/****************************/
+/* Current conditions section. */
+/* %1$ = title, %2$ = temperature, %3$ = humidity,  %4$ = wind speed */
+"conditions.speak" = "Actualmente está %1$@, y %2$@ con %3$@ de humedad, y una velocidad de viento de %4$@";
+/* %1$ = temperature, %2$ = humidity, %3$ = wind speed */
+"conditions.show" = "%1$@, %2$@, %3$@";
+/* This is a regular expression pattern used to get a short version of the condition summary. */
+"conditions.title.short" = "^((posible(s)? )?((fuerte|poco|peligrosamente|parcialmente|mayormente)(s)? )?\\b[^\\s]+\\b( (ligera(s)?|mixta))?)";
+
+/****************************/
+/* In-App menu commands */
+"cmd.current-conditions" = "Condiciones actuales";
+"cmd.daily-forecast" = "Pronóstico diario";
+"cmd.hourly-forecast" = "Pronóstico por hora";
+"cmd.alerts" = "Alertas";
+"cmd.change-units" = "Cambiar unidades";
+"cmd.next" = "Siguiente";
+"cmd.previous" = "Anterior";
+"cmd.show-list" = "Mostrar lista";
+"cmd.show-message" = "Mostrar mensaje";
+"cmd.back" = "Atrás";
+
+/****************************/
+/* VR commands */
+"vr.current" = "actuales";
+"vr.conditions" = "condiciones";
+"vr.current-conditions" = "condiciones actuales";
+"vr.show-conditions" = "mostrar condiciones";
+"vr.show-current-conditions" = "mostrar condiciones actuales";
+"vr.daily" = "diario";
+"vr.daily-forecast" = "pronóstico diario";
+"vr.show-daily-forecast" = "mostrar pronóstico diario";
+"vr.hourly" = "por hora";
+"vr.hourly-forecast" = "pronóstico por hora";
+"vr.show-hourly-forecast" = "mostrar pronóstico por hora";
+"vr.units" = "unidades";
+"vr.change-units" = "cambiar unidades";
+"vr.metric" = "métrico";
+"vr.imperial" = "imperial";
+"vr.next" = "siguiente";
+"vr.previous" = "anterior";
+"vr.back" = "atrás";
+"vr.list" = "lista";
+"vr.show-list" = "mostrar lista";
+"vr.now" = "ahora";
+"vr.today" = "hoy";
+"vr.tomorrow" = "mañana";
+"vr.alerts" = "alertas";
+"vr.show-alerts" = "mostrar alertas";
+"vr.message" = "mensaje";
+"vr.show-message" = "mostrar mensaje";
+
+/****************************/
+/* Softbuttons */
+"sb.current" = "Actual";
+"sb.daily" = "Diario";
+"sb.hourly" = "Hora";
+"sb.alerts" = "Alertas";
+"sb.list" = "Lista";
+"sb.message" = "Mensaje";
+"sb.back" = "Atrás";
+
+/****************************/
+/* weather alerts section */
+"weather-alerts.format.date-time.show" = "dd.MM HH:mm";
+"weather-alerts.format.date-time.speak" = "d 'de' MMMM H:mm 'horas'";
+/* %1$ = title, %2$ = date expiration */
+"weather-alerts.speak" = "%1$@ hasta %2$@";
+
+/****************************/
+/* ChoiceSet */
+"choice.units.imperial" = "Imperial";
+"choice.units.metric" = "Métrico";
+
+/****************************/
+/* PerformInteraction  */
+"pi.units.text" = "Cambiar unidades";
+"pi.units.initial-prompt" = "Por favor, elige unidades en métrico o imperial";
+"pi.units.help-prompt" = "métrico, imperial";
+"pi.units.timeout-prompt" = "métrico, imperial";
+"pi.daily-forecast.text" = "Elige dia";
+"pi.daily-forecast.initial-prompt" = "por favor, elige un dia del pronóstico";
+"pi.daily-forecast.help-prompt" = "un día de la semana, como lunes, martes, hoy, mañana";
+"pi.daily-forecast.timeout-prompt" = "un día de la semana, hoy, mañana";
+"pi.hourly-forecast.text" = "Elige hora";
+"pi.hourly-forecast.initial-prompt" = "por favor, elige un hora del pronóstico";
+"pi.hourly-forecast.help-prompt" = "un hora, como 11 horas, ahora";
+"pi.hourly-forecast.timeout-prompt" = "un hora, ahora";
+
+/****************************/
+/* Daily forecast section. */
+"forecast.daily.choice.show" = "EEEE";
+"forecast.daily.choice.speak" = "EEEE";
+"forecast.daily.format.date-time.show" = "dd.MM";
+"forecast.daily.format.date-time.speak" = "d 'de' MMMM";
+"forecast.daily.format.week-day.show" = "E";
+"forecast.daily.format.week-day.speak" = "EEEE";
+/* %1$ = week-day, %2$ = title (shortened) */
+"forecast.daily.show.field1" = "%1$@: %2$@";
+/* %1$ = min temperature, %2$ = max temperature, %3$ = temperature unit, %4$ = humidity, %5$ = precipitation chance */
+"forecast.daily.show.field2" = "%1$.0f - %2$.0f %3$@, %4$@, %5$@";
+/* %1$ = week-day, %2$ = title, %3$ = min temperature, %4$ = max temperature, %5$ = temperature unit, %6$ = humidity, %7$ = precipitation chance */
+"forecast.daily.speak" = "%1$@ está %2$@, de %3$.0f a %4$.0f %5$@, con %6$@ de humedad, y %7$@ de probabilidad de precipitación";
+
+/****************************/
+/* Hourly forecast section. */
+"forecast.hourly.choice.show" = "dd.MM HH:mm";
+"forecast.hourly.choice.speak" = "H 'horas'";
+"forecast.hourly.format.date-time.show" = "HH:00";
+"forecast.hourly.format.date-time.speak" = "H 'horas'";
+"forecast.hourly.format.week-day.show" = "E";
+"forecast.hourly.format.week-day.speak" = "EEEE";
+/* %1$ = date-time, %2$ = title (shortened) */
+"forecast.hourly.show.field1" = "%1$@: %2$@";
+/* %1$ = temperature, %2$ = humidity, %3$ = precipitation chance */
+"forecast.hourly.show.field2" = "%1$@, %2$@, %3$@";
+/* %1$ = date-time, %2$ = title, %3$ = temperature, %4$ = humidity, %5$ = precipitation chance */
+"forecast.hourly.speak" = "a %1$@ está %2$@, y %3$@, con %4$@ de humedad, y %5$@ de probabilidad de precipitación";

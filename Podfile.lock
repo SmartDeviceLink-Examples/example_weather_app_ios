@@ -1,12 +1,22 @@
 PODS:
-  - SmartDeviceLink-iOS (4.3.0-rc.2)
+  - SmartDeviceLink-iOS (4.3.0-rc.3)
 
 DEPENDENCIES:
-  - SmartDeviceLink-iOS (= 4.3.0-rc.2)
+  - SmartDeviceLink-iOS (from `https://www.github.com/smartdevicelink/sdl_ios.git`, branch `release/4.3.0`)
+
+EXTERNAL SOURCES:
+  SmartDeviceLink-iOS:
+    :branch: release/4.3.0
+    :git: https://www.github.com/smartdevicelink/sdl_ios.git
+
+CHECKOUT OPTIONS:
+  SmartDeviceLink-iOS:
+    :commit: 2062b305214a196b1aa3fe449421a321de255071
+    :git: https://www.github.com/smartdevicelink/sdl_ios.git
 
 SPEC CHECKSUMS:
-  SmartDeviceLink-iOS: 9946587353cd35d6d0be90d4851376952a4a1432
+  SmartDeviceLink-iOS: 75dc17ffeecf7766e4780bf676733bd9c6b871e8
 
-PODFILE CHECKSUM: e9884ca934079f3cfb0b68402b3ac12eeadb3b96
+PODFILE CHECKSUM: fb3ccd41ad95b43a544cbab758ab377d64686c8f
 
-COCOAPODS: 1.1.0.rc.1
+COCOAPODS: 1.1.0.rc.2

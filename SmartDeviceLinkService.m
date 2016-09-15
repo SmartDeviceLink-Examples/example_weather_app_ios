@@ -109,7 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
     SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration debugConfigurationWithAppName:@"MobileWeather" appId:@"330533107" ipAddress:@"192.168.1.249" port:2776];
     lifecycleConfig.ttsName = [SDLTTSChunkFactory buildTTSChunksFromSimple:NSLocalizedString(@"app.tts-name", nil)];
     lifecycleConfig.voiceRecognitionCommandNames = @[NSLocalizedString(@"app.vr-synonym", nil)];
-    lifecycleConfig.appIcon = [SDLArtwork persistentArtworkWithImage:[UIImage imageNamed:@"AppIcon"] name:@"AppIcon" asImageFormat:SDLArtworkImageFormatPNG];
+    lifecycleConfig.appIcon = [SDLArtwork persistentArtworkWithImage:[UIImage imageNamed:@"AppIcon60x60@2x"] name:@"AppIcon" asImageFormat:SDLArtworkImageFormatPNG];
     lifecycleConfig.logFlags = SDLLogOutputConsole;
     
     SDLConfiguration *config = [SDLConfiguration configurationWithLifecycle:lifecycleConfig lockScreen:[SDLLockScreenConfiguration enabledConfiguration]];
@@ -928,6 +928,10 @@ NS_ASSUME_NONNULL_BEGIN
     
     __weak typeof(self) weakSelf = self;
     request.handler = ^(SDLRPCNotification *notification) {
+        if (![notification isMemberOfClass:[SDLOnButtonPress class]]) {
+            return;
+        }
+        
         [weakSelf repeatWeatherInformation];
     };
     
@@ -947,6 +951,10 @@ NS_ASSUME_NONNULL_BEGIN
         [button setType:[SDLSoftButtonType TEXT]];
         [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
         button.handler = ^(SDLRPCNotification *notification) {
+            if (![notification isMemberOfClass:[SDLOnButtonPress class]]) {
+                return;
+            }
+            
             [weakSelf sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES];
         };
         
@@ -960,6 +968,10 @@ NS_ASSUME_NONNULL_BEGIN
         [button setType:[SDLSoftButtonType TEXT]];
         [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
         button.handler = ^(SDLRPCNotification *notification) {
+            if (![notification isMemberOfClass:[SDLOnButtonPress class]]) {
+                return;
+            }
+            
             [weakSelf sendForecastList:[WeatherDataManager sharedManager].dailyForecast infoType:[InfoType DAILY_FORECAST] withSpeak:YES];
         };
         
@@ -973,6 +985,10 @@ NS_ASSUME_NONNULL_BEGIN
         [button setType:[SDLSoftButtonType TEXT]];
         [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
         button.handler = ^(SDLRPCNotification *notification) {
+            if (![notification isMemberOfClass:[SDLOnButtonPress class]]) {
+                return;
+            }
+            
             [weakSelf sendForecastList:[WeatherDataManager sharedManager].hourlyForecast infoType:[InfoType HOURLY_FORECAST] withSpeak:YES];
         };
         
@@ -986,6 +1002,10 @@ NS_ASSUME_NONNULL_BEGIN
         [button setType:[SDLSoftButtonType TEXT]];
         [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
         button.handler = ^(SDLRPCNotification *notification) {
+            if (![notification isMemberOfClass:[SDLOnButtonPress class]]) {
+                return;
+            }
+            
             [weakSelf sendAlertList:[WeatherDataManager sharedManager].alerts withSpeak:YES];
         };
         
@@ -1032,6 +1052,10 @@ NS_ASSUME_NONNULL_BEGIN
             [button setSoftButtonID:@(BTNID_LIST_NEXT)];
             [button setText:@">"];
             button.handler = ^(SDLRPCNotification *notification) {
+                if (![notification isMemberOfClass:[SDLOnButtonPress class]]) {
+                    return;
+                }
+                
                 InfoType *infoType = [weakSelf currentInfoType];
                 if ([weakSelf currentInfoTypeListIndex] + 1 < [[self currentInfoTypeList] count]) {
                     NSInteger index = [self currentInfoTypeListIndex] + 1;
@@ -1057,12 +1081,20 @@ NS_ASSUME_NONNULL_BEGIN
             [button setSoftButtonID:@(BTNID_LIST_SHOW_LIST)];
             [button setText:[[self localization] stringForKey:@"sb.list"]];
             button.handler = ^(SDLRPCNotification *notification) {
+                if (![notification isMemberOfClass:[SDLOnButtonPress class]]) {
+                    return;
+                }
+                
                 [weakSelf performForecastInteractionWithMode:[SDLInteractionMode MANUAL_ONLY]];
             };
         } else if ([[InfoType ALERTS] isEqual:infoType]) {
             [button setSoftButtonID:@(BTNID_LIST_SHOW_MESSAGE)];
             [button setText:[[self localization] stringForKey:@"sb.message"]];
             button.handler = ^(SDLRPCNotification *notification) {
+                if (![notification isMemberOfClass:[SDLOnButtonPress class]]) {
+                    return;
+                }
+                
                 [weakSelf sendAlertMessageAtIndex:[weakSelf currentInfoTypeListIndex]];
             };
         }
@@ -1079,6 +1111,10 @@ NS_ASSUME_NONNULL_BEGIN
         [button setType:[SDLSoftButtonType TEXT]]; 
         [button setSystemAction:[SDLSystemAction DEFAULT_ACTION]];
         button.handler = ^(SDLRPCNotification *notification) {
+            if (![notification isMemberOfClass:[SDLOnButtonPress class]]) {
+                return;
+            }
+            
             [weakSelf closeListInfoType:[weakSelf currentInfoType]];
         };
         

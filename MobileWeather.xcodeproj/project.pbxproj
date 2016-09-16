@@ -687,6 +687,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6C85981B4F3E1BA0417BE768 /* Pods-MobileWeather.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -708,6 +709,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 13038C54B36FFD6A185D06C4 /* Pods-MobileWeather.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

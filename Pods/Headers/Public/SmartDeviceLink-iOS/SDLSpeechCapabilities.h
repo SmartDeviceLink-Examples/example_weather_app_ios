@@ -1,1 +1,0 @@
-../../../SmartDeviceLink-iOS/SmartDeviceLink/SDLSpeechCapabilities.h

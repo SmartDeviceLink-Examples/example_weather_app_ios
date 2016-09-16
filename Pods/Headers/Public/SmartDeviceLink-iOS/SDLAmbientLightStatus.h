@@ -1,1 +1,0 @@
-../../../SmartDeviceLink-iOS/SmartDeviceLink/SDLAmbientLightStatus.h

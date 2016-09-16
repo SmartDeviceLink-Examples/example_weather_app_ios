@@ -1,1 +1,0 @@
-../../../SmartDeviceLink-iOS/SmartDeviceLink/SDLVehicleDataNotificationStatus.h

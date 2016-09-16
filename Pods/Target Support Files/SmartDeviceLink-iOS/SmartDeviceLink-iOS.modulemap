@@ -1,0 +1,6 @@
+framework module SmartDeviceLink_iOS {
+  umbrella header "SmartDeviceLink-iOS-umbrella.h"
+
+  export *
+  module * { export * }
+}

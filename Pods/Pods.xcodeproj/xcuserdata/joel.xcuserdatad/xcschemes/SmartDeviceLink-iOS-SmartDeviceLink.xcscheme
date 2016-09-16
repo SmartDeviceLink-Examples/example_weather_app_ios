@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '819F173FEC5C5D8E59392067F514D718'
+               BlueprintIdentifier = '1CF31F17913359260A5B744B9D713B2D'
                BlueprintName = 'SmartDeviceLink-iOS-SmartDeviceLink'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'SmartDeviceLink.bundle'>

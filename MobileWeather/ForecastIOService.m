@@ -17,7 +17,7 @@
 #import "UnitType.h"
 #import "WeatherLanguage.h"
 
-#define FORECASTIO_BASE_URL @"https://api.forecast.io/forecast"
+#define FORECASTIO_BASE_URL @"https://api.darksky.net/forecast"
 #define FORECASTIO_UNIT @"units=si"
 #define FORECASTIO_EXCLUDE @"exclude=minutely,flags"
 #define FORECASTIO_LANG @"lang=%@"

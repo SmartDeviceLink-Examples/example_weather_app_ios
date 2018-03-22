@@ -26,9 +26,8 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        [self setServiceName:@"Forecast.IO"];
-        [self setServiceURL:[NSURL URLWithString:@"https://developer.forecast.io/"]];
-        [self setServiceLogo:[UIImage imageNamed:@"logo-forecast"]];
+        self.serviceName = @"DarkSky";
+        self.serviceURL = [NSURL URLWithString:@"https://darksky.net/dev"];
     }
     
     return self;
@@ -38,7 +37,7 @@
     NSMutableString *urlstring = [NSMutableString stringWithCapacity:2048];
     [urlstring appendString:FORECASTIO_BASE_URL];
     [urlstring appendString:@"/"];
-    [urlstring appendString:[self serviceApiKey]];
+    [urlstring appendString:self.serviceApiKey];
     [urlstring appendString:@"/"];
     [urlstring appendString:location.gpsLocation.latitude];
     [urlstring appendString:@","];
@@ -48,7 +47,7 @@
     [urlstring appendString:@"&"];
     [urlstring appendString:FORECASTIO_EXCLUDE];
     [urlstring appendString:@"&"];
-    [urlstring appendString:[NSString stringWithFormat:FORECASTIO_LANG, [[language value] lowercaseString]]];
+    [urlstring appendString:[NSString stringWithFormat:FORECASTIO_LANG, language.value.lowercaseString]];
     
     NSURL *url = [NSURL URLWithString:urlstring];
     return url;
@@ -84,29 +83,29 @@
                     alerts = [ForecastIOProcessor alerts:root];
                     
                     // first add the language to the user info object
-                    [userInfo setObject:language forKey:@"language"];
+                    userInfo[@"language"] = language;
                     
                     if (conditions != nil) {
-                        [userInfo setObject:conditions forKey:@"weatherConditions"];
+                        userInfo[@"weatherConditions"] = conditions;
                     }
                     
                     if (dailyForecast != nil) {
-                        [userInfo setObject:dailyForecast forKey:@"dailyForecast"];
+                        userInfo[@"dailyForecast"] = dailyForecast;
                     }
                     
                     if (hourlyForecast != nil) {
-                        [userInfo setObject:hourlyForecast forKey:@"hourlyForecast"];
+                        userInfo[@"hourlyForecast"] = hourlyForecast;
                     }
                     
                     if (alerts != nil) {
-                        [userInfo setObject:alerts forKey:@"alerts"];
+                        userInfo[@"alerts"] = alerts;
                     }
                 }
             }
         }
     }
     
-    if ([userInfo count] > 0) {
+    if (userInfo.count > 0) {
         [center postNotificationName:MobileWeatherDataUpdatedNotification object:self userInfo:userInfo];
         return YES;
     }

@@ -11,15 +11,17 @@
 @interface UnitNumber : NSObject
 
 /** Returns the unit of the value represented by the number. */
-@property (readonly) NSUInteger unit;
+@property (assign, nonatomic, readonly) NSUInteger unit;
 
 /** Returns the number of the value. */
-@property (readonly) NSNumber *number;
+@property (copy, nonatomic, readonly) NSNumber *number;
+
+-(instancetype)init NS_UNAVAILABLE;
 
 /** Creates a new object using a number and the unit that describes the value. */
 + (instancetype)numberWithNumber:(NSNumber *)number withUnitValue:(NSUInteger)unit;
 
 /** Creates a new object using a number and the unit that describes the value. */
-- (instancetype)initWithNumber:(NSNumber *)number withUnitValue:(NSUInteger)unit;
+- (instancetype)initWithNumber:(NSNumber *)number withUnitValue:(NSUInteger)unit NS_DESIGNATED_INITIALIZER;
 
 @end

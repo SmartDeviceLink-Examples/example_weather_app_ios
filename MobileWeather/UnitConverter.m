@@ -73,7 +73,7 @@
             return nil;
     }
     
-    return @([length doubleValue] * (multiplierFrom * multiplierTo));
+    return @(length.doubleValue * (multiplierFrom * multiplierTo));
 }
 
 + (NSNumber *)convertTemperature:(NSNumber *)temperature from:(UnitTemperatureType)fromUnit to:(UnitTemperatureType)toUnit {
@@ -85,11 +85,11 @@
     
     if (fromUnit == UnitTemperatureCelsius && toUnit == UnitTemperatureFahrenheit) {
         // from celsius to fahrenheit
-        return @(([temperature doubleValue] * 9/5) + 32);
+        return @((temperature.doubleValue * 9/5) + 32);
     }
     else if (fromUnit == UnitTemperatureFahrenheit && toUnit == UnitTemperatureCelsius) {
         // from fahrenheit to celsius
-        return @(([temperature doubleValue] - 32) * 5/9);
+        return @((temperature.doubleValue - 32) * 5/9);
     }
     else {
         return nil;
@@ -135,7 +135,7 @@
             return nil;
     }
     
-    return @([speed doubleValue] * (multiplierFrom * multiplierTo));
+    return @(speed.doubleValue * (multiplierFrom * multiplierTo));
 }
 
 + (NSNumber *)convertTime:(NSNumber *)time from:(UnitTimeType)fromUnit to:(UnitTimeType)toUnit {
@@ -183,7 +183,7 @@
             return nil;
     }
     
-    return @([time doubleValue] * (multiplierFrom * multiplierTo));
+    return @(time.doubleValue * (multiplierFrom * multiplierTo));
 }
 
 + (NSNumber *)convertPercentage:(NSNumber *)percentage from:(UnitPercentageType)fromUnit to:(UnitPercentageType)toUnit {
@@ -217,7 +217,7 @@
             return nil;
     }
     
-    return @([percentage doubleValue] * (multiplierFrom * multiplierTo));
+    return @(percentage.doubleValue * (multiplierFrom * multiplierTo));
 }
 
 @end

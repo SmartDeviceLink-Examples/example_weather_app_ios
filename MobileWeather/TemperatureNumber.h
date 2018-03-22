@@ -15,13 +15,13 @@
 @interface TemperatureNumber : UnitNumber
 
 /** Returns the unit of the representing number. */
-@property (readonly) UnitTemperatureType temperatureUnit;
+@property (assign, nonatomic, readonly) UnitTemperatureType temperatureUnit;
 
 /** Creates a new object using a number and the unit that describes the value. */
 + (instancetype)numberWithNumber:(NSNumber *)number withUnit:(UnitTemperatureType)unit;
 
 /** Creates a new object using a number and the unit that describes the value. */
-- (instancetype)initWithNumber:(NSNumber *)number withUnit:(UnitTemperatureType)unit;
+- (instancetype)initWithNumber:(NSNumber *)number withUnit:(UnitTemperatureType)unit NS_DESIGNATED_INITIALIZER;
 
 /** Returns the value represented in the desired unit. */
 - (double)doubleValueForUnit:(UnitTemperatureType)unit;

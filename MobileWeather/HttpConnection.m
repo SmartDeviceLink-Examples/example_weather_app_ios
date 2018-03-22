@@ -26,8 +26,8 @@ static NSInteger HttpConnectionSuccessCodes[] = { 200, 201, 202, 203, 204, 205, 
     NSError *error;
     NSData *result;
     
-    [request setURL:url];
-    [request setTimeoutInterval:30.0];
+    request.URL = url;
+    request.timeoutInterval = 30.0;
     
     if ((requestMethod == HttpConnectionRequestMethodPUT || requestMethod == HttpConnectionRequestMethodPOST) && (contentData != nil)) {
 
@@ -39,13 +39,13 @@ static NSInteger HttpConnectionSuccessCodes[] = { 200, 201, 202, 203, 204, 205, 
         }
     
         [request setValue:@"en-US" forHTTPHeaderField:@"Content-Language"];
-        [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[contentData length]] forHTTPHeaderField:@"Content-Length"];
-        [request setHTTPBody:contentData];
+        [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)contentData.length] forHTTPHeaderField:@"Content-Length"];
+        request.HTTPBody = contentData;
     }
     
     result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
     
-    NSInteger responseCode = [response statusCode];
+    NSInteger responseCode = response.statusCode;
     // If it doesn't equal 'OK' or we performed a DELETE, return the code and message
     if (result == nil && ([self isResponseCodeSuccess:responseCode] == NO || requestMethod == HttpConnectionRequestMethodDELETE)) {
         result = [[NSString stringWithFormat:@"STATUS=%li:%@", (long)responseCode, [NSHTTPURLResponse localizedStringForStatusCode:responseCode]] dataUsingEncoding:NSUTF8StringEncoding];
@@ -68,7 +68,7 @@ static NSInteger HttpConnectionSuccessCodes[] = { 200, 201, 202, 203, 204, 205, 
     if (statusString != nil && [statusString hasPrefix:@"STATUS="]) {
         NSUInteger separator = [statusString rangeOfString:@":"].location;
         if (separator != NSNotFound) {
-            return [[statusString substringWithRange:NSMakeRange(7, separator - 7)] integerValue];
+            return [statusString substringWithRange:NSMakeRange(7, separator - 7)].integerValue;
         }
     }
     

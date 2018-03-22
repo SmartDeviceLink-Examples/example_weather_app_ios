@@ -5,5 +5,4 @@
  Copyright (c) 2013-2015 Ford Motor Company. All rights reserved.
 */
 
-"NSLocationAlwaysUsageDescription" = "This will enable the app to download weather conditions for your current location.";
-"NSLocationUsageDescription" = "This will enable the app to download weather conditions for your current location.";
+"NSLocationWhenInUseUsageDescription" = "This will enable the app to download weather conditions for your current location.";

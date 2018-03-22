@@ -4,39 +4,28 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>BiSON.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-MobileWeather.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>SmartDeviceLink-iOS-SmartDeviceLink.xcscheme</key>
+		<key>SmartDeviceLink-SmartDeviceLink.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>SmartDeviceLink-iOS.xcscheme</key>
+		<key>SmartDeviceLink.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
-	<dict>
-		<key>1CF31F17913359260A5B744B9D713B2D</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>61AD920BA6C458ED482BF9DB38A9951C</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>7B5B2FA61A0DBC9FA0ED50E525029327</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-	</dict>
+	<dict/>
 </dict>
 </plist>

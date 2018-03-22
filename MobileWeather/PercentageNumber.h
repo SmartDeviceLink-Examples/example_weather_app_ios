@@ -20,7 +20,7 @@
 + (instancetype)numberWithNumber:(NSNumber *)number withUnit:(UnitPercentageType)unit;
 
 /** Creates a new object using a number and the unit that describes the value. */
-- (instancetype)initWithNumber:(NSNumber *)number withUnit:(UnitPercentageType)unit;
+- (instancetype)initWithNumber:(NSNumber *)number withUnit:(UnitPercentageType)unit NS_DESIGNATED_INITIALIZER;
 
 /** Returns the value represented in the desired unit. */
 - (double)doubleValueForUnit:(UnitPercentageType)unit;

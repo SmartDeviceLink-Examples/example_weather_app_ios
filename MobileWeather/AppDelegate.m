@@ -25,7 +25,7 @@
     // Register every setting of the settings bundle and set it to its default value if it does not have any value set.
     [[NSUserDefaults standardUserDefaults] registerDefaultsFromSettingsBundle];
     
-    [self setMainViewController:[[self window] rootViewController]];
+    self.mainViewController = self.window.rootViewController;
     
     //connect & register service class to head unit.
     [[SmartDeviceLinkService sharedService] start];
@@ -35,10 +35,10 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // start the weather service
-    if ([[ForecastIOService sharedService] isStarted] == NO) {
+    if ([ForecastIOService sharedService].isStarted == NO) {
         [[ForecastIOService sharedService] start];
         // is it started? (API key etc. works)
-        if ([[ForecastIOService sharedService] isStarted]) {
+        if ([ForecastIOService sharedService].isStarted) {
             // Start the services
             [[LocationService sharedService] start];
             

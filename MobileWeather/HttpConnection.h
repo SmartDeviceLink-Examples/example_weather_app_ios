@@ -7,12 +7,12 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum : NSUInteger {
+typedef NS_ENUM(NSUInteger, HttpConnectionRequestMethod) {
     HttpConnectionRequestMethodGET,
     HttpConnectionRequestMethodPUT,
     HttpConnectionRequestMethodPOST,
     HttpConnectionRequestMethodDELETE,
-} HttpConnectionRequestMethod;
+};
 
 @interface HttpConnection : NSObject
 

@@ -87,7 +87,7 @@
 
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"%@::%@", NSStringFromClass([self class]), [self value]];
+    return [NSString stringWithFormat:@"%@::%@", NSStringFromClass([self class]), self.value];
 }
 
 @end

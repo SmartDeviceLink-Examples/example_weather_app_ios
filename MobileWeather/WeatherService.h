@@ -14,15 +14,11 @@
 
 @interface WeatherService : NSObject
 
-@property NSString *serviceName;
+@property (copy, nonatomic) NSString *serviceName;
+@property (copy, nonatomic) NSString *serviceApiKey;
+@property (copy, nonatomic) NSURL *serviceURL;
 
-@property NSString *serviceApiKey;
-
-@property UIImage *serviceLogo;
-
-@property NSURL *serviceURL;
-
-@property BOOL isStarted;
+@property (assign, nonatomic) BOOL isStarted;
 
 + (instancetype)sharedService;
 

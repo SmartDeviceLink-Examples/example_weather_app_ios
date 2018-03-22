@@ -14,14 +14,14 @@
 @implementation LengthNumber
 
 - (UnitLengthType)lengthUnit {
-    switch ([self unit]) {
+    switch (self.unit) {
         case UnitLengthMilliMeter:
         case UnitLengthMeter:
         case UnitLengthKiloMeter:
         case UnitLengthMile:
         case UnitLengthYard:
         case UnitLengthInch:
-            return [self unit];
+            return self.unit;
         default:
             return NSUIntegerMax;
     }
@@ -36,7 +36,7 @@
 }
 
 - (double)doubleValueForUnit:(UnitLengthType)unit {
-    return [[UnitConverter convertLength:[self number] from:[self lengthUnit] to:unit] doubleValue];
+    return [UnitConverter convertLength:self.number from:self.lengthUnit to:unit].doubleValue;
 }
 
 - (NSString *)stringValueForUnit:(UnitLengthType)unit shortened:(BOOL)shortened {
@@ -98,7 +98,7 @@
 
 - (NSString *)nameForUnit:(UnitLengthType)unit shortened:(BOOL)shortened localization:(Localization *)localization format:(NSString *)format {
     // convert the value to the desired unit and format this value. At the end convert it to float again.
-    double convertedValue = [[NSString stringWithFormat:format, [self doubleValueForUnit:unit]] floatValue];
+    double convertedValue = [NSString stringWithFormat:format, [self doubleValueForUnit:unit]].floatValue;
 
     NSMutableString *unitkey = [NSMutableString stringWithString:@"units.length"];
     

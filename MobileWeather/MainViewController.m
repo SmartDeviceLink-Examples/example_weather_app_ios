@@ -83,7 +83,10 @@
     NSDictionary *userInfo = notification.userInfo;
     WeatherConditions *conditions = userInfo[@"weatherConditions"];
     WeatherLanguage *language = userInfo[@"language"];
-    [self setWeatherConditions:conditions withLanguage:language];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self setWeatherConditions:conditions withLanguage:language];
+    });
 }
 
 - (void)setWeatherConditions:(WeatherConditions *)conditions withLanguage:(WeatherLanguage *)language {

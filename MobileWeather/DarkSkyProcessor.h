@@ -8,6 +8,6 @@
 #import <Foundation/Foundation.h>
 #import "WeatherProcessor.h"
 
-@interface ForecastIOProcessor : NSObject <WeatherProcessor>
+@interface DarkSkyProcessor : NSObject <WeatherProcessor>
 
 @end

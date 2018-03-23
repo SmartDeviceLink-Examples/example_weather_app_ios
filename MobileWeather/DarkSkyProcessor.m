@@ -5,7 +5,7 @@
 //  Copyright (c) 2013-2015 Ford Motor Company. All rights reserved.
 //
 
-#import "ForecastIOProcessor.h"
+#import "DarkSkyProcessor.h"
 
 #import "Forecast.h"
 #import "UnitConverter.h"
@@ -39,7 +39,7 @@
 #define KEY_TIMEZONE @"timezone"
 #define KEY_OFFSET @"offset"
 
-@implementation ForecastIOProcessor
+@implementation DarkSkyProcessor
 
 + (WeatherConditions *)weatherConditions:(NSDictionary *)json {
     WeatherConditions *conditions = nil;

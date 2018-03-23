@@ -9,7 +9,7 @@
 
 #import "NSUserDefaults+RegisterSettings.h"
 #import "Notifications.h"
-#import "ForecastIOService.h"
+#import "DarkSkyService.h"
 #import "LocationService.h"
 #import "SmartDeviceLinkService.h"
 
@@ -35,10 +35,10 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // start the weather service
-    if ([ForecastIOService sharedService].isStarted == NO) {
-        [[ForecastIOService sharedService] start];
+    if ([DarkSkyService sharedService].isStarted == NO) {
+        [[DarkSkyService sharedService] start];
         // is it started? (API key etc. works)
-        if ([ForecastIOService sharedService].isStarted) {
+        if ([DarkSkyService sharedService].isStarted) {
             // Start the services
             [[LocationService sharedService] start];
             
@@ -46,11 +46,6 @@
             [application setMinimumBackgroundFetchInterval:30.0];
         }
     }
-}
-
-- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    // Post notification that we want an update of the weather data
-    [[NSNotificationCenter defaultCenter] postNotificationName:MobileWeatherTimeUpdateNotification object:self userInfo:@{@"completion": completionHandler}];
 }
 
 @end

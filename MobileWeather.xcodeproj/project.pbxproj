@@ -11,7 +11,6 @@
 		1E555E3918466B6500B143B4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E555E3818466B6500B143B4 /* UIKit.framework */; };
 		1E555E4518466B6500B143B4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E555E4418466B6500B143B4 /* AppDelegate.m */; };
 		1E555E4B18466B6500B143B4 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E555E4A18466B6500B143B4 /* MainViewController.m */; };
-		1E555E741846749500B143B4 /* HttpConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E555E731846749500B143B4 /* HttpConnection.m */; };
 		5DB7EDC91D89CC2C00B62BB7 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5DB7EDC81D89CC2C00B62BB7 /* Settings.bundle */; };
 		5DB7EDCB1D89CC3800B62BB7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DB7EDCA1D89CC3800B62BB7 /* Images.xcassets */; };
 		6E04EAC31CF4E52A00115C2F /* Localization.m in Sources */ = {isa = PBXBuildFile; fileRef = E4BD7AEE1B023A2C006BE23B /* Localization.m */; };
@@ -20,8 +19,8 @@
 		AA62726DBC705DF2AB93C537 /* Pods_MobileWeather.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5FAE7A71ACD04B5A73D580C /* Pods_MobileWeather.framework */; };
 		E4059D6219FF7D4800C9996D /* WeatherDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E4059D6119FF7D4800C9996D /* WeatherDataManager.m */; };
 		E4059D6519FF7DA900C9996D /* WeatherService.m in Sources */ = {isa = PBXBuildFile; fileRef = E4059D6419FF7DA900C9996D /* WeatherService.m */; };
-		E4059D6819FF8AF500C9996D /* ForecastIOService.m in Sources */ = {isa = PBXBuildFile; fileRef = E4059D6719FF8AF500C9996D /* ForecastIOService.m */; };
-		E4059D7A19FFC21500C9996D /* ForecastIOProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = E4059D7919FFC21500C9996D /* ForecastIOProcessor.m */; };
+		E4059D6819FF8AF500C9996D /* DarkSkyService.m in Sources */ = {isa = PBXBuildFile; fileRef = E4059D6719FF8AF500C9996D /* DarkSkyService.m */; };
+		E4059D7A19FFC21500C9996D /* DarkSkyProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = E4059D7919FFC21500C9996D /* DarkSkyProcessor.m */; };
 		E42758301A0B75C000AA42B1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E427582D1A0B75C000AA42B1 /* main.m */; };
 		E436919A19F556D800678C1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E436919919F556D800678C1D /* Main.storyboard */; };
 		E43D8D5D1B32E50D00FB8717 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = E43D8D5F1B32E50D00FB8717 /* Localizable.stringsdict */; };
@@ -69,8 +68,6 @@
 		1E555E4418466B6500B143B4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1E555E4918466B6500B143B4 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		1E555E4A18466B6500B143B4 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
-		1E555E721846749500B143B4 /* HttpConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpConnection.h; sourceTree = "<group>"; };
-		1E555E731846749500B143B4 /* HttpConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpConnection.m; sourceTree = "<group>"; };
 		56FBAA80C3ED8E16429896CD /* Pods-MobileWeather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWeather.release.xcconfig"; path = "Pods/Target Support Files/Pods-MobileWeather/Pods-MobileWeather.release.xcconfig"; sourceTree = "<group>"; };
 		5DB7EDC81D89CC2C00B62BB7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = MobileWeather/Settings.bundle; sourceTree = SOURCE_ROOT; };
 		5DB7EDCA1D89CC3800B62BB7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MobileWeather/Images.xcassets; sourceTree = SOURCE_ROOT; };
@@ -81,10 +78,10 @@
 		E4059D6119FF7D4800C9996D /* WeatherDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherDataManager.m; sourceTree = "<group>"; };
 		E4059D6319FF7DA900C9996D /* WeatherService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherService.h; sourceTree = "<group>"; };
 		E4059D6419FF7DA900C9996D /* WeatherService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherService.m; sourceTree = "<group>"; };
-		E4059D6619FF8AF500C9996D /* ForecastIOService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForecastIOService.h; sourceTree = "<group>"; };
-		E4059D6719FF8AF500C9996D /* ForecastIOService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForecastIOService.m; sourceTree = "<group>"; };
-		E4059D7819FFC21500C9996D /* ForecastIOProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForecastIOProcessor.h; sourceTree = "<group>"; };
-		E4059D7919FFC21500C9996D /* ForecastIOProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForecastIOProcessor.m; sourceTree = "<group>"; };
+		E4059D6619FF8AF500C9996D /* DarkSkyService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DarkSkyService.h; sourceTree = "<group>"; };
+		E4059D6719FF8AF500C9996D /* DarkSkyService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DarkSkyService.m; sourceTree = "<group>"; };
+		E4059D7819FFC21500C9996D /* DarkSkyProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DarkSkyProcessor.h; sourceTree = "<group>"; };
+		E4059D7919FFC21500C9996D /* DarkSkyProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DarkSkyProcessor.m; sourceTree = "<group>"; };
 		E4059D7B19FFC9CC00C9996D /* UnitType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitType.h; sourceTree = "<group>"; };
 		E427582D1A0B75C000AA42B1 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = MobileWeather/main.m; sourceTree = SOURCE_ROOT; };
 		E427582E1A0B75C000AA42B1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MobileWeather/Info.plist; sourceTree = SOURCE_ROOT; };
@@ -203,21 +200,11 @@
 				E45EADF41AE92D9B0046D883 /* Localization */,
 				E491A6FF19F7C17200F82A4D /* Application */,
 				E491A70219F7C60500F82A4D /* UI */,
-				1E555E7A1846971A00B143B4 /* Connection */,
 				E48C4DAC19FE918F00A90448 /* Location */,
 				E48C4D8E19FE706F00A90448 /* Weather */,
 				E441104E19F555B800CF3A8F /* Supporting Files */,
 			);
 			path = MobileWeather;
-			sourceTree = "<group>";
-		};
-		1E555E7A1846971A00B143B4 /* Connection */ = {
-			isa = PBXGroup;
-			children = (
-				1E555E721846749500B143B4 /* HttpConnection.h */,
-				1E555E731846749500B143B4 /* HttpConnection.m */,
-			);
-			name = Connection;
 			sourceTree = "<group>";
 		};
 		5DB7EDC71D89CC0C00B62BB7 /* Utilities */ = {
@@ -309,10 +296,10 @@
 		E48C4D8D19FE705000A90448 /* DarkSky */ = {
 			isa = PBXGroup;
 			children = (
-				E4059D7819FFC21500C9996D /* ForecastIOProcessor.h */,
-				E4059D7919FFC21500C9996D /* ForecastIOProcessor.m */,
-				E4059D6619FF8AF500C9996D /* ForecastIOService.h */,
-				E4059D6719FF8AF500C9996D /* ForecastIOService.m */,
+				E4059D7819FFC21500C9996D /* DarkSkyProcessor.h */,
+				E4059D7919FFC21500C9996D /* DarkSkyProcessor.m */,
+				E4059D6619FF8AF500C9996D /* DarkSkyService.h */,
+				E4059D6719FF8AF500C9996D /* DarkSkyService.m */,
 			);
 			name = DarkSky;
 			sourceTree = "<group>";
@@ -521,13 +508,13 @@
 				6EF1FC581CF5EF3F009BE8E9 /* SmartDeviceLinkService.m in Sources */,
 				6E04EAC41CF4E55900115C2F /* Forecast.m in Sources */,
 				6E04EAC31CF4E52A00115C2F /* Localization.m in Sources */,
-				E4059D7A19FFC21500C9996D /* ForecastIOProcessor.m in Sources */,
+				E4059D7A19FFC21500C9996D /* DarkSkyProcessor.m in Sources */,
 				E4059D6219FF7D4800C9996D /* WeatherDataManager.m in Sources */,
 				E477F2611A8B79020028B59C /* PercentageNumber.m in Sources */,
 				E44F82451A7F86D20055AD77 /* RoadConditions.m in Sources */,
 				E48C4DA719FE840800A90448 /* ImageProcessor.m in Sources */,
 				E48C4DA319FE7E9E00A90448 /* WeatherConditions.m in Sources */,
-				E4059D6819FF8AF500C9996D /* ForecastIOService.m in Sources */,
+				E4059D6819FF8AF500C9996D /* DarkSkyService.m in Sources */,
 				E4780C221A35E6D200B194E7 /* UnitConverter.m in Sources */,
 				E477F2551A8B526E0028B59C /* UnitNumber.m in Sources */,
 				E4C5B2E11AEE24AC0056E934 /* WeatherLanguage.m in Sources */,
@@ -543,7 +530,6 @@
 				E44F82411A7F84E10055AD77 /* AlertType.m in Sources */,
 				E477F2581A8B567E0028B59C /* LengthNumber.m in Sources */,
 				E4C5B2DE1AEE248C0056E934 /* EnumType.m in Sources */,
-				1E555E741846749500B143B4 /* HttpConnection.m in Sources */,
 				E42758301A0B75C000AA42B1 /* main.m in Sources */,
 				E48C4D9619FE7D1400A90448 /* Alert.m in Sources */,
 				E4BD7AED1B02338C006BE23B /* NSBundle+Language.m in Sources */,

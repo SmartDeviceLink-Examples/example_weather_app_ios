@@ -8,6 +8,6 @@
 #import <Foundation/Foundation.h>
 #import "WeatherService.h"
 
-@interface ForecastIOService : WeatherService
+@interface DarkSkyService : WeatherService
 
 @end

@@ -22,6 +22,6 @@
 + (instancetype)numberWithNumber:(NSNumber *)number withUnitValue:(NSUInteger)unit;
 
 /** Creates a new object using a number and the unit that describes the value. */
-- (instancetype)initWithNumber:(NSNumber *)number withUnitValue:(NSUInteger)unit NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithNumber:(NSNumber *)number withUnitValue:(NSUInteger)unit;
 
 @end

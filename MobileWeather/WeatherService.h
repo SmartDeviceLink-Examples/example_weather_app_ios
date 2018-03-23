@@ -27,6 +27,6 @@
 
 - (NSURL *)urlForLocation:(WeatherLocation *)location forLanguage:(WeatherLanguage *)language;
 
-- (BOOL)updateWeatherDataFromUrl:(NSURL *)url forLanguage:(WeatherLanguage *)language;
+- (void)updateWeatherDataFromUrl:(NSURL *)url forLanguage:(WeatherLanguage *)language;
 
 @end

@@ -13,9 +13,6 @@ extern NSString * const MobileWeatherLocationUpdateNotification;
 /** A notification taht informs observing receivers that the language settings have been changed. */
 extern NSString * const MobileWeatherLanguageUpdateNotification;
 
-/** A notification that informs observiing receivers about significant time updates. */
-extern NSString * const MobileWeatherTimeUpdateNotification;
-
 /** A notificaiton that informs observing receivers that weather data has been updated. */
 extern NSString * const MobileWeatherDataUpdatedNotification;
 

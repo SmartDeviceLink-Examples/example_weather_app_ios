@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
 /**
  Provides a simplified way to handle localization for a specific language that may not match the system language.
  */
@@ -86,3 +87,5 @@
 - (nullable id)objectForKeyedSubscript:(nullable NSString *)key;
 
 @end
+
+NS_ASSUME_NONNULL_END

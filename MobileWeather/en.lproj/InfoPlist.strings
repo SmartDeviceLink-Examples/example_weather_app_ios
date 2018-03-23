@@ -6,3 +6,5 @@
 */
 
 "NSLocationWhenInUseUsageDescription" = "This will enable the app to download weather conditions for your current location.";
+"NSLocationAlwaysUsageDescription" = "This will enable the app to download weather conditions for your current location.";
+"NSLocationUsageDescription" = "This will enable the app to download weather conditions for your current location.";

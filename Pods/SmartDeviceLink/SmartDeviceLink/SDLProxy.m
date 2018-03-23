@@ -251,7 +251,7 @@ static float DefaultConnectionTimeout = 45.0;
     @try {
         [self.protocol sendRPC:message];
     } @catch (NSException *exception) {
-        SDLLogE(@"Proxy: Failed to send RPC message: %@", message.name);
+        SDLLogE(@"Proxy: Failed to send RPC message: %@\nException: %@", message.name, exception.debugDescription);
     }
 }
 

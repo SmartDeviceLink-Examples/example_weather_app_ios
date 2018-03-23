@@ -7,7 +7,6 @@
 
 #import "ForecastIOService.h"
 
-#import "GPSLocation.h"
 #import "Notifications.h"
 #import "HttpConnection.h"
 #import "WeatherConditions.h"
@@ -17,10 +16,10 @@
 #import "UnitType.h"
 #import "WeatherLanguage.h"
 
-#define FORECASTIO_BASE_URL @"https://api.darksky.net/forecast"
-#define FORECASTIO_UNIT @"units=si"
-#define FORECASTIO_EXCLUDE @"exclude=minutely,flags"
-#define FORECASTIO_LANG @"lang=%@"
+NSString *const DarkSkyBaseURL = @"https://api.darksky.net/forecast";
+NSString *const DarkSkyUnit = @"units=si";
+NSString *const DarkSkyExclude = @"exclude=minutely,flags";
+NSString *const DarkSkyLanguage = @"lang=%@";
 
 @implementation ForecastIOService
 
@@ -35,19 +34,19 @@
 
 - (NSURL *)urlForLocation:(WeatherLocation *)location forLanguage:(WeatherLanguage *)language {
     NSMutableString *urlstring = [NSMutableString stringWithCapacity:2048];
-    [urlstring appendString:FORECASTIO_BASE_URL];
+    [urlstring appendString:DarkSkyBaseURL];
     [urlstring appendString:@"/"];
     [urlstring appendString:self.serviceApiKey];
     [urlstring appendString:@"/"];
-    [urlstring appendString:location.gpsLocation.latitude];
+    [urlstring appendString:[NSString stringWithFormat:@"%f", location.gpsLocation.coordinate.latitude]];
     [urlstring appendString:@","];
-    [urlstring appendString:location.gpsLocation.longitude];
+    [urlstring appendString:[NSString stringWithFormat:@"%f", location.gpsLocation.coordinate.longitude]];
     [urlstring appendString:@"?"];
-    [urlstring appendString:FORECASTIO_UNIT];
+    [urlstring appendString:DarkSkyUnit];
     [urlstring appendString:@"&"];
-    [urlstring appendString:FORECASTIO_EXCLUDE];
+    [urlstring appendString:DarkSkyExclude];
     [urlstring appendString:@"&"];
-    [urlstring appendString:[NSString stringWithFormat:FORECASTIO_LANG, language.value.lowercaseString]];
+    [urlstring appendString:[NSString stringWithFormat:DarkSkyLanguage, language.value.lowercaseString]];
     
     NSURL *url = [NSURL URLWithString:urlstring];
     return url;
@@ -66,7 +65,7 @@
     NSData *data;
     
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:4];
-    
+
     if (url) {
         data = [connection sendRequestForURL:url withMethod:HttpConnectionRequestMethodGET withData:nil ofType:@"application/json"];
         

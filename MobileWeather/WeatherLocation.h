@@ -7,16 +7,18 @@
 
 #import <Foundation/Foundation.h>
 
-@class GPSLocation;
+#import <CoreLocation/CoreLocation.h>
 
+@class GPSLocation;
 
 @interface WeatherLocation : NSObject
 
-@property (strong) NSString *country;
-@property (strong) NSString *state;
-@property (strong) NSString *city;
-@property (strong) NSString *zipCode;
-@property (strong) NSString *airportCode;
-@property (strong) GPSLocation *gpsLocation;
+@property (copy, nonatomic) NSString *country;
+@property (copy, nonatomic) NSString *state;
+@property (copy, nonatomic) NSString *city;
+@property (copy, nonatomic) NSString *zipCode;
+@property (copy, nonatomic) CLLocation *gpsLocation;
+
+- (instancetype)initWithCity:(NSString *)city state:(NSString *)state zipCode:(NSString *)zip country:(NSString *)country gpsLocation:(CLLocation *)location;
 
 @end

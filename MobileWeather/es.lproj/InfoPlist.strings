@@ -6,3 +6,5 @@
  */
 
 "NSLocationWhenInUseUsageDescription" = "Esto permitirá a la aplicación para descargar las pronóstico del tiempo de su ubicación actual.";
+"NSLocationAlwaysUsageDescription" = "Esto permitirá a la aplicación para descargar las pronóstico del tiempo de su ubicación actual.";
+"NSLocationUsageDescription" = "Esto permitirá a la aplicación para descargar las pronóstico del tiempo de su ubicación actual.";

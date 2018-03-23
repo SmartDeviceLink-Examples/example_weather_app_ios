@@ -6,3 +6,5 @@
  */
 
 "NSLocationWhenInUseUsageDescription" = "Dies ermöglicht es der App, Wetterdaten zu Ihrer aktuellen Position zu abzurufen.";
+"NSLocationAlwaysUsageDescription" = "Dies ermöglicht es der App, Wetterdaten zu Ihrer aktuellen Position zu abzurufen.";
+"NSLocationUsageDescription" = "Dies ermöglicht es der App, Wetterdaten zu Ihrer aktuellen Position zu abzurufen.";

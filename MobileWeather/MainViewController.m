@@ -25,7 +25,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *currentConditionsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *currentTempLabel;
 @property (weak, nonatomic) IBOutlet UILabel *windSpeedLabel;
-@property (weak, nonatomic) IBOutlet UILabel *humidityLabel;
+@property (weak, nonatomic) IBOutlet UILabel *precipitationChanceLabel;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *conditionIcon;
@@ -45,11 +45,8 @@
     NSDictionary *bundle = [NSBundle mainBundle].infoDictionary;
     NSString *bundleAppVersion = bundle[@"CFBundleShortVersionString"];
     NSString *bundleBuildVersion = bundle[@"CFBundleVersion"];
-
-    NSUInteger cputype = sizeof(void*) * 8;
-    NSString *cputypestring = [NSString stringWithFormat:@"%lu bit", (unsigned long)cputype];
     
-    self.versionLabel.text = [NSString stringWithFormat:@"%@: %@ (%@)", cputypestring, bundleAppVersion, bundleBuildVersion];
+    self.versionLabel.text = [NSString stringWithFormat:@"%@ (%@)", bundleAppVersion, bundleBuildVersion];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleLocationUpdate:) name:MobileWeatherLocationUpdateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleWeatherUpdate:) name:MobileWeatherDataUpdatedNotification object:nil];
@@ -58,10 +55,6 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (BOOL)shouldAutorotate {
-    return NO;
 }
 
 - (void)handleLocationUpdate:(NSNotification *)notification {
@@ -78,9 +71,8 @@
     NSString *locationText;
     
     if (location) {
-        locationText = [NSString stringWithFormat:@"%@, %@", location.country, location.city];
-    }
-    else {
+        locationText = [NSString stringWithFormat:@"%@, %@, %@", location.city, location.state, location.country];
+    } else {
         locationText = @"...";
     }
 
@@ -108,7 +100,7 @@
     self.statusLabel.text = status;
     self.currentConditionsLabel.text = conditions.conditionTitle;
     self.conditionIcon.image = [[ImageProcessor sharedProcessor] imageFromConditionImage:conditions.conditionIcon];
-    self.humidityLabel.text = [conditions.humidity stringValueForUnit:UnitPercentageDefault shortened:YES];
+    self.precipitationChanceLabel.text = [conditions.precipitation stringValueForUnit:UnitPercentageDefault shortened:YES];
     
     if ([WeatherDataManager sharedManager].unit == UnitTypeImperial) {
         self.currentTempLabel.text = [conditions.temperature stringValueForUnit:UnitTemperatureFahrenheit shortened:YES];

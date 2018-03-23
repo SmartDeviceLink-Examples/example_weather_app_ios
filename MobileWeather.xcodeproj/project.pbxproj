@@ -41,7 +41,6 @@
 		E48C4DA719FE840800A90448 /* ImageProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = E48C4DA619FE840800A90448 /* ImageProcessor.m */; };
 		E48C4DB019FE922300A90448 /* LocationService.m in Sources */ = {isa = PBXBuildFile; fileRef = E48C4DAF19FE922300A90448 /* LocationService.m */; };
 		E48C4DB319FE970100A90448 /* WeatherLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = E48C4DB219FE970100A90448 /* WeatherLocation.m */; };
-		E48C4DB619FE972100A90448 /* GPSLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = E48C4DB519FE972100A90448 /* GPSLocation.m */; };
 		E4BAFA851A0BA707003BB807 /* NSUserDefaults+RegisterSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = E4BAFA841A0BA707003BB807 /* NSUserDefaults+RegisterSettings.m */; };
 		E4BD7AED1B02338C006BE23B /* NSBundle+Language.m in Sources */ = {isa = PBXBuildFile; fileRef = E4BD7AEC1B02338C006BE23B /* NSBundle+Language.m */; };
 		E4C5B2DE1AEE248C0056E934 /* EnumType.m in Sources */ = {isa = PBXBuildFile; fileRef = E4C5B2DD1AEE248C0056E934 /* EnumType.m */; };
@@ -133,8 +132,6 @@
 		E48C4DAF19FE922300A90448 /* LocationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationService.m; sourceTree = "<group>"; };
 		E48C4DB119FE970100A90448 /* WeatherLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherLocation.h; sourceTree = "<group>"; };
 		E48C4DB219FE970100A90448 /* WeatherLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherLocation.m; sourceTree = "<group>"; };
-		E48C4DB419FE972100A90448 /* GPSLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSLocation.h; sourceTree = "<group>"; };
-		E48C4DB519FE972100A90448 /* GPSLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSLocation.m; sourceTree = "<group>"; };
 		E4BAFA831A0BA707003BB807 /* NSUserDefaults+RegisterSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSUserDefaults+RegisterSettings.h"; path = "MobileWeather/NSUserDefaults+RegisterSettings.h"; sourceTree = SOURCE_ROOT; };
 		E4BAFA841A0BA707003BB807 /* NSUserDefaults+RegisterSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSUserDefaults+RegisterSettings.m"; path = "MobileWeather/NSUserDefaults+RegisterSettings.m"; sourceTree = SOURCE_ROOT; };
 		E4BD7AEB1B02338C006BE23B /* NSBundle+Language.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSBundle+Language.h"; path = "MobileWeather/NSBundle+Language.h"; sourceTree = SOURCE_ROOT; };
@@ -309,7 +306,7 @@
 			name = Localization;
 			sourceTree = "<group>";
 		};
-		E48C4D8D19FE705000A90448 /* ForecastIO */ = {
+		E48C4D8D19FE705000A90448 /* DarkSky */ = {
 			isa = PBXGroup;
 			children = (
 				E4059D7819FFC21500C9996D /* ForecastIOProcessor.h */,
@@ -317,7 +314,7 @@
 				E4059D6619FF8AF500C9996D /* ForecastIOService.h */,
 				E4059D6719FF8AF500C9996D /* ForecastIOService.m */,
 			);
-			name = ForecastIO;
+			name = DarkSky;
 			sourceTree = "<group>";
 		};
 		E48C4D8E19FE706F00A90448 /* Weather */ = {
@@ -325,7 +322,7 @@
 			children = (
 				E42CD7311A41A9C300C51CAA /* Unit */,
 				E42CD7301A41A99E00C51CAA /* Data */,
-				E48C4D8D19FE705000A90448 /* ForecastIO */,
+				E48C4D8D19FE705000A90448 /* DarkSky */,
 				E48C4D9019FE708400A90448 /* Generic */,
 			);
 			name = Weather;
@@ -350,8 +347,6 @@
 				E48C4DAF19FE922300A90448 /* LocationService.m */,
 				E48C4DB119FE970100A90448 /* WeatherLocation.h */,
 				E48C4DB219FE970100A90448 /* WeatherLocation.m */,
-				E48C4DB419FE972100A90448 /* GPSLocation.h */,
-				E48C4DB519FE972100A90448 /* GPSLocation.m */,
 			);
 			name = Location;
 			sourceTree = "<group>";
@@ -543,7 +538,6 @@
 				E4059D6519FF7DA900C9996D /* WeatherService.m in Sources */,
 				E477F25E1A8B568F0028B59C /* TemperatureNumber.m in Sources */,
 				1E555E4B18466B6500B143B4 /* MainViewController.m in Sources */,
-				E48C4DB619FE972100A90448 /* GPSLocation.m in Sources */,
 				E48C4DB019FE922300A90448 /* LocationService.m in Sources */,
 				1E555E4518466B6500B143B4 /* AppDelegate.m in Sources */,
 				E44F82411A7F84E10055AD77 /* AlertType.m in Sources */,
@@ -702,7 +696,7 @@
 				DEVELOPMENT_TEAM = NCVC2MHU7M;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = MobileWeather/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.mobileweather;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -724,7 +718,7 @@
 				DEVELOPMENT_TEAM = NCVC2MHU7M;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = MobileWeather/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.mobileweather;
 				PRODUCT_NAME = "$(TARGET_NAME)";

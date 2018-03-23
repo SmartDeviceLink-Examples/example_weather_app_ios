@@ -7,7 +7,6 @@
 
 #import <CoreLocation/CoreLocation.h>
 
-#import "GPSLocation.h"
 #import "Notifications.h"
 #import "LocationService.h"
 #import "WeatherLocation.h"
@@ -37,19 +36,17 @@ NSTimeInterval const MinimumTimeBetweenLocationUpdates = 120;
 
 - (instancetype)init {
     if (self = [super init]) {
-        self.manager = [[CLLocationManager alloc] init];
-        self.manager.delegate = self;
-        self.manager.pausesLocationUpdatesAutomatically = YES;
-        // setup to be able to pause automatically when motion is not expected. Will safe battery.
-        [self.manager setPausesLocationUpdatesAutomatically:YES];
+        _manager = [[CLLocationManager alloc] init];
+        _manager.delegate = self;
+        _manager.pausesLocationUpdatesAutomatically = YES;
         // specify accuracy of 500 meters. Its enough for determining the city and will safe battery.
-        self.manager.desiredAccuracy = 500.0;
+        _manager.desiredAccuracy = 500.0;
         // Set the minimum distance that the device must move before we want an update
-        self.manager.distanceFilter = 500.0;
+        _manager.distanceFilter = 500.0;
 
-        [self.manager requestWhenInUseAuthorization];
+        [_manager requestWhenInUseAuthorization];
         
-        self.geocoder = [[CLGeocoder alloc] init];
+        _geocoder = [[CLGeocoder alloc] init];
     }
     return self;
 }
@@ -63,16 +60,15 @@ NSTimeInterval const MinimumTimeBetweenLocationUpdates = 120;
     [self.manager stopMonitoringSignificantLocationChanges];
 }
 
+#pragma mark - CLLocationManagerDelegate
+
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     NSString *statusString;
-    
-    // get a string based on the authorization status. Remember that they changed since iPhone SDK 8.0
-    // If we are building on iPhone SDK 8.0 or higher then use the new offered authorization status types
-    // otherwise use the old one
-    
+
     switch (status) {
         case kCLAuthorizationStatusAuthorizedWhenInUse:
             statusString = @"AuthorizedWhenInUse";
+            [self.manager startUpdatingLocation];
             break;
         case kCLAuthorizationStatusDenied:
             statusString = @"Denied";
@@ -94,36 +90,30 @@ NSTimeInterval const MinimumTimeBetweenLocationUpdates = 120;
 }
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
+    NSLog(@"Location Manager did pause location updates");
 }
 
 - (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager {
+    NSLog(@"Location Manager did resume location updates");
 }
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
     NSLog(@"%s\n%@", __FUNCTION__, locations);
-    
+
     NSDate *date = [NSDate date];
-    
-    if ([date timeIntervalSinceDate:self.lastLocationUpdate] > MinimumTimeBetweenLocationUpdates) {
-        self.lastLocationUpdate = date;
-        [self.geocoder reverseGeocodeLocation:locations.lastObject completionHandler:^(NSArray *placemarks, NSError *error) {
-            if (placemarks != nil && placemarks.count > 0) {
-                CLPlacemark *placemark = placemarks.lastObject;
-                
-                WeatherLocation *location = [[WeatherLocation alloc] init];
-                location.country = placemark.country;
-                location.state = placemark.administrativeArea;
-                location.city = placemark.locality;
-                location.zipCode = placemark.postalCode;
-                
-                location.gpsLocation = [[GPSLocation alloc] init];
-                location.gpsLocation.latitude = [NSString stringWithFormat:@"%f", placemark.location.coordinate.latitude];
-                location.gpsLocation.longitude = [NSString stringWithFormat:@"%f", placemark.location.coordinate.longitude];
-                
-                [[NSNotificationCenter defaultCenter] postNotificationName:MobileWeatherLocationUpdateNotification object:self userInfo:@{ @"location": location }];
-            }
-        }];
+    if ([date timeIntervalSinceDate:self.lastLocationUpdate] <= MinimumTimeBetweenLocationUpdates) {
+        return;
     }
+
+    self.lastLocationUpdate = date;
+    [self.geocoder reverseGeocodeLocation:locations.lastObject completionHandler:^(NSArray *placemarks, NSError *error) {
+        if (placemarks.count == 0) { return; }
+
+        CLPlacemark *placemark = placemarks.lastObject;
+        WeatherLocation *location = [[WeatherLocation alloc] initWithCity:placemark.locality state:placemark.administrativeArea zipCode:placemark.postalCode country:placemark.country gpsLocation:placemark.location];
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:MobileWeatherLocationUpdateNotification object:self userInfo:@{ @"location": location }];
+    }];
 }
 
 @end

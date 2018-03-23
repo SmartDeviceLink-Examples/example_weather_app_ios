@@ -62,7 +62,7 @@
     
     // load api key from settings
 //    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    self.serviceApiKey = @"d0026f2248ded5c5e00f3b6f08a9c33b";
+    self.serviceApiKey = PREFS_WEATHER_API_KEY;
     
     if (self.serviceApiKey == nil || [self.serviceApiKey isEqualToString:@""]) {
         NSString *message = [NSString stringWithFormat:@"In order to use this demo app you need to get an API key of %@.\nIf you already have an API key please open Settings app and copy the key into MobileWeather settings.", self.serviceName];

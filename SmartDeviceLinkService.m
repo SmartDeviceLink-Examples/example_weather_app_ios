@@ -108,7 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
     // Change which config you need based on if you want to connect to a TDK (default) or a wifi based emulator (debug)
     SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration defaultConfigurationWithAppName:@"MobileWeather" appId:@"330533107"];
 //    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration debugConfigurationWithAppName:@"MobileWeather" appId:@"330533107" ipAddress:@"192.168.1.61" port:2776];
-    lifecycleConfig.ttsName = @[[SDLTTSChunk textChunksFromString:NSLocalizedString(@"app.tts-name", nil)]];
+    lifecycleConfig.ttsName = [SDLTTSChunk textChunksFromString:NSLocalizedString(@"app.tts-name", nil)];
     lifecycleConfig.voiceRecognitionCommandNames = @[NSLocalizedString(@"app.vr-synonym", nil)];
     lifecycleConfig.appIcon = [SDLArtwork persistentArtworkWithImage:[UIImage imageNamed:@"AppIcon60x60@2x"] name:@"AppIcon" asImageFormat:SDLArtworkImageFormatPNG];
     lifecycleConfig.language = SDLLanguageEnUs;
@@ -119,7 +119,7 @@ NS_ASSUME_NONNULL_BEGIN
     WeatherLanguage *wlanguage = [WeatherLanguage elementWithValue:languageString];
     [[NSNotificationCenter defaultCenter] postNotificationName:MobileWeatherLanguageUpdateNotification object:self userInfo:@{ @"language" : wlanguage }];
     
-    SDLConfiguration *config = [SDLConfiguration configurationWithLifecycle:lifecycleConfig lockScreen:[SDLLockScreenConfiguration enabledConfiguration] logging:[SDLLogConfiguration defaultConfiguration]];
+    SDLConfiguration *config = [SDLConfiguration configurationWithLifecycle:lifecycleConfig lockScreen:[SDLLockScreenConfiguration enabledConfiguration] logging:[SDLLogConfiguration debugConfiguration]];
     
     self.manager = [[SDLManager alloc] initWithConfiguration:config delegate:self];
     
@@ -344,11 +344,13 @@ NS_ASSUME_NONNULL_BEGIN
         [artworks addObject:[SDLArtwork artworkWithImage:[[ImageProcessor sharedProcessor] imageFromConditionImage:filename] name:filename asImageFormat:SDLArtworkImageFormatPNG]];
     }
 
-    __weak typeof(self) weakSelf = self;
-    [self.manager.fileManager uploadArtworks:artworks progressHandler:nil completionHandler:^(NSArray<NSString *> * _Nonnull artworkNames, NSError * _Nullable error) {
-        weakSelf.currentForecastChoices = createChoiceSetRequest.choiceSet;
-        [weakSelf.manager sendRequest:createChoiceSetRequest];
-    }];
+    if (artworks.count > 0) {
+        __weak typeof(self) weakSelf = self;
+        [self.manager.fileManager uploadArtworks:artworks progressHandler:nil completionHandler:^(NSArray<NSString *> * _Nonnull artworkNames, NSError * _Nullable error) {
+            weakSelf.currentForecastChoices = createChoiceSetRequest.choiceSet;
+            [weakSelf.manager sendRequest:createChoiceSetRequest];
+        }];
+    }
 }
 
 - (void)deleteForecastChoiceSet {
@@ -450,7 +452,7 @@ NS_ASSUME_NONNULL_BEGIN
         self.manager.screenManager.textField2 = [conditions.temperature stringValueForUnit:temperatureType shortened:YES localization:self.localization];
         self.manager.screenManager.textField2Type = SDLMetadataTypeCurrentTemperature;
 
-        self.manager.screenManager.textField3 = [conditions.humidity stringValueForUnit:percentageType shortened:YES localization:self.localization];
+        self.manager.screenManager.textField3 = [conditions.precipitation stringValueForUnit:percentageType shortened:YES localization:self.localization];
         self.manager.screenManager.textField4 = [conditions.windSpeed stringValueForUnit:speedType shortened:YES localization:self.localization];
 
         self.manager.screenManager.primaryGraphic = [SDLArtwork artworkWithImage:[[ImageProcessor sharedProcessor] imageFromConditionImage:conditions.conditionIcon] name:conditions.conditionIcon asImageFormat:SDLArtworkImageFormatPNG];
@@ -541,9 +543,11 @@ NS_ASSUME_NONNULL_BEGIN
     
     UnitPercentageType percentageType = UnitPercentageDefault;
     UnitTemperatureType temperatureType = UnitTemperatureCelsius;
+    UnitSpeedType speedType = UnitSpeedKiloMeterHour;
     
     if ([WeatherDataManager sharedManager].unit == UnitTypeImperial) {
         temperatureType = UnitTemperatureFahrenheit;
+        speedType = UnitSpeedMileHour;
     }
     if ([self updateListVoiceCommandsWithNewIndex:index
                                         ofNewList:forecasts
@@ -566,16 +570,16 @@ NS_ASSUME_NONNULL_BEGIN
         self.manager.screenManager.textField2 = [forecast.temperature stringValueForUnit:temperatureType shortened:YES localization:self.localization];;
         self.manager.screenManager.textField2Type = SDLMetadataTypeCurrentTemperature;
 
-        self.manager.screenManager.textField3 = [forecast.humidity stringValueForUnit:percentageType shortened:YES localization:self.localization];
-        self.manager.screenManager.textField4 = [forecast.precipitationChance stringValueForUnit:percentageType shortened:YES localization:self.localization];
+        self.manager.screenManager.textField3 = [forecast.precipitation stringValueForUnit:percentageType shortened:YES localization:self.localization];
+        self.manager.screenManager.textField4 = [forecast.windSpeed stringValueForUnit:speedType shortened:YES localization:self.localization];
     } else {
         self.manager.screenManager.textField1 = [self.localization stringForKey:@"forecast.daily.show.field1", weekDayStringShow, conditionTitleShow];
         self.manager.screenManager.textField1Type = SDLMetadataTypeWeatherTerm;
 
-        self.manager.screenManager.textField2 = [NSString stringWithFormat:@"%f", [forecast.lowTemperature doubleValueForUnit:temperatureType]];
+        self.manager.screenManager.textField2 = [forecast.highTemperature stringValueForUnit:temperatureType shortened:YES localization:self.localization];
         self.manager.screenManager.textField2Type = SDLMetadataTypeMinimumTemperature;
 
-        self.manager.screenManager.textField3 = [NSString stringWithFormat:@"%f", [forecast.highTemperature doubleValueForUnit:temperatureType]];
+        self.manager.screenManager.textField3 = [forecast.lowTemperature stringValueForUnit:temperatureType shortened:YES localization:self.localization];
         self.manager.screenManager.textField3Type = SDLMetadataTypeMaximumTemperature
         ;
         self.manager.screenManager.textField4 = [forecast.precipitationChance stringValueForUnit:percentageType shortened:YES localization:self.localization];

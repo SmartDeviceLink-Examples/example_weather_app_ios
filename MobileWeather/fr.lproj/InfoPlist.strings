@@ -6,3 +6,5 @@
  */
 
 "NSLocationWhenInUseUsageDescription" = "Cela permettra à l'application pour télécharger Prévisions météo pour votre position actuelle.";
+"NSLocationAlwaysUsageDescription" = "Cela permettra à l'application pour télécharger Prévisions météo pour votre position actuelle.";
+"NSLocationUsageDescription" = "Cela permettra à l'application pour télécharger Prévisions météo pour votre position actuelle.";

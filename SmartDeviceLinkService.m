@@ -110,7 +110,7 @@ NS_ASSUME_NONNULL_BEGIN
 //    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration debugConfigurationWithAppName:@"MobileWeather" appId:@"330533107" ipAddress:@"192.168.1.61" port:2776];
     lifecycleConfig.ttsName = [SDLTTSChunk textChunksFromString:NSLocalizedString(@"app.tts-name", nil)];
     lifecycleConfig.voiceRecognitionCommandNames = @[NSLocalizedString(@"app.vr-synonym", nil)];
-    lifecycleConfig.appIcon = [SDLArtwork persistentArtworkWithImage:[UIImage imageNamed:@"AppIcon60x60@2x"] name:@"AppIcon" asImageFormat:SDLArtworkImageFormatPNG];
+    lifecycleConfig.appIcon = [SDLArtwork persistentArtworkWithImage:[UIImage imageNamed:@"sdl-appicon"] name:@"AppIcon" asImageFormat:SDLArtworkImageFormatPNG];
     lifecycleConfig.language = SDLLanguageEnUs;
     lifecycleConfig.languagesSupported = @[SDLLanguageEnUs, SDLLanguageEnGb, SDLLanguageEnAu, SDLLanguageDeDe, SDLLanguageEsEs, SDLLanguageEsMx, SDLLanguagePtPt, SDLLanguagePtBr, SDLLanguageFrFr, SDLLanguageFrCa];
 

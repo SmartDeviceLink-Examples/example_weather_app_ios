@@ -64,7 +64,10 @@
 
 - (void)handleUnitUpdate:(NSNotification *)notification {
     WeatherDataManager *data = [WeatherDataManager sharedManager];
-    [self setWeatherConditions:data.weatherConditions withLanguage:data.language];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self setWeatherConditions:data.weatherConditions withLanguage:data.language];
+    });
 }
 
 - (void)setLocationLabelFromWeatherLocation:(WeatherLocation *)location {

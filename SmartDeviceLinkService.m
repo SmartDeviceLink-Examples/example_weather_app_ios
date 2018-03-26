@@ -256,7 +256,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)createChangeUnitsInteractionChoiceSet {
     SDLChoice *metricChoice = [[SDLChoice alloc] initWithId:MWChoiceSetChangeUnitChoiceIdMetric menuName:self.localization[@"choice.units.metric"] vrCommands:@[self.localization[@"vr.metric"]]];
-    SDLChoice *imperialChoice = [[SDLChoice alloc] initWithId:MWChoiceSetChangeUnitChoiceIdImperial menuName:self.localization[@"choice.units.imperial"] vrCommands:self.localization[@"vr.imperial"]];
+    SDLChoice *imperialChoice = [[SDLChoice alloc] initWithId:MWChoiceSetChangeUnitChoiceIdImperial menuName:self.localization[@"choice.units.imperial"] vrCommands:@[self.localization[@"vr.imperial"]]];
 
     SDLCreateInteractionChoiceSet *request = [[SDLCreateInteractionChoiceSet alloc] initWithId:MWChoiceSetIdChangeUnits choiceSet:@[metricChoice, imperialChoice]];
     [self.manager sendRequest:request];

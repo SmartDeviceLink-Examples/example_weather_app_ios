@@ -317,18 +317,18 @@ NS_ASSUME_NONNULL_BEGIN
             choice.image = image;
         }
 
-        choice.choiceID = @(MWChoiceSetIdList + createChoiceSetRequest.choiceSet.count + 1);
+        choice.choiceID = @(MWChoiceSetIdList + choices.count + 1);
         choice.menuName = [dateFormatShow stringFromDate:forecast.date];
 
         NSMutableArray *vrCommands = [NSMutableArray array];
         [vrCommands addObject:[dateFormatSpeak stringFromDate:forecast.date]];
        
-        if (isHourlyForecast && createChoiceSetRequest.choiceSet.count == 0) {
+        if (isHourlyForecast && choices.count == 0) {
             [vrCommands addObject:self.localization[@"vr.now"]];
         } else {
-            if (createChoiceSetRequest.choiceSet.count == 0) {
+            if (choices.count == 0) {
                 [vrCommands addObject:self.localization[@"vr.today"]];
-            } else if (createChoiceSetRequest.choiceSet.count == 1) {
+            } else if (choices.count == 1) {
                 [vrCommands addObject:self.localization[@"vr.tomorrow"]];
             }
         }

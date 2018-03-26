@@ -124,9 +124,8 @@
     return nil;
 }
 
-- (BOOL)updateWeatherDataFromUrl:(NSURL *)url forLanguage:(WeatherLanguage *)language {
+- (void)updateWeatherDataFromUrl:(NSURL *)url forLanguage:(WeatherLanguage *)language {
     @throw [NSException exceptionWithName:@"NotImplementedException" reason:@"This method must be implemented from subclass" userInfo:nil];
-    return NO;
 }
 
 @end

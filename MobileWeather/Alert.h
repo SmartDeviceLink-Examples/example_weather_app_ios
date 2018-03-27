@@ -6,15 +6,17 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AlertType.h"
+
+@class AlertType;
+
 
 @interface Alert : NSObject
 
 @property AlertType *type;
 
-@property (strong) NSString *alertTitle;
+@property (strong) NSString *title;
 
-@property (strong) NSString *alertDescription;
+@property (strong) NSString *text;
 
 @property (strong) NSDate *dateIssued;
 

@@ -20,8 +20,10 @@
 /** Returns the element that represents the specified value. */
 + (instancetype)elementWithValue:(NSString *)value;
 
+- (instancetype)init NS_UNAVAILABLE;
+
 /** Initializes a new element with the given value. */
-- (instancetype)initWithValue:(NSString *)value;
+- (instancetype)initWithValue:(NSString *)value NS_DESIGNATED_INITIALIZER;
 
 /** Returns the value of the current element. */
 @property (strong, readonly) NSString *value;

@@ -6,8 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Forecast.h"
-#import "WeatherConditions.h"
+
+@class WeatherConditions;
+
 
 @protocol WeatherProcessor <NSObject>
 

@@ -36,16 +36,6 @@
 			<key>Title</key>
 			<string>Weather</string>
 		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-			<key>Title</key>
-			<string>API key</string>
-			<key>Key</key>
-			<string>weatherapikey</string>
-			<key>DefaultValue</key>
-			<string></string>
-		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>

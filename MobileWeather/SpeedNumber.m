@@ -7,14 +7,17 @@
 
 #import "SpeedNumber.h"
 
+#import "UnitConverter.h"
+#import "Localization.h"
+
 @implementation SpeedNumber
 
 - (UnitSpeedType)speedUnit {
-    switch ([self unit]) {
+    switch (self.unit) {
         case UnitSpeedMeterSecond:
         case UnitSpeedKiloMeterHour:
         case UnitSpeedMileHour:
-            return [self unit];
+            return self.unit;
         default:
             return NSUIntegerMax;
     }
@@ -29,7 +32,7 @@
 }
 
 - (double)doubleValueForUnit:(UnitSpeedType)unit {
-    return [[UnitConverter convertSpeed:[self number] from:[self speedUnit] to:unit] doubleValue];
+    return [UnitConverter convertSpeed:self.number from:self.speedUnit to:unit].doubleValue;
 }
 
 - (NSString *)stringValueForUnit:(UnitSpeedType)unit shortened:(BOOL)shortened {
@@ -91,7 +94,7 @@
 
 - (NSString *)nameForUnit:(UnitSpeedType)unit shortened:(BOOL)shortened localization:(Localization *)localization format:(NSString *)format {
     // convert the value to the desired unit and format this value. At the end convert it to float again.
-    double convertedValue = [[NSString stringWithFormat:format, [self doubleValueForUnit:unit]] floatValue];
+    double convertedValue = [NSString stringWithFormat:format, [self doubleValueForUnit:unit]].floatValue;
     
     NSMutableString *unitkey = [NSMutableString stringWithString:@"units.speed"];
     

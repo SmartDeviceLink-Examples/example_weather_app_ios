@@ -1,0 +1,39 @@
+//  SDLEmergencyEventType.h
+//
+
+
+#import "SDLEnum.h"
+
+/** Reflects the emergency event status of the vehicle.
+ *<b> Since:</b> SmartDeviceLink 2.0
+ *<p>
+ */
+typedef SDLEnum SDLEmergencyEventType SDL_SWIFT_ENUM;
+
+/** No emergency event has happened.
+ */
+extern SDLEmergencyEventType const SDLEmergencyEventTypeNoEvent;
+
+/** Frontal collision has happened.
+ */
+extern SDLEmergencyEventType const SDLEmergencyEventTypeFrontal;
+
+/** Side collision has happened.
+ */
+extern SDLEmergencyEventType const SDLEmergencyEventTypeSide;
+
+/**Rear collision has happened.
+ */
+extern SDLEmergencyEventType const SDLEmergencyEventTypeRear;
+
+/** A rollover event has happened.
+ */
+extern SDLEmergencyEventType const SDLEmergencyEventTypeRollover;
+
+/** The signal is not supported
+ */
+extern SDLEmergencyEventType const SDLEmergencyEventTypeNotSupported;
+
+/** Emergency status cannot be determined
+ */
+extern SDLEmergencyEventType const SDLEmergencyEventTypeFault;

@@ -7,13 +7,17 @@
 
 #import "TemperatureNumber.h"
 
+#import "UnitConverter.h"
+#import "Localization.h"
+
+
 @implementation TemperatureNumber
 
 - (UnitTemperatureType)temperatureUnit {
-    switch ([self unit]) {
+    switch (self.unit) {
         case UnitTemperatureCelsius:
         case UnitTemperatureFahrenheit:
-            return [self unit];
+            return self.unit;
         default:
             return NSUIntegerMax;
     }
@@ -28,7 +32,7 @@
 }
 
 - (double)doubleValueForUnit:(UnitTemperatureType)unit {
-    return [[UnitConverter convertTemperature:[self number] from:[self temperatureUnit] to:unit] doubleValue];
+    return [UnitConverter convertTemperature:self.number from:self.temperatureUnit to:unit].doubleValue;
 }
 
 - (NSString *)stringValueForUnit:(UnitTemperatureType)unit shortened:(BOOL)shortened {
@@ -90,7 +94,7 @@
 
 - (NSString *)nameForUnit:(UnitTemperatureType)unit shortened:(BOOL)shortened localization:(Localization *)localization format:(NSString *)format {
     // convert the value to the desired unit and format this value. At the end convert it to float again.
-    double convertedValue = [[NSString stringWithFormat:format, [self doubleValueForUnit:unit]] floatValue];
+    double convertedValue = [NSString stringWithFormat:format, [self doubleValueForUnit:unit]].floatValue;
     
     NSMutableString *unitkey = [NSMutableString stringWithString:@"units.temp"];
     

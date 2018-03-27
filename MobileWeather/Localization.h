@@ -7,57 +7,58 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
 /**
  Provides a simplified way to handle localization for a specific language that may not match the system language.
  */
 @interface Localization : NSObject
 
 /** The language code used by this instance. This code can differ from initialization regarding fallback. */
-@property (readonly) NSString *language;
+@property (copy, nonatomic, readonly) NSString *language;
 
 /** The region code used by this instance. This code can differ from initialization regarding fallback. */
-@property (readonly) NSString *region;
+@property (copy, nonatomic, readonly) NSString *region;
 
 
 /** 
  The bundle object using language and region. If region is not provided or localization for that region does not exist
  this property is set to nil.
  */
-@property (readonly) NSBundle *defaultBundle;
+@property (strong, nonatomic, readonly) NSBundle *defaultBundle;
 
 /**
  The locale object using language and region. If region is not provided or localization for that region does not exist
  this property is set to nil.
  */
-@property (readonly) NSLocale *defaultLocale;
+@property (strong, nonatomic, readonly) NSLocale *defaultLocale;
 
 /**
  The bundle object using language only as a fallback to the default bundle. 
  If the default bundle does not exist or it does not contain a specific localization
  then this fallback bundle is used.
  */
-@property (readonly) NSBundle *fallbackBundle;
+@property (strong, nonatomic, readonly) NSBundle *fallbackBundle;
 
 /**
  The locale object using language only as a fallback to the default locale.
  If the default bundle does not exist or it does not contain a specific localization
  then this fallback locale is used.
  */
-@property (readonly) NSLocale *fallbackLocale;
+@property (strong, nonatomic, readonly) NSLocale *fallbackLocale;
 
 /**
  Returns the default bundle. 
  Return the fallback bundle if the default bundle does not exist.
  Returns nil if both bundles do not exist.
 */
-@property (readonly) NSBundle *bundle;
+@property (strong, nonatomic, readonly) NSBundle *bundle;
 
 /**
  Returns the default locale.
  Return the fallback locale if the default locale does not exist.
  Returns nil if both locales do not exist.
  */
-@property (readonly) NSLocale *locale;
+@property (strong, nonatomic, readonly) NSLocale *locale;
 
 
 /**
@@ -83,4 +84,8 @@
  http://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html */
 - (NSString *)stringForKey:(NSString *)key, ...;
 
+- (nullable id)objectForKeyedSubscript:(nullable NSString *)key;
+
 @end
+
+NS_ASSUME_NONNULL_END

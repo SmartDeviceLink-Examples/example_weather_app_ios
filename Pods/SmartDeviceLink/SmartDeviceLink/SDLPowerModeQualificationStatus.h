@@ -1,0 +1,12 @@
+//  SDLPowerModeQualificationStatus.h
+//
+
+
+#import "SDLEnum.h"
+
+typedef SDLEnum SDLPowerModeQualificationStatus SDL_SWIFT_ENUM;
+
+extern SDLPowerModeQualificationStatus const SDLPowerModeQualificationStatusUndefined;
+extern SDLPowerModeQualificationStatus const SDLPowerModeQualificationStatusEvaluationInProgress;
+extern SDLPowerModeQualificationStatus const SDLPowerModeQualificationStatusNotDefined;
+extern SDLPowerModeQualificationStatus const SDLPowerModeQualificationStatusOk;

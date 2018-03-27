@@ -1,0 +1,6 @@
+framework module SmartDeviceLink {
+  umbrella header "SmartDeviceLink-umbrella.h"
+
+  export *
+  module * { export * }
+}

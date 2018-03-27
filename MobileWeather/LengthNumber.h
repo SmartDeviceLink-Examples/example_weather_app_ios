@@ -7,17 +7,21 @@
 
 #import <Foundation/Foundation.h>
 #import "UnitNumber.h"
+#import "UnitType.h"
+
+@class Localization;
+
 
 @interface LengthNumber : UnitNumber
 
 /** Returns the unit of the representing number. */
-@property (readonly) UnitLengthType lengthUnit;
+@property (assign, nonatomic, readonly) UnitLengthType lengthUnit;
 
 /** Creates a new object using a number and the unit that describes the value. */
 + (instancetype)numberWithNumber:(NSNumber *)number withUnit:(UnitLengthType)unit;
 
 /** Creates a new object using a number and the unit that describes the value. */
-- (instancetype)initWithNumber:(NSNumber *)number withUnit:(UnitLengthType)unit;
+- (instancetype)initWithNumber:(NSNumber *)number withUnit:(UnitLengthType)unit NS_DESIGNATED_INITIALIZER;
 
 /** Returns the value represented in the desired unit. */
 - (double)doubleValueForUnit:(UnitLengthType)unit;

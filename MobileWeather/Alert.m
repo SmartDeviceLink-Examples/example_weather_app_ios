@@ -7,6 +7,8 @@
 
 #import "Alert.h"
 
+#import "AlertType.h"
+
 @implementation Alert
 
 - (BOOL)isEqual:(id)object {
@@ -33,10 +35,10 @@
     if ([alert.dateExpires isEqualToDate:self.dateExpires] == NO) return NO;
     
     // is the alert message not the same?
-    if ([alert.alertTitle isEqualToString:self.alertTitle] == NO) return NO;
+    if ([alert.title isEqualToString:self.title] == NO) return NO;
          
     // is the alert description not the same?
-    if ([alert.alertDescription isEqualToString:self.alertDescription] == NO) return NO;
+    if ([alert.text isEqualToString:self.text] == NO) return NO;
     
     return YES;
 }

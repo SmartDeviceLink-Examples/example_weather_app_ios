@@ -7,17 +7,20 @@
 
 #import <Foundation/Foundation.h>
 #import "UnitNumber.h"
+#import "UnitType.h"
+
+@class Localization;
 
 @interface SpeedNumber : UnitNumber
 
 /** Returns the unit of the representing number. */
-@property (readonly) UnitSpeedType speedUnit;
+@property (assign, nonatomic, readonly) UnitSpeedType speedUnit;
 
 /** Creates a new object using a number and the unit that describes the value. */
 + (instancetype)numberWithNumber:(NSNumber *)number withUnit:(UnitSpeedType)unit;
 
 /** Creates a new object using a number and the unit that describes the value. */
-- (instancetype)initWithNumber:(NSNumber *)number withUnit:(UnitSpeedType)unit;
+- (instancetype)initWithNumber:(NSNumber *)number withUnit:(UnitSpeedType)unit NS_DESIGNATED_INITIALIZER;
 
 /** Returns the value represented in the desired unit. */
 - (double)doubleValueForUnit:(UnitSpeedType)unit;

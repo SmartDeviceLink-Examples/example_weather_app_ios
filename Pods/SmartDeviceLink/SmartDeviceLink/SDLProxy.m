@@ -41,7 +41,7 @@ typedef NSString SDLVehicleMake;
 typedef void (^URLSessionTaskCompletionHandler)(NSData *data, NSURLResponse *response, NSError *error);
 typedef void (^URLSessionDownloadTaskCompletionHandler)(NSURL *location, NSURLResponse *response, NSError *error);
 
-NSString *const SDLProxyVersion = @"5.1.1";
+NSString *const SDLProxyVersion = @"5.2.0";
 const float StartSessionTime = 10.0;
 const float NotifyProxyClosedDelay = (float)0.1;
 const int PoliciesCorrelationId = 65535;
@@ -251,7 +251,7 @@ static float DefaultConnectionTimeout = 45.0;
     @try {
         [self.protocol sendRPC:message];
     } @catch (NSException *exception) {
-        SDLLogE(@"Proxy: Failed to send RPC message: %@\nException: %@", message.name, exception.debugDescription);
+        SDLLogE(@"Proxy: Failed to send RPC message: %@", message.name);
     }
 }
 

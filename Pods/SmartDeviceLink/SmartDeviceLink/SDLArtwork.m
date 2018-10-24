@@ -15,11 +15,17 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SDLArtwork ()
 
 @property (strong, nonatomic) UIImage *image;
+@property (assign, nonatomic, readwrite) BOOL isTemplate;
 
 @end
 
 
 @implementation SDLArtwork
+
+- (void)setImage:(UIImage *)image {
+    _image = image;
+    _isTemplate = (image.renderingMode == UIImageRenderingModeAlwaysTemplate);
+}
 
 #pragma mark - Lifecycle
 
@@ -43,10 +49,12 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark Private Lifecycle
 
 - (instancetype)initWithImage:(UIImage *)image name:(NSString *)name persistent:(BOOL)persistent asImageFormat:(SDLArtworkImageFormat)imageFormat {
+    self.image = image;
     return [super initWithData:[self.class sdl_dataForUIImage:image imageFormat:imageFormat] name:name fileExtension:[self.class sdl_fileExtensionForImageFormat:imageFormat] persistent:persistent];
 }
 
 - (instancetype)initWithImage:(UIImage *)image persistent:(BOOL)persistent asImageFormat:(SDLArtworkImageFormat)imageFormat {
+    self.image = image;
     NSData *imageData = [self.class sdl_dataForUIImage:image imageFormat:imageFormat];
     NSString *imageName = [self.class sdl_md5HashFromNSData:imageData];
     return [super initWithData:[self.class sdl_dataForUIImage:image imageFormat:imageFormat] name:(imageName != nil ? imageName : @"") fileExtension:[self.class sdl_fileExtensionForImageFormat:imageFormat] persistent:persistent];
@@ -94,6 +102,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Creates a string representation of NSData by hashing the data using the MD5 hash function. This string is not guaranteed to be unique as collisions can occur, however collisions are extremely rare.
  *
+ *  HAX: A MD5 hash always creates a string with 32 characters (128-bits). Due to some implementations of Core not following the spec, file names that are too long are being rejected. To try to accommodate this setup, hashed file names are being truncated to 16 characters.
+ *
  *  Sourced from https://stackoverflow.com/questions/2018550/how-do-i-create-an-md5-hash-of-a-string-in-cocoa
  *
  *  @param data     The data to hash
@@ -104,11 +114,36 @@ NS_ASSUME_NONNULL_BEGIN
 
     unsigned char hash[CC_MD5_DIGEST_LENGTH];
     CC_MD5([data bytes], (CC_LONG)[data length], hash);
-    NSMutableString *formattedHash = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
-    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i += 1) {
+    NSMutableString *formattedHash = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH];
+    // HAX: To shorten the string to 16 characters, the loop has been shortened to 8 fom 16.
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH / 2; i += 1) {
         [formattedHash appendFormat:@"%02x", hash[i]];
     }
     return formattedHash;
+}
+
+#pragma mark - NSObject overrides
+
+- (NSUInteger)hash {
+    return self.name.hash ^ self.data.hash;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (self == object) { return YES; }
+
+    if (![object isKindOfClass:[SDLArtwork class]]) { return NO; }
+
+    return [self isEqualToArtwork:(SDLArtwork *)object];
+}
+
+- (BOOL)isEqualToArtwork:(SDLArtwork *)artwork {
+    if (!artwork) { return NO; }
+
+    BOOL haveEqualNames = [self.name isEqualToString:artwork.name];
+    BOOL haveEqualData = [self.data isEqualToData:artwork.data];
+    BOOL haveEqualFormats = [self.fileType isEqualToEnum:artwork.fileType];
+
+    return haveEqualNames && haveEqualData && haveEqualFormats;
 }
 
 @end

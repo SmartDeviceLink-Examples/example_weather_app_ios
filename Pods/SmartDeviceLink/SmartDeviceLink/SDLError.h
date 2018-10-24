@@ -19,6 +19,11 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NSString SDLErrorDomain;
 extern SDLErrorDomain *const SDLErrorDomainLifecycleManager;
 extern SDLErrorDomain *const SDLErrorDomainFileManager;
+extern SDLErrorDomain *const SDLErrorDomainTextAndGraphicManager;
+extern SDLErrorDomain *const SDLErrorDomainSoftButtonManager;
+extern SDLErrorDomain *const SDLErrorDomainMenuManager;
+extern SDLErrorDomain *const SDLErrorDomainChoiceSetManager;
+extern SDLErrorDomain *const SDLErrorDomainTransport;
 
 @interface NSError (SDLErrors)
 
@@ -47,8 +52,26 @@ extern SDLErrorDomain *const SDLErrorDomainFileManager;
 + (NSError *)sdl_fileManager_dataMissingError;
 
 #pragma mark Show Managers
+
 + (NSError *)sdl_softButtonManager_pendingUpdateSuperseded;
 + (NSError *)sdl_textAndGraphicManager_pendingUpdateSuperseded;
+
+#pragma mark Menu Manager
+
++ (NSError *)sdl_menuManager_failedToUpdateWithDictionary:(NSDictionary *)userInfo;
+
+#pragma mark Choice Set Manager
+
++ (NSError *)sdl_choiceSetManager_choicesDeletedBeforePresentation:(NSDictionary *)userInfo;
++ (NSError *)sdl_choiceSetManager_choiceDeletionFailed:(NSDictionary *)userInfo;
++ (NSError *)sdl_choiceSetManager_choiceUploadFailed:(NSDictionary *)userInfo;
+
+#pragma mark Transport
+
++ (NSError *)sdl_transport_unknownError;
++ (NSError *)sdl_transport_connectionRefusedError;
++ (NSError *)sdl_transport_connectionTimedOutError;
++ (NSError *)sdl_transport_networkDownError;
 
 @end
 

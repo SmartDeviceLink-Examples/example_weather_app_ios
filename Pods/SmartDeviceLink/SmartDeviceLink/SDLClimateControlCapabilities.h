@@ -13,18 +13,22 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface SDLClimateControlCapabilities : SDLRPCStruct
 
-- (instancetype)initWithModuleName:(NSString *)moduleName fanSpeedAvailable:(BOOL)fanSpeedAvailable desiredTemperatureAvailable:(BOOL)desiredTemperatureAvailable acEnableAvailable:(BOOL)acEnableAvailable acMaxEnableAvailable:(BOOL)acMaxEnableAvailable circulateAirAvailable:(BOOL)circulateAirEnableAvailable autoModeEnableAvailable:(BOOL)autoModeEnableAvailable dualModeEnableAvailable:(BOOL)dualModeEnableAvailable defrostZoneAvailable:(BOOL)defrostZoneAvailable ventilationModeAvailable:(BOOL)ventilationModeAvailable;
+- (instancetype)initWithModuleName:(NSString *)moduleName fanSpeedAvailable:(BOOL)fanSpeedAvailable desiredTemperatureAvailable:(BOOL)desiredTemperatureAvailable acEnableAvailable:(BOOL)acEnableAvailable acMaxEnableAvailable:(BOOL)acMaxEnableAvailable circulateAirAvailable:(BOOL)circulateAirEnableAvailable autoModeEnableAvailable:(BOOL)autoModeEnableAvailable dualModeEnableAvailable:(BOOL)dualModeEnableAvailable defrostZoneAvailable:(BOOL)defrostZoneAvailable ventilationModeAvailable:(BOOL)ventilationModeAvailable __deprecated_msg("Use initWithModuleName:fanSpeedAvailable:desiredTemperatureAvailable:acEnableAvailable:acMaxEnableAvailable:circulateAirAvailable:autoModeEnableAvailable: dualModeEnableAvailable:defrostZoneAvailable:ventilationModeAvailable: heatedSteeringWheelAvailable:heatedWindshieldAvailable: heatedRearWindowAvailable:heatedMirrorsAvailable: instead");
+
+- (instancetype)initWithModuleName:(NSString *)moduleName fanSpeedAvailable:(BOOL)fanSpeedAvailable desiredTemperatureAvailable:(BOOL)desiredTemperatureAvailable acEnableAvailable:(BOOL)acEnableAvailable acMaxEnableAvailable:(BOOL)acMaxEnableAvailable circulateAirAvailable:(BOOL)circulateAirEnableAvailable autoModeEnableAvailable:(BOOL)autoModeEnableAvailable dualModeEnableAvailable:(BOOL)dualModeEnableAvailable defrostZoneAvailable:(BOOL)defrostZoneAvailable ventilationModeAvailable:(BOOL)ventilationModeAvailable heatedSteeringWheelAvailable:(BOOL)heatedSteeringWheelAvailable heatedWindshieldAvailable:(BOOL)heatedWindshieldAvailable heatedRearWindowAvailable:(BOOL)heatedRearWindowAvailable heatedMirrorsAvailable:(BOOL)heatedMirrorsAvailable;
 
 /**
- * @abstract The short friendly name of the climate control module.
+ * The short friendly name of the climate control module.
  * It should not be used to identify a module by mobile application.
  *
  * Max string length 100 chars
+
+ Required
  */
 @property (strong, nonatomic) NSString *moduleName;
 
 /**
- * @abstract Availability of the control of fan speed.
+ * Availability of the control of fan speed.
  * True: Available, False: Not Available, Not present: Not Available.
  *
  * Optional, Boolean
@@ -32,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, strong, nonatomic) NSNumber<SDLBool> *fanSpeedAvailable;
 
 /**
- * @abstract Availability of the control of desired temperature.
+ * Availability of the control of desired temperature.
  * True: Available, False: Not Available, Not present: Not Available.
  *
  * Optional, Boolean
@@ -40,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, strong, nonatomic) NSNumber<SDLBool> *desiredTemperatureAvailable;
 
 /**
- * @abstract Availability of the control of turn on/off AC.
+ * Availability of the control of turn on/off AC.
  * True: Available, False: Not Available, Not present: Not Available.
  *
  * Optional, Boolean
@@ -48,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, strong, nonatomic) NSNumber<SDLBool> *acEnableAvailable;
 
 /**
- * @abstract  Availability of the control of enable/disable air conditioning is ON on the maximum level.
+ *  Availability of the control of enable/disable air conditioning is ON on the maximum level.
  * True: Available, False: Not Available, Not present: Not Available.
  *
  * Optional, Boolean
@@ -56,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, strong, nonatomic) NSNumber<SDLBool> *acMaxEnableAvailable;
 
 /**
- * @abstract Availability of the control of enable/disable circulate Air mode.
+ * Availability of the control of enable/disable circulate Air mode.
  * True: Available, False: Not Available, Not present: Not Available.
  *
  * Optional, Boolean
@@ -64,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, strong, nonatomic) NSNumber<SDLBool> *circulateAirEnableAvailable;
 
 /**
- * @abstract Availability of the control of enable/disable auto mode.
+ * Availability of the control of enable/disable auto mode.
  * True: Available, False: Not Available, Not present: Not Available.
  *
  * Optional, Boolean
@@ -72,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, strong, nonatomic) NSNumber<SDLBool> *autoModeEnableAvailable;
 
 /**
- * @abstract Availability of the control of enable/disable dual mode.
+ * Availability of the control of enable/disable dual mode.
  * True: Available, False: Not Available, Not present: Not Available.
  *
  * Optional, Boolean
@@ -80,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, strong, nonatomic) NSNumber<SDLBool> *dualModeEnableAvailable;
 
 /**
- * @abstract Availability of the control of defrost zones.
+ * Availability of the control of defrost zones.
  * True: Available, False: Not Available, Not present: Not Available.
  *
  * Optional, Boolean
@@ -88,14 +92,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, strong, nonatomic) NSNumber<SDLBool> *defrostZoneAvailable;
 
 /**
- * @abstract  A set of all defrost zones that are controllable.
+ * A set of all defrost zones that are controllable.
  *
  * Optional, NSArray of type SDLDefrostZone minsize="1" maxsize="100"
  */
 @property (nullable, strong, nonatomic) NSArray<SDLDefrostZone > *defrostZone;
 
 /**
- * @abstract Availability of the control of air ventilation mode.
+ * Availability of the control of air ventilation mode.
  * True: Available, False: Not Available, Not present: Not Available.
  *
  * Optional, Boolean
@@ -103,12 +107,44 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, strong, nonatomic) NSNumber<SDLBool> *ventilationModeAvailable;
 
 /**
- * @abstract  A set of all ventilation modes that are controllable.
+ * A set of all ventilation modes that are controllable.
  * True: Available, False: Not Available, Not present: Not Available.
  *
  * Optional, NSArray of type SDLVentilationMode minsize="1" maxsize="100"
  */
 @property (nullable, strong, nonatomic) NSArray<SDLVentilationMode> *ventilationMode;
+
+/**
+ * @abstract Availability of the control (enable/disable) of heated Steering Wheel.
+ * True: Available, False: Not Available, Not present: Not Available.
+ *
+ * Optional, Boolean
+ */
+@property (nullable, strong, nonatomic) NSNumber<SDLBool> *heatedSteeringWheelAvailable;
+
+/**
+ * @abstract  Availability of the control (enable/disable) of heated Windshield.
+ * True: Available, False: Not Available, Not present: Not Available.
+ *
+ * Optional, Boolean
+ */
+@property (nullable, strong, nonatomic) NSNumber<SDLBool> *heatedWindshieldAvailable;
+
+/**
+ * @abstract Availability of the control (enable/disable) of heated Rear Window.
+ * True: Available, False: Not Available, Not present: Not Available.
+ *
+ * Optional, Boolean
+ */
+@property (nullable, strong, nonatomic) NSNumber<SDLBool> *heatedRearWindowAvailable;
+
+/**
+ * @abstract Availability of the control (enable/disable) of heated Mirrors.
+ * True: Available, False: Not Available, Not present: Not Available.
+ *
+ * Optional, Boolean
+ */
+@property (nullable, strong, nonatomic) NSNumber<SDLBool> *heatedMirrorsAvailable;
 
 @end
 

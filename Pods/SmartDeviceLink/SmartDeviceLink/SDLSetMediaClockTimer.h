@@ -4,6 +4,7 @@
 #import "SDLRPCRequest.h"
 
 #import "SDLUpdateMode.h"
+#import "SDLAudioStreamingIndicator.h"
 
 @class SDLStartTime;
 
@@ -22,12 +23,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SDLSetMediaClockTimer : SDLRPCRequest
 
+- (instancetype)initWithUpdateMode:(SDLUpdateMode)updateMode hours:(UInt8)hours minutes:(UInt8)minutes seconds:(UInt8)seconds audioStreamingIndicator:(SDLAudioStreamingIndicator)audioStreamingIndicator;
+
 - (instancetype)initWithUpdateMode:(SDLUpdateMode)updateMode hours:(UInt8)hours minutes:(UInt8)minutes seconds:(UInt8)seconds;
 
 - (instancetype)initWithUpdateMode:(SDLUpdateMode)updateMode;
 
 /**
- * @abstract A Start Time with specifying hour, minute, second values
+ * A Start Time with specifying hour, minute, second values
  *
  * @discussion A startTime object with specifying hour, minute, second values
  *            <p>
@@ -40,13 +43,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (strong, nonatomic, nullable) SDLStartTime *startTime;
 /**
- * @abstract An END time of type SDLStartTime, specifying hour, minute, second values
+ * An END time of type SDLStartTime, specifying hour, minute, second values
  *
  * @discussion An SDLStartTime object with specifying hour, minute, second values
  */
 @property (strong, nonatomic, nullable) SDLStartTime *endTime;
 /**
- * @abstract The media clock/timer update mode (COUNTUP/COUNTDOWN/PAUSE/RESUME)
+ * The media clock/timer update mode (COUNTUP/COUNTDOWN/PAUSE/RESUME)
  *
  * @discussion a Enumeration value (COUNTUP/COUNTDOWN/PAUSE/RESUME)
  *            <p>
@@ -59,6 +62,16 @@ NS_ASSUME_NONNULL_BEGIN
  *            </ul>
  */
 @property (strong, nonatomic) SDLUpdateMode updateMode;
+
+/**
+ * The audio streaming indicator used for a play/pause button.
+ *
+ * @discussion Set the indicator icon of a play/pause button depending on the
+ * current audio playback. This parameter is optional. If omitted the last indicator sent
+ * will not change.
+ */
+@property (strong, nonatomic, nullable) SDLAudioStreamingIndicator audioStreamingIndicator;
+
 
 @end
 

@@ -12,8 +12,8 @@
 #import "SDLStreamingAudioManagerType.h"
 #import "SDLStreamingMediaManagerConstants.h"
 
-@class SDLAbstractProtocol;
 @class SDLAudioStreamManager;
+@class SDLProtocol;
 @class SDLStreamingMediaConfiguration;
 @class SDLTouchManager;
 @class SDLVideoStreamingFormat;
@@ -32,12 +32,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly) SDLTouchManager *touchManager;
 
+/**
+ *  Audio Manager responsible for managing streaming audio.
+ */
 @property (nonatomic, strong, readonly) SDLAudioStreamManager *audioManager;
 
 /**
  This property is used for SDLCarWindow, the ability to stream any view controller. To start, you must set an initial view controller on `SDLStreamingMediaConfiguration` `rootViewController`. After streaming begins, you can replace that view controller with a new root by placing the new view controller into this property.
  */
-@property (nonatomic, strong) UIViewController *rootViewController;
+@property (nonatomic, strong, nullable) UIViewController *rootViewController;
 
 /**
  A haptic interface that can be updated to reparse views within the window you've provided. Send a `SDLDidUpdateProjectionView` notification or call the `updateInterfaceLayout` method to reparse. The "output" of this haptic interface occurs in the `touchManager` property where it will call the delegate.
@@ -120,12 +123,32 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Start the manager with a completion block that will be called when startup completes. This is used internally. To use an SDLStreamingMediaManager, you should use the manager found on `SDLManager`.
  */
-- (void)startWithProtocol:(SDLAbstractProtocol *)protocol;
+- (void)startWithProtocol:(SDLProtocol *)protocol;
+
+/**
+ *  Start the audio feature of the manager. This is used internally. To use an SDLStreamingMediaManager, you should use the manager found on `SDLManager`.
+ */
+- (void)startAudioWithProtocol:(SDLProtocol *)protocol;
+
+/**
+ *  Start the video feature of the manager. This is used internally. To use an SDLStreamingMediaManager, you should use the manager found on `SDLManager`.
+ */
+- (void)startVideoWithProtocol:(SDLProtocol *)protocol;
 
 /**
  *  Stop the manager. This method is used internally.
  */
 - (void)stop;
+
+/**
+ *  Stop the audio feature of the manager. This method is used internally.
+ */
+- (void)stopAudio;
+
+/**
+ *  Stop the video feature of the manager. This method is used internally.
+ */
+- (void)stopVideo;
 
 /**
  *  This method receives raw image data and will run iOS8+'s hardware video encoder to turn the data into a video stream, which will then be passed to the connected head unit.

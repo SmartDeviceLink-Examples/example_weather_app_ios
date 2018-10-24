@@ -82,7 +82,9 @@ NS_ASSUME_NONNULL_BEGIN
     self.canPresent = NO;
 
     // Remove the lock screen if presented, don't allow it to present again until we start
-    [self.presenter dismiss];
+    if (self.presenter.lockViewController != nil) {
+        [self.presenter dismiss];
+    }
 }
 
 - (nullable UIViewController *)lockScreenViewController {
@@ -135,7 +137,7 @@ NS_ASSUME_NONNULL_BEGIN
     } else if ([self.lastLockNotification.lockScreenStatus isEqualToEnum:SDLLockScreenStatusOptional]) {
         if (self.config.showInOptionalState && !self.presenter.presented && self.canPresent) {
             [self.presenter present];
-        } else if (self.presenter.presented) {
+        } else if (!self.config.showInOptionalState && self.presenter.presented) {
             [self.presenter dismiss];
         }
     } else if ([self.lastLockNotification.lockScreenStatus isEqualToEnum:SDLLockScreenStatusOff]) {

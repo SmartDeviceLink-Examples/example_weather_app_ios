@@ -100,17 +100,17 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Initalizes a socket from which to read data.
 
+ @discussion A new `NSInputStream` is created when requested instead of returning the already open `NSInputStream`. This is done because once a opened, a stream *cannot* be closed and reopened. If the same file is accessed multiple times (i.e. a non-persistant file is uploaded before and after a disconnect from Core during the same session) the file cannot be accessed after the first access because the stream is closed once the upload is completed. Apple `NSInputStream` doc: https://developer.apple.com/documentation/foundation/nsstream/1411963-open
+
  @return A socket
  */
 - (NSInputStream *)inputStream {
-    if (!_inputStream) {
-        if (_fileURL) {
-            // Data in file
-            _inputStream = [[NSInputStream alloc] initWithURL:_fileURL];
-        } else if (_data.length != 0) {
-            // Data in memory
-            _inputStream = [[NSInputStream alloc] initWithData:_data];
-        }
+    if (_fileURL) {
+        // Data in file
+        _inputStream = [[NSInputStream alloc] initWithURL:_fileURL];
+    } else if (_data.length != 0) {
+        // Data in memory
+        _inputStream = [[NSInputStream alloc] initWithData:_data];
     }
     return _inputStream;
 }
@@ -159,6 +159,30 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id)copyWithZone:(nullable NSZone *)zone {
     return [[self.class allocWithZone:zone] initWithFileURL:_fileURL name:_name persistent:_persistent];
+}
+
+#pragma mark - NSObject overrides
+
+- (NSUInteger)hash {
+    return self.name.hash ^ self.data.hash;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (self == object) { return YES; }
+
+    if (![object isKindOfClass:[SDLFile class]]) { return NO; }
+
+    return [self isEqualToFile:(SDLFile *)object];
+}
+
+- (BOOL)isEqualToFile:(SDLFile *)file {
+    if (!file) { return NO; }
+
+    BOOL haveEqualNames = [self.name isEqualToString:file.name];
+    BOOL haveEqualData = [self.data isEqualToData:file.data];
+    BOOL haveEqualFormats = [self.fileType isEqualToEnum:file.fileType];
+
+    return haveEqualNames && haveEqualData && haveEqualFormats;
 }
 
 @end

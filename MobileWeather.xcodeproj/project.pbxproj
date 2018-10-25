@@ -202,7 +202,7 @@
 				E491A70219F7C60500F82A4D /* UI */,
 				E48C4DAC19FE918F00A90448 /* Location */,
 				E48C4D8E19FE706F00A90448 /* Weather */,
-				E441104E19F555B800CF3A8F /* Supporting Files */,
+				5DC0B72B2182466A00E1B317 /* Supporting Files */,
 			);
 			path = MobileWeather;
 			sourceTree = "<group>";
@@ -218,6 +218,17 @@
 				E4BD7AEC1B02338C006BE23B /* NSBundle+Language.m */,
 			);
 			name = Utilities;
+			sourceTree = "<group>";
+		};
+		5DC0B72B2182466A00E1B317 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DB7EDCA1D89CC3800B62BB7 /* Images.xcassets */,
+				5DB7EDC81D89CC2C00B62BB7 /* Settings.bundle */,
+				E427582D1A0B75C000AA42B1 /* main.m */,
+				E427582E1A0B75C000AA42B1 /* Info.plist */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		ACA98BA4794368CA002C5DC3 /* Pods */ = {
@@ -268,17 +279,6 @@
 				E477F2601A8B79020028B59C /* PercentageNumber.m */,
 			);
 			name = Unit;
-			sourceTree = "<group>";
-		};
-		E441104E19F555B800CF3A8F /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				5DB7EDCA1D89CC3800B62BB7 /* Images.xcassets */,
-				5DB7EDC81D89CC2C00B62BB7 /* Settings.bundle */,
-				E427582D1A0B75C000AA42B1 /* main.m */,
-				E427582E1A0B75C000AA42B1 /* Info.plist */,
-			);
-			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		E45EADF41AE92D9B0046D883 /* Localization */ = {

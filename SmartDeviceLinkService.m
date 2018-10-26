@@ -342,7 +342,7 @@ NS_ASSUME_NONNULL_BEGIN
         self.manager.screenManager.textField3 = [conditions.precipitation stringValueForUnit:percentageType shortened:YES localization:self.localization];
         self.manager.screenManager.textField4 = [conditions.windSpeed stringValueForUnit:speedType shortened:YES localization:self.localization];
 
-        self.manager.screenManager.primaryGraphic = [SDLArtwork artworkWithImage:[[ImageProcessor sharedProcessor] imageFromConditionImage:conditions.conditionIcon] name:conditions.conditionIcon asImageFormat:SDLArtworkImageFormatPNG];
+        self.manager.screenManager.primaryGraphic = [SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:conditions.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] name:conditions.conditionIcon asImageFormat:SDLArtworkImageFormatPNG];
 
         [self.manager.screenManager endUpdatesWithCompletionHandler:nil];
 

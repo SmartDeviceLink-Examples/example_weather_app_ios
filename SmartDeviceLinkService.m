@@ -280,7 +280,7 @@ NS_ASSUME_NONNULL_BEGIN
             }
         }
 
-        SDLChoiceCell *cell = [[SDLChoiceCell alloc] initWithText:[dateFormatShow stringFromDate:forecast.date] artwork:[SDLArtwork artworkWithImage:[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] asImageFormat:SDLArtworkImageFormatPNG] voiceCommands:[vrCommands copy]];
+        SDLChoiceCell *cell = [[SDLChoiceCell alloc] initWithText:[dateFormatShow stringFromDate:forecast.date] artwork:[SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG] voiceCommands:[vrCommands copy]];
         [choices addObject:cell];
     }
 
@@ -438,7 +438,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self.manager.screenManager beginUpdates];
     self.manager.screenManager.softButtonObjects = [self buildListSoftButtons:infoType withIndex:index maxCount:forecasts.count];
 
-    self.manager.screenManager.primaryGraphic = [SDLArtwork artworkWithImage:[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] asImageFormat:SDLArtworkImageFormatPNG];
+    self.manager.screenManager.primaryGraphic = [SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG];
     
     if (isHourlyForecast) {
         self.manager.screenManager.textField1 = [self.localization stringForKey:@"forecast.hourly.show.field1", dateTimeStringShow, conditionTitleShow];

@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SDLAsynchronousRPCRequestOperation ()
 
-@property (copy, nonatomic) NSArray<SDLRPCRequest *> *requests;
 @property (weak, nonatomic) id<SDLConnectionManagerType> connectionManager;
 @property (copy, nonatomic, nullable) SDLMultipleAsyncRequestProgressHandler progressHandler;
 @property (copy, nonatomic, nullable) SDLMultipleRequestCompletionHandler completionHandler;
@@ -81,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
     for (SDLRPCRequest *request in self.requests) {
         if (self.isCancelled) {
             [self sdl_abortOperationWithRequest:request];
-            break;
+            return;
         }
 
         [self sdl_sendRequest:request];
@@ -120,16 +119,19 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)sdl_abortOperationWithRequest:(SDLRPCRequest *)request {
-    if (self.isFinished) { return; }
     self.requestFailed = YES;
 
-    for (NSUInteger i = self.requestsComplete; i <= self.requests.count; i++) {
+    for (NSUInteger i = self.requestsComplete; i < self.requests.count; i++) {
         if (self.progressHandler != NULL) {
             self.progressHandler(self.requests[i], nil, [NSError sdl_lifecycle_multipleRequestsCancelled], self.percentComplete);
         }
 
         if (self.responseHandler != NULL) {
             self.responseHandler(request, nil, [NSError sdl_lifecycle_multipleRequestsCancelled]);
+        }
+
+        if (self.completionHandler != NULL) {
+            self.completionHandler(NO);
         }
     }
 
@@ -158,6 +160,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSOperationQueuePriority)queuePriority {
     return NSOperationQueuePriorityNormal;
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"%@, request count=%lu, requests started=%lu, finished=%lu, failed=%@", self.name, (unsigned long)self.requests.count, (unsigned long)self.requestsStarted, (unsigned long)self.requestsComplete, (self.requestFailed ? @"YES": @"NO")];
+}
+
+- (NSString *)debugDescription {
+    return [NSString stringWithFormat:@"%@, request count=%lu, requests started=%lu, finished=%lu, failed=%@, requests=%@", self.name, (unsigned long)self.requests.count, (unsigned long)self.requestsStarted, (unsigned long)self.requestsComplete, (self.requestFailed ? @"YES": @"NO"), self.requests];
 }
 
 @end

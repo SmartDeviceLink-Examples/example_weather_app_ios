@@ -21,34 +21,6 @@
 #import "PercentageNumber.h"
 #import "SpeedNumber.h"
 
-typedef NS_ENUM(UInt32, MWChoiceSetId) {
-    MWChoiceSetIdChangeUnits = 300,
-    MWChoiceSetIdList = 400
-};
-
-typedef NS_ENUM(UInt16, MWChoiceSetChangeUnitChoiceId) {
-    MWChoiceSetChangeUnitChoiceIdMetric = 301,
-    MWChoiceSetChangeUnitChoiceIdImperial = 302
-};
-
-typedef NS_ENUM(UInt16, MWMenuCommandIdShow) {
-    MWMenuCommandIdShowWeatherConditions = 101,
-    MWMenuCommandIdShowDailyForecast = 102,
-    MWMenuCommandIdShowHourlyForecast = 103,
-    MWMenuCommandIdShowAlerts = 104,
-    MWMenuCommandIdShowChangeUnits = 105
-};
-
-typedef NS_ENUM(NSUInteger, MWMenuCommandIdList) {
-    MWMenuCommandIdListNext = 111,
-    MWMenuCommandIdListPrevious = 112,
-    MWMenuCommandIdListShowList = 113,
-    MWMenuCommandIdListBack = 114,
-    MWMenuCommandIdListHourlyNow = 115,
-    MWMenuCommandIdListDailyToday = 116,
-    MWMenuCommandIdListDailyTomorrow = 117,
-    MWMenuCommandIdListShowMessage = 118
-};
 
 MWInfoType const MWInfoTypeNone = @"NONE";
 MWInfoType const MWInfoTypeWeatherConditions = @"WEATHER_CONDITIONS";
@@ -59,7 +31,7 @@ MWInfoType const MWInfoTypeAlerts = @"ALERTS";
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SmartDeviceLinkService () <SDLManagerDelegate>
+@interface SmartDeviceLinkService () <SDLManagerDelegate, SDLChoiceSetDelegate>
 
 @property SDLManager *manager;
 
@@ -70,7 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) SDLLanguage language;
 @property (nonatomic, strong, nullable) Localization *localization;
 @property (nonatomic, assign, getter=hasFirstHMIFullOccurred) BOOL firstHMIFullOccurred;
-
 
 @property (nonatomic, strong, nullable) MWInfoType currentInfoType;
 @property (nonatomic, strong, nullable) NSArray  *currentInfoTypeList;
@@ -104,10 +75,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)start {
     [self resetProperties];
+
+    self.localization = [Localization defaultLocalization];
     
     // Change which config you need based on if you want to connect to a TDK (default) or a wifi based emulator (debug)
-    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration defaultConfigurationWithAppName:@"MobileWeather" appId:@"330533107"];
-//    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration debugConfigurationWithAppName:@"MobileWeather" appId:@"330533107" ipAddress:@"192.168.1.61" port:2776];
+    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration defaultConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107"];
+//    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration debugConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107" ipAddress:@"192.168.1.61" port:2776];
     lifecycleConfig.ttsName = [SDLTTSChunk textChunksFromString:NSLocalizedString(@"app.tts-name", nil)];
     lifecycleConfig.voiceRecognitionCommandNames = @[NSLocalizedString(@"app.vr-synonym", nil)];
     lifecycleConfig.appIcon = [SDLArtwork persistentArtworkWithImage:[UIImage imageNamed:@"sdl-appicon"] name:@"AppIcon" asImageFormat:SDLArtworkImageFormatPNG];
@@ -119,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
     WeatherLanguage *wlanguage = [WeatherLanguage elementWithValue:languageString];
     [[NSNotificationCenter defaultCenter] postNotificationName:MobileWeatherLanguageUpdateNotification object:self userInfo:@{ @"language" : wlanguage }];
     
-    SDLConfiguration *config = [SDLConfiguration configurationWithLifecycle:lifecycleConfig lockScreen:[SDLLockScreenConfiguration enabledConfiguration] logging:[SDLLogConfiguration debugConfiguration]];
+    SDLConfiguration *config = [SDLConfiguration configurationWithLifecycle:lifecycleConfig lockScreen:[SDLLockScreenConfiguration enabledConfiguration] logging:[SDLLogConfiguration debugConfiguration] fileManager:[SDLFileManagerConfiguration defaultConfiguration]];
     
     self.manager = [[SDLManager alloc] initWithConfiguration:config delegate:self];
     
@@ -156,11 +129,11 @@ NS_ASSUME_NONNULL_BEGIN
         self.firstHMIFullOccurred = YES;
         // the app is just started by the user. Send everything needed to be done once
         [self sendWelcomeMessageWithSpeak:YES];
-        [self sendWeatherVoiceCommands];
-        [self sendChangeUnitsVoiceCommand];
         [self subscribeRepeatButton];
         [self sendDefaultGlobalProperties];
-        [self createChangeUnitsInteractionChoiceSet];
+        [self preloadChangeUnitsChoices];
+
+        self.manager.screenManager.menu = [self weatherMenuCells];
     }
 }
 
@@ -254,43 +227,36 @@ NS_ASSUME_NONNULL_BEGIN
     [self.manager sendRequest:request];
 }
 
-- (void)createChangeUnitsInteractionChoiceSet {
-    SDLChoice *metricChoice = [[SDLChoice alloc] initWithId:MWChoiceSetChangeUnitChoiceIdMetric menuName:self.localization[@"choice.units.metric"] vrCommands:@[self.localization[@"vr.metric"]]];
-    SDLChoice *imperialChoice = [[SDLChoice alloc] initWithId:MWChoiceSetChangeUnitChoiceIdImperial menuName:self.localization[@"choice.units.imperial"] vrCommands:@[self.localization[@"vr.imperial"]]];
+#pragma mark - Choice Sets
 
-    SDLCreateInteractionChoiceSet *request = [[SDLCreateInteractionChoiceSet alloc] initWithId:MWChoiceSetIdChangeUnits choiceSet:@[metricChoice, imperialChoice]];
-    [self.manager sendRequest:request];
+- (NSArray<SDLChoiceCell *> *)changeUnitsChoiceCells {
+    SDLChoiceCell *metric = [[SDLChoiceCell alloc] initWithText:self.localization[@"choice.units.metric"] artwork:nil voiceCommands:@[self.localization[@"vr.metric"]]];
+    SDLChoiceCell *imperial = [[SDLChoiceCell alloc] initWithText:self.localization[@"choice.units.imperial"] artwork:nil voiceCommands:@[self.localization[@"vr.imperial"]]];
+
+    return @[metric, imperial];
 }
 
-- (void)performChangeUnitsInteractionWithMode:(SDLInteractionMode)mode {
-    SDLPerformInteraction *request = [[SDLPerformInteraction alloc] initWithInitialPrompt:self.localization[@"pi.units.initial-prompt"] initialText:self.localization[@"pi.units.text"] interactionChoiceSetIDList:@[@(MWChoiceSetIdChangeUnits)] helpPrompt:nil timeoutPrompt:self.localization[@"pi.units.timeout-prompt"] interactionMode:(mode ?: SDLInteractionModeBoth) timeout:60000];
-    
-    [self.manager sendRequest:request withResponseHandler:^(SDLPerformInteraction * _Nullable request, SDLPerformInteractionResponse * _Nullable response, NSError * _Nullable error) {
-        if (!response.success.boolValue) {
-            return;
-        }
-        
-        NSUInteger choiceID = response.choiceID.unsignedIntegerValue;
-        if (choiceID != MWChoiceSetChangeUnitChoiceIdImperial && choiceID != MWChoiceSetChangeUnitChoiceIdMetric) {
-            return;
-        }
-
-        UnitType unit = (choiceID == MWChoiceSetChangeUnitChoiceIdImperial) ? UnitTypeImperial : UnitTypeMetric;
-        [WeatherDataManager sharedManager].unit = unit;
-    }];
+- (void)preloadChangeUnitsChoices {
+    [self.manager.screenManager preloadChoices:[self changeUnitsChoiceCells] withCompletionHandler:nil];
 }
 
-- (void)createForecastChoiceSetWithList:(NSArray *)forecasts ofType:(MWInfoType)infoType {
+- (void)presentChangeUnitsInteraction:(SDLInteractionMode)mode {
+    SDLChoiceSet *changeUnits = [[SDLChoiceSet alloc] initWithTitle:self.localization[@"pi.units.text"] delegate:self layout:SDLChoiceSetLayoutList timeout:30 initialPromptString:self.localization[@"pi.units.initial-prompt"] timeoutPromptString:self.localization[@"pi.units.timeout-prompt"] helpPromptString:nil vrHelpList:nil choices:[self changeUnitsChoiceCells]];
+
+    [self.manager.screenManager presentChoiceSet:changeUnits mode:mode];
+}
+
+- (void)presentForecastInteractionWithList:(NSArray *)forecasts ofType:(MWInfoType)infoType mode:(SDLInteractionMode)mode {
     BOOL isHourlyForecast = [infoType isEqualToString:MWInfoTypeHourlyForecast];
-    
+
     NSDateFormatter *dateFormatShow = [[NSDateFormatter alloc] init];
     dateFormatShow.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
     dateFormatShow.locale = self.localization.locale;
-    
+
     NSDateFormatter *dateFormatSpeak = [[NSDateFormatter alloc] init];
     dateFormatSpeak.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
     dateFormatSpeak.locale = self.localization.locale;
-    
+
     if (isHourlyForecast) {
         dateFormatShow.dateFormat = self.localization[@"forecast.hourly.choice.show"];
         dateFormatSpeak.dateFormat = self.localization[@"forecast.hourly.choice.speak"];
@@ -298,31 +264,12 @@ NS_ASSUME_NONNULL_BEGIN
         dateFormatShow.dateFormat = self.localization[@"forecast.daily.choice.show"];
         dateFormatSpeak.dateFormat = self.localization[@"forecast.daily.choice.speak"];
     }
-    
-    SDLCreateInteractionChoiceSet *createChoiceSetRequest = [[SDLCreateInteractionChoiceSet alloc] init];
-    createChoiceSetRequest.interactionChoiceSetID = @(MWChoiceSetIdList);
 
-    NSMutableSet *filenames = [NSMutableSet set];
-    NSMutableArray *choices = [NSMutableArray array];
+    NSMutableArray<SDLChoiceCell *> *choices = [NSMutableArray array];
     for (Forecast *forecast in forecasts) {
-        SDLChoice *choice = [[SDLChoice alloc] init];
-        if (self.graphicsAvailable && forecast.conditionIcon != nil) {
-            NSString *filename = forecast.conditionIcon;
-            SDLImage *image = [[SDLImage alloc] initWithName:filename];
-            
-            if ([self.manager.fileManager.remoteFileNames containsObject:filename] == NO) {
-                [filenames addObject:forecast.conditionIcon];
-            }
-
-            choice.image = image;
-        }
-
-        choice.choiceID = @(MWChoiceSetIdList + choices.count + 1);
-        choice.menuName = [dateFormatShow stringFromDate:forecast.date];
-
         NSMutableArray *vrCommands = [NSMutableArray array];
         [vrCommands addObject:[dateFormatSpeak stringFromDate:forecast.date]];
-       
+
         if (isHourlyForecast && choices.count == 0) {
             [vrCommands addObject:self.localization[@"vr.now"]];
         } else {
@@ -333,56 +280,22 @@ NS_ASSUME_NONNULL_BEGIN
             }
         }
 
-        choice.vrCommands = [vrCommands copy];
-        [choices addObject:choice];
+        SDLChoiceCell *cell = [[SDLChoiceCell alloc] initWithText:[dateFormatShow stringFromDate:forecast.date] artwork:[SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG] voiceCommands:[vrCommands copy]];
+        [choices addObject:cell];
     }
 
-    createChoiceSetRequest.choiceSet = [choices copy];
-
-    NSMutableArray *artworks = [NSMutableArray array];
-    for (NSString *filename in filenames) {
-        [artworks addObject:[SDLArtwork artworkWithImage:[[ImageProcessor sharedProcessor] imageFromConditionImage:filename] name:filename asImageFormat:SDLArtworkImageFormatPNG]];
-    }
-
-    if (artworks.count > 0) {
-        __weak typeof(self) weakSelf = self;
-        [self.manager.fileManager uploadArtworks:artworks progressHandler:nil completionHandler:^(NSArray<NSString *> * _Nonnull artworkNames, NSError * _Nullable error) {
-            weakSelf.currentForecastChoices = createChoiceSetRequest.choiceSet;
-            [weakSelf.manager sendRequest:createChoiceSetRequest];
-        }];
-    }
-}
-
-- (void)deleteForecastChoiceSet {
-    SDLDeleteInteractionChoiceSet *request = [[SDLDeleteInteractionChoiceSet alloc] initWithId:MWChoiceSetIdList];
-    self.currentForecastChoices = nil;
-    [self.manager sendRequest:request];
-}
-
-- (void)performForecastInteractionWithMode:(SDLInteractionMode)mode {
-    SDLPerformInteraction *request = nil;
-    
+    SDLChoiceSet *choiceSet = nil;
     if ([self.currentInfoType isEqualToString:MWInfoTypeDailyForecast]) {
-        request = [[SDLPerformInteraction alloc] initWithInitialPrompt:self.localization[@"pi.daily-forecast.initial-prompt"] initialText:self.localization[@"pi.daily-forecast.text"] interactionChoiceSetIDList:@[@(MWChoiceSetIdList)] helpPrompt:self.localization[@"pi.daily-forecast.help-prompt"] timeoutPrompt:self.localization[@"pi.daily-forecast.timeout-prompt"] interactionMode:(mode ?: SDLInteractionModeBoth) timeout:60000];
+        choiceSet = [[SDLChoiceSet alloc] initWithTitle:self.localization[@"pi.daily-forecast.text"] delegate:self layout:SDLChoiceSetLayoutTiles timeout:60 initialPromptString:self.localization[@"pi.daily-forecast.initial-prompt"] timeoutPromptString:self.localization[@"pi.daily-forecast.timeout-prompt"] helpPromptString:self.localization[@"pi.daily-forecast.help-prompt"] vrHelpList:nil choices:choices];
     } else if ([self.currentInfoType isEqualToString:MWInfoTypeHourlyForecast]) {
-        request = [[SDLPerformInteraction alloc] initWithInitialPrompt:self.localization[@"pi.hourly-forecast.initial-prompt"] initialText:self.localization[@"pi.hourly-forecast.text"] interactionChoiceSetIDList:@[@(MWChoiceSetIdList)] helpPrompt:self.localization[@"pi.hourly-forecast.help-prompt"] timeoutPrompt:self.localization[@"pi.hourly-forecast.timeout-prompt"] interactionMode:(mode ?: SDLInteractionModeBoth) timeout:60000];
+        choiceSet = [[SDLChoiceSet alloc] initWithTitle:self.localization[@"pi.hourly-forecast.text"] delegate:self layout:SDLChoiceSetLayoutTiles timeout:60 initialPromptString:self.localization[@"pi.hourly-forecast.initial-prompt"] timeoutPromptString:self.localization[@"pi.hourly-forecast.timeout-prompt"] helpPromptString:self.localization[@"pi.hourly-forecast.help-prompt"] vrHelpList:nil choices:choices];
     }
-    
-    [self.manager sendRequest:request withResponseHandler:^(SDLPerformInteraction * _Nullable request, SDLPerformInteractionResponse * _Nullable response, NSError * _Nullable error) {
-        NSUInteger choiceID = response.choiceID.unsignedIntegerValue;
-        if (self.currentForecastChoices == nil) { return; }
-        
-        for (SDLChoice *choice in self.currentForecastChoices) {
-            NSUInteger listChoiceID = choice.choiceID.unsignedIntegerValue;
-            if (listChoiceID == choiceID) {
-                NSUInteger index = listChoiceID - MWChoiceSetIdList - 1;
-                [self sendForecastAtIndex:index fromList:self.currentInfoTypeList infoType:self.currentInfoType withSpeak:YES];
-                self.currentInfoTypeListIndex = index;
-                break;
-            }
-        }
-    }];
+
+    [self.manager.screenManager presentChoiceSet:choiceSet mode:mode];
 }
+
+
+#pragma mark - Template updates
 
 - (void)sendWelcomeMessageWithSpeak:(BOOL)withSpeak {
     self.currentInfoType = MWInfoTypeNone;
@@ -398,32 +311,6 @@ NS_ASSUME_NONNULL_BEGIN
     if (withSpeak) {
         SDLSpeak *speak = [[SDLSpeak alloc] initWithTTS:self.localization[@"speak.welcome"]];
         [self.manager sendRequest:speak];
-    }
-}
-
-- (void)sendShowRequest:(SDLShow *)showRequest withImageNamed:(NSString *)filename {
-    // If graphics are available we need to add in the image graphic to the SHOW
-    if (self.graphicsAvailable) {
-        SDLImage *image = [[SDLImage alloc] init];
-        image.imageType = SDLImageTypeDynamic;
-        image.value = filename;
-        
-        // Check if the file is already on the remote system
-        if ([self.manager.fileManager.remoteFileNames containsObject:filename]) {
-            showRequest.graphic = image;
-            [self.manager sendRequest:showRequest];
-        } else {
-            [self.manager sendRequest:showRequest];
-            
-            SDLArtwork *artwork = [SDLArtwork artworkWithImage:[[ImageProcessor sharedProcessor] imageFromConditionImage:filename] name:filename asImageFormat:SDLArtworkImageFormatPNG];
-            [self.manager.fileManager uploadFile:artwork completionHandler:^(BOOL success, NSUInteger bytesAvailable, NSError * _Nullable error) {
-                SDLShow *showImage = [[SDLShow alloc] init];
-                showImage.graphic = image;
-                [self.manager sendRequest:showImage];
-            }];
-        }
-    } else {
-        [self.manager sendRequest:showRequest];
     }
 }
 
@@ -455,7 +342,7 @@ NS_ASSUME_NONNULL_BEGIN
         self.manager.screenManager.textField3 = [conditions.precipitation stringValueForUnit:percentageType shortened:YES localization:self.localization];
         self.manager.screenManager.textField4 = [conditions.windSpeed stringValueForUnit:speedType shortened:YES localization:self.localization];
 
-        self.manager.screenManager.primaryGraphic = [SDLArtwork artworkWithImage:[[ImageProcessor sharedProcessor] imageFromConditionImage:conditions.conditionIcon] name:conditions.conditionIcon asImageFormat:SDLArtworkImageFormatPNG];
+        self.manager.screenManager.primaryGraphic = [SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:conditions.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] name:conditions.conditionIcon asImageFormat:SDLArtworkImageFormatPNG];
 
         [self.manager.screenManager endUpdatesWithCompletionHandler:nil];
 
@@ -479,7 +366,6 @@ NS_ASSUME_NONNULL_BEGIN
         }
         NSUInteger index = 0;
         if ([infoType isEqualToString:self.currentInfoType]) {
-            [self deleteForecastChoiceSet];
             Forecast *oldForecast = (self.currentInfoTypeList)[self.currentInfoTypeListIndex];
             
             for (NSUInteger newindex = 0; newindex < forecasts.count; newindex++) {
@@ -491,12 +377,11 @@ NS_ASSUME_NONNULL_BEGIN
                 }
             }
         } else {
-            [self deleteWeatherVoiceCommands];
-            [self sendListVoiceCommands:infoType];
+            self.manager.screenManager.menu = [self listMenuCellsForType:infoType];
+            self.manager.screenManager.voiceCommands = [self listVoiceCommandsForType:infoType];
         }
 
-        [self createForecastChoiceSetWithList:forecasts ofType:infoType];
-        [self sendForecastAtIndex:index fromList:forecasts infoType:infoType withSpeak:withSpeak];
+        [self showForecastAtIndex:index fromList:forecasts infoType:infoType withSpeak:withSpeak];
         
         self.currentInfoType = infoType;
         self.currentInfoTypeList = forecasts;
@@ -507,7 +392,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
-- (void)sendForecastAtIndex:(NSUInteger)index fromList:(NSArray *)forecasts infoType:(MWInfoType)infoType withSpeak:(BOOL)withSpeak {
+- (void)showForecastAtIndex:(NSUInteger)index fromList:(NSArray *)forecasts infoType:(MWInfoType)infoType withSpeak:(BOOL)withSpeak {
     BOOL isHourlyForecast = [infoType isEqualToString:MWInfoTypeHourlyForecast];
     Forecast *forecast = forecasts[index];
     
@@ -549,19 +434,11 @@ NS_ASSUME_NONNULL_BEGIN
         temperatureType = UnitTemperatureFahrenheit;
         speedType = UnitSpeedMileHour;
     }
-    if ([self updateListVoiceCommandsWithNewIndex:index
-                                        ofNewList:forecasts
-                                     withOldIndex:self.currentInfoTypeListIndex
-                                        ofOldList:self.currentInfoTypeList]) {
-        [self sendListGlobalProperties:infoType
-                          withPrevious:(index != 0)
-                              withNext:(index + 1 != forecasts.count)];
-    }
 
     [self.manager.screenManager beginUpdates];
     self.manager.screenManager.softButtonObjects = [self buildListSoftButtons:infoType withIndex:index maxCount:forecasts.count];
 
-    self.manager.screenManager.primaryGraphic = [SDLArtwork artworkWithImage:[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] asImageFormat:SDLArtworkImageFormatPNG];
+    self.manager.screenManager.primaryGraphic = [SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG];
     
     if (isHourlyForecast) {
         self.manager.screenManager.textField1 = [self.localization stringForKey:@"forecast.hourly.show.field1", dateTimeStringShow, conditionTitleShow];
@@ -631,6 +508,8 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
+#pragma mark - Alerts
+
 - (void)sendAlertList:(NSArray *)alerts withSpeak:(BOOL)withSpeak {
     if (alerts.count > 0) {
         NSUInteger index = 0;
@@ -646,8 +525,8 @@ NS_ASSUME_NONNULL_BEGIN
                 }
             }
         } else {
-            [self deleteWeatherVoiceCommands];
-            [self sendListVoiceCommands:MWInfoTypeAlerts];
+            self.manager.screenManager.menu = [self listMenuCellsForType:MWInfoTypeAlerts];
+            self.manager.screenManager.voiceCommands = [self listVoiceCommandsForType:MWInfoTypeAlerts];
         }
         
         [self sendAlertAtIndex:index fromList:alerts withSpeak:withSpeak];
@@ -671,10 +550,6 @@ NS_ASSUME_NONNULL_BEGIN
     dateTimeFormatShow.dateFormat = self.localization[@"weather-alerts.format.date-time.show"];
     
     NSString *dateTimeStringShow = [dateTimeFormatShow stringFromDate:alert.dateExpires];
-
-    if ([self updateListVoiceCommandsWithNewIndex:index ofNewList:alerts withOldIndex:self.currentInfoTypeListIndex ofOldList:self.currentInfoTypeList]) {
-        [self sendListGlobalProperties:MWInfoTypeAlerts withPrevious:(index != 0) withNext:(index + 1 != alerts.count)];
-    }
 
     [self.manager.screenManager beginUpdates];
     self.manager.screenManager.textField1 = dateTimeStringShow;
@@ -710,21 +585,14 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)closeListInfoType:(MWInfoType)infoType {
-    if ([MWInfoTypeHourlyForecast isEqualToString:infoType] || [MWInfoTypeDailyForecast isEqualToString:infoType]) {
-        [self deleteForecastChoiceSet];
-    }
-
-    [self deleteListVoiceCommands:infoType];
-    [self deleteListNextVoiceCommand];
-    [self deleteListPreviousVoiceCommand];
-    
     self.currentInfoType = MWInfoTypeNone;
     [self setCurrentInfoTypeList:nil];
     self.currentInfoTypeListIndex = -1;
     
     [self sendWelcomeMessageWithSpeak:NO];
-    [self sendWeatherVoiceCommands];
     [self sendDefaultGlobalProperties];
+
+    self.manager.screenManager.menu = [self weatherMenuCells];
 }
 
 - (void)repeatWeatherInformation {
@@ -732,7 +600,7 @@ NS_ASSUME_NONNULL_BEGIN
     if ([MWInfoTypeWeatherConditions isEqualToString:infoType]) {
         [self sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES];
     } else if ([MWInfoTypeDailyForecast isEqualToString:infoType] || [MWInfoTypeHourlyForecast isEqualToString:infoType]) {
-        [self sendForecastAtIndex:self.currentInfoTypeListIndex fromList:self.currentInfoTypeList infoType:infoType withSpeak:YES];
+        [self showForecastAtIndex:self.currentInfoTypeListIndex fromList:self.currentInfoTypeList infoType:infoType withSpeak:YES];
     } else if ([MWInfoTypeAlerts isEqualToString:infoType]) {
         [self sendAlertAtIndex:self.currentInfoTypeListIndex fromList:self.currentInfoTypeList withSpeak:YES];
     }
@@ -749,9 +617,11 @@ NS_ASSUME_NONNULL_BEGIN
     [self.manager sendRequest:request];
 }
 
+#pragma mark - Soft Buttons
+
 - (NSArray<SDLSoftButtonObject *> *)buildDefaultSoftButtons {
     __weak typeof(self) weakSelf = self;
-    SDLSoftButtonState *currentWeatherState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.current"] image:nil];
+    SDLSoftButtonState *currentWeatherState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.current"] artwork:nil];
     SDLSoftButtonObject *currentWeatherObject = [[SDLSoftButtonObject alloc] initWithName:@"CurrentWeather" state:currentWeatherState handler:^(SDLOnButtonPress * _Nullable buttonPress, SDLOnButtonEvent * _Nullable buttonEvent) {
         if (!buttonPress) {
             return;
@@ -804,7 +674,7 @@ NS_ASSUME_NONNULL_BEGIN
         if (weakSelf.currentInfoTypeListIndex > 0) {
             NSInteger index = weakSelf.currentInfoTypeListIndex - 1;
             if ([infoType isEqualToString:MWInfoTypeDailyForecast] || [infoType isEqualToString:MWInfoTypeHourlyForecast]) {
-                [weakSelf sendForecastAtIndex:index fromList:weakSelf.currentInfoTypeList infoType:infoType withSpeak:YES];
+                [weakSelf showForecastAtIndex:index fromList:weakSelf.currentInfoTypeList infoType:infoType withSpeak:YES];
             }
             weakSelf.currentInfoTypeListIndex = index;
         }
@@ -821,7 +691,7 @@ NS_ASSUME_NONNULL_BEGIN
         if (weakSelf.currentInfoTypeListIndex + 1 < weakSelf.currentInfoTypeList.count) {
             NSInteger index = weakSelf.currentInfoTypeListIndex + 1;
             if ([infoType isEqualToString:MWInfoTypeDailyForecast] || [infoType isEqualToString:MWInfoTypeHourlyForecast]) {
-                [weakSelf sendForecastAtIndex:index fromList:weakSelf.currentInfoTypeList infoType:infoType withSpeak:YES];
+                [weakSelf showForecastAtIndex:index fromList:weakSelf.currentInfoTypeList infoType:infoType withSpeak:YES];
             }
             weakSelf.currentInfoTypeListIndex = index;
         }
@@ -833,7 +703,7 @@ NS_ASSUME_NONNULL_BEGIN
         showObject = [[SDLSoftButtonObject alloc] initWithName:@"ShowList" state:showListState handler:^(SDLOnButtonPress * _Nullable buttonPress, SDLOnButtonEvent * _Nullable buttonEvent) {
             if (!buttonPress) { return; }
 
-            [weakSelf performForecastInteractionWithMode:SDLInteractionModeManualOnly];
+            [weakSelf presentForecastInteractionWithList:weakSelf.currentInfoTypeList ofType:infoType mode:SDLInteractionModeManualOnly];
         }];
     } else if ([MWInfoTypeAlerts isEqualToString:infoType]) {
         SDLSoftButtonState *showMessage = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.message"] image:nil];
@@ -854,245 +724,85 @@ NS_ASSUME_NONNULL_BEGIN
     return @[previousObject, showObject, nextObject, closeObject];
 }
 
-- (void)sendWeatherVoiceCommands {
-    SDLMenuParams *menuparams1 = [[SDLMenuParams alloc] initWithMenuName:self.localization[@"cmd.current-conditions"]];
-    menuparams1.position = @1;
-    SDLAddCommand *request1 = [[SDLAddCommand alloc] initWithId:MWMenuCommandIdShowWeatherConditions vrCommands:@[self.localization[@"vr.current"],self.localization[@"vr.conditions"], self.localization[@"vr.current-conditions"], self.localization[@"vr.show-conditions"], self.localization[@"vr.show-current-conditions"]] handler:^(SDLOnCommand * _Nonnull command) {
-        [self sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES];
-    }];
-    request1.menuParams = menuparams1;
+#pragma mark - Menus
 
-    SDLMenuParams *menuparams2 = [[SDLMenuParams alloc] initWithMenuName:self.localization[@"cmd.daily-forecast"]];
-    menuparams2.position = @2;
-    SDLAddCommand *request2 = [[SDLAddCommand alloc] initWithId:MWMenuCommandIdShowDailyForecast vrCommands:@[self.localization[@"vr.daily"], self.localization[@"vr.daily-forecast"], self.localization[@"vr.show-daily-forecast"]] handler:^(SDLOnCommand * _Nonnull command) {
-        [self sendForecastList:[WeatherDataManager sharedManager].dailyForecast infoType:MWInfoTypeDailyForecast withSpeak:YES];
-    }];
-    request2.menuParams = menuparams2;
-
-    SDLMenuParams *menuparams3 = [[SDLMenuParams alloc] initWithMenuName:self.localization[@"cmd.hourly-forecast"]];
-    menuparams3.position = @3;
-    SDLAddCommand *request3 = [[SDLAddCommand alloc] initWithId:MWMenuCommandIdShowHourlyForecast vrCommands:@[self.localization[@"vr.hourly"], self.localization[@"vr.hourly-forecast"], self.localization[@"vr.show-hourly-forecast"]] handler:^(SDLOnCommand * _Nonnull command) {
-        [self sendForecastList:[WeatherDataManager sharedManager].hourlyForecast infoType:MWInfoTypeHourlyForecast withSpeak:YES];
-    }];
-    request3.menuParams = menuparams3;
-
-    SDLMenuParams *menuparams4 = [[SDLMenuParams alloc] initWithMenuName:self.localization[@"cmd.alerts"]];
-    menuparams4.position = @4;
-    SDLAddCommand *request4 = [[SDLAddCommand alloc] initWithId:MWMenuCommandIdShowAlerts vrCommands:@[self.localization[@"vr.alerts"], self.localization[@"vr.show-alerts"]] handler:^(SDLOnCommand * _Nonnull command) {
-        [self sendAlertList:[WeatherDataManager sharedManager].alerts withSpeak:YES];
-    }];
-    request4.menuParams = menuparams4;
-    
-    [self.manager sendRequests:@[request1, request2, request3, request4] progressHandler:nil completionHandler:nil];
-}
-
-- (void)deleteWeatherVoiceCommands {
-    SDLDeleteCommand *delete1 = [[SDLDeleteCommand alloc] initWithId:MWMenuCommandIdShowWeatherConditions];
-    SDLDeleteCommand *delete2 = [[SDLDeleteCommand alloc] initWithId:MWMenuCommandIdShowDailyForecast];
-    SDLDeleteCommand *delete3 = [[SDLDeleteCommand alloc] initWithId:MWMenuCommandIdShowHourlyForecast];
-    SDLDeleteCommand *delete4 = [[SDLDeleteCommand alloc] initWithId:MWMenuCommandIdShowAlerts];
-    
-    [self.manager sendRequests:@[delete1, delete2, delete3, delete4] progressHandler:nil completionHandler:nil];
-}
-
-- (void)sendChangeUnitsVoiceCommand {
-    SDLAddCommand *request = nil;
-    SDLMenuParams *menuparams = nil;
-    
-    menuparams = [[SDLMenuParams alloc] initWithMenuName:self.localization[@"cmd.change-units"]];
-    menuparams.position = @5;
-
+- (NSArray<SDLMenuCell *> *)weatherMenuCells {
     __weak typeof(self) weakSelf = self;
-    request = [[SDLAddCommand alloc] initWithId:MWMenuCommandIdShowChangeUnits vrCommands:@[self.localization[@"vr.units"], self.localization[@"vr.change-units"]] handler:^(SDLOnCommand * _Nonnull command) {
-        // the user has performed the voice command to change the units
-        SDLInteractionMode mode = nil;
-        if ([command.triggerSource isEqualToEnum:SDLTriggerSourceMenu]) {
-            mode = SDLInteractionModeManualOnly;
-        } else {
-            mode = SDLInteractionModeBoth;
-        }
-
-        [weakSelf performChangeUnitsInteractionWithMode:mode];
+    SDLMenuCell *showWeatherConditions = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.current-conditions"] icon:nil voiceCommands:@[self.localization[@"vr.current"],self.localization[@"vr.conditions"], self.localization[@"vr.current-conditions"], self.localization[@"vr.show-conditions"], self.localization[@"vr.show-current-conditions"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
+        [weakSelf sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES];
     }];
-    request.menuParams = menuparams;
-    [self.manager sendRequest:request];
+
+    SDLMenuCell *showDailyForecast = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.daily-forecast"] icon:nil voiceCommands:@[self.localization[@"vr.daily"], self.localization[@"vr.daily-forecast"], self.localization[@"vr.show-daily-forecast"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
+        [weakSelf sendForecastList:[WeatherDataManager sharedManager].dailyForecast infoType:MWInfoTypeDailyForecast withSpeak:YES];
+    }];
+
+    SDLMenuCell *showHourlyForecast = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.hourly-forecast"] icon:nil voiceCommands:@[self.localization[@"vr.hourly"], self.localization[@"vr.hourly-forecast"], self.localization[@"vr.show-hourly-forecast"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
+        [weakSelf sendForecastList:[WeatherDataManager sharedManager].hourlyForecast infoType:MWInfoTypeHourlyForecast withSpeak:YES];
+    }];
+
+    SDLMenuCell *showAlerts = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.alerts"] icon:nil voiceCommands:@[self.localization[@"vr.alerts"], self.localization[@"vr.show-alerts"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
+        [weakSelf sendAlertList:[WeatherDataManager sharedManager].alerts withSpeak:YES];
+    }];
+
+    SDLMenuCell *changeUnits = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.change-units"] icon:nil voiceCommands:@[self.localization[@"vr.units"], self.localization[@"vr.change-units"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
+        SDLInteractionMode mode = [triggerSource isEqualToEnum:SDLTriggerSourceMenu] ? SDLInteractionModeManualOnly : SDLInteractionModeBoth;
+        [weakSelf presentChangeUnitsInteraction:mode];
+    }];
+
+    return @[showWeatherConditions, showDailyForecast, showHourlyForecast, showAlerts, changeUnits];
 }
 
-- (void)sendListVoiceCommands:(MWInfoType)infoType {
-    SDLAddCommand *request;
-    SDLMenuParams *menuparams;
+- (NSArray<SDLMenuCell *> *)listMenuCellsForType:(MWInfoType)infoType {
     __weak typeof(self) weakSelf = self;
-    
-    if ([MWInfoTypeDailyForecast isEqual:infoType] || [MWInfoTypeHourlyForecast isEqual:infoType]) {
-        menuparams = [[SDLMenuParams alloc] initWithMenuName:self.localization[@"cmd.show-list"]];
-        menuparams.position = @3;
+    NSMutableArray<SDLMenuCell *> *menu = [NSMutableArray array];
 
-        request = [[SDLAddCommand alloc] initWithId:MWMenuCommandIdListShowList vrCommands:@[self.localization[@"vr.list"], self.localization[@"vr.show-list"]] handler:^(SDLOnCommand * _Nonnull command) {
-            SDLInteractionMode mode = nil;
-            if ([SDLTriggerSourceMenu isEqualToEnum:command.triggerSource]) {
-                mode = SDLInteractionModeManualOnly;
-            } else {
-                mode = SDLInteractionModeBoth;
-            }
-            [weakSelf performForecastInteractionWithMode:mode];
-        }];
-        request.menuParams = menuparams;
-        [self.manager sendRequest:request];
+    if ([infoType isEqualToString:MWInfoTypeDailyForecast] || [infoType isEqualToString:MWInfoTypeHourlyForecast]) {
+         [menu addObject:[[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.show-list"] icon:nil voiceCommands:@[self.localization[@"vr.list"], self.localization[@"vr.show-list"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
+            SDLInteractionMode mode = [triggerSource isEqualToEnum:SDLTriggerSourceMenu] ? SDLInteractionModeManualOnly : SDLInteractionModeBoth;
+             [weakSelf presentForecastInteractionWithList:weakSelf.currentInfoTypeList ofType:infoType mode:mode];
+        }]];
     } else if ([MWInfoTypeAlerts isEqualToString:infoType]) {
-        menuparams = [[SDLMenuParams alloc] initWithMenuName:self.localization[@"cmd.show-message"]];
-        menuparams.position = @3;
-        request = [[SDLAddCommand alloc] initWithId:MWMenuCommandIdListShowMessage vrCommands:@[self.localization[@"vr.message"], self.localization[@"vr.show-message"]] handler:^(SDLOnCommand * _Nonnull command) {
-            [weakSelf sendAlertMessageAtIndex:weakSelf.currentInfoTypeListIndex];
-        }];
-        request.menuParams = menuparams;
-        [self.manager sendRequest:request];
+        [menu addObject:[[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.show-message"] icon:nil voiceCommands:@[self.localization[@"vr.message"], self.localization[@"vr.show-message"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
+            SDLInteractionMode mode = [triggerSource isEqualToEnum:SDLTriggerSourceMenu] ? SDLInteractionModeManualOnly : SDLInteractionModeBoth;
+            [weakSelf presentForecastInteractionWithList:weakSelf.currentInfoTypeList ofType:infoType mode:mode];
+        }]];
     }
-    
-    menuparams = [[SDLMenuParams alloc] initWithMenuName:self.localization[@"cmd.back"]];
-    menuparams.position = @4;
-    request = [[SDLAddCommand alloc] initWithId:MWMenuCommandIdListBack vrCommands:@[self.localization[@"vr.back"]] handler:^(SDLOnCommand * _Nonnull command) {
+
+    [menu addObject:[[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.back"] icon:nil voiceCommands:@[self.localization[@"vr.back"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
         [weakSelf closeListInfoType:weakSelf.currentInfoType];
-    }];
-    request.menuParams = menuparams;
-    [self.manager sendRequest:request];
-    
-    if ([MWInfoTypeHourlyForecast isEqualToString:infoType]) {
-        request = [[SDLAddCommand alloc] initWithId:MWMenuCommandIdListHourlyNow vrCommands:@[self.localization[@"vr.now"]] handler:^(SDLOnCommand * _Nonnull command) {
-            [weakSelf sendForecastAtIndex:0 fromList:weakSelf.currentInfoTypeList infoType:weakSelf.currentInfoType withSpeak:YES];
+    }]];
+
+    return [menu copy];
+}
+
+- (NSArray<SDLVoiceCommand *> *)listVoiceCommandsForType:(MWInfoType)infoType {
+    __weak typeof(self) weakSelf = self;
+    NSArray<SDLVoiceCommand *> *voiceCommands = nil;
+    if ([infoType isEqualToString:MWInfoTypeHourlyForecast]) {
+        SDLVoiceCommand *hourlyNow = [[SDLVoiceCommand alloc] initWithVoiceCommands:@[self.localization[@"vr.now"]] handler:^{
+            [weakSelf showForecastAtIndex:0 fromList:weakSelf.currentInfoTypeList infoType:weakSelf.currentInfoType withSpeak:YES];
             weakSelf.currentInfoTypeListIndex = 0;
         }];
-        [self.manager sendRequest:request];
+
+        voiceCommands = @[hourlyNow];
     } else {
-        request = [[SDLAddCommand alloc] initWithId:MWMenuCommandIdListDailyToday vrCommands:@[self.localization[@"vr.today"]] handler:^(SDLOnCommand * _Nonnull command) {
-            [weakSelf sendForecastAtIndex:0 fromList:weakSelf.currentInfoTypeList infoType:weakSelf.currentInfoType withSpeak:YES];
+        SDLVoiceCommand *dailyToday = [[SDLVoiceCommand alloc] initWithVoiceCommands:@[self.localization[@"vr.today"]] handler:^{
+            [weakSelf showForecastAtIndex:0 fromList:weakSelf.currentInfoTypeList infoType:weakSelf.currentInfoType withSpeak:YES];
             weakSelf.currentInfoTypeListIndex = 0;
         }];
-        [self.manager sendRequest:request];
-        
-        request = [[SDLAddCommand alloc] initWithId:MWMenuCommandIdListDailyTomorrow vrCommands:@[self.localization[@"vr.tomorrow"]] handler:^(SDLOnCommand * _Nonnull command) {
-            [weakSelf sendForecastAtIndex:1 fromList:weakSelf.currentInfoTypeList infoType:weakSelf.currentInfoType withSpeak:YES];
+
+        SDLVoiceCommand *dailyTomorrow = [[SDLVoiceCommand alloc] initWithVoiceCommands:@[self.localization[@"vr.tomorrow"]] handler:^{
+            [weakSelf showForecastAtIndex:1 fromList:weakSelf.currentInfoTypeList infoType:weakSelf.currentInfoType withSpeak:YES];
             weakSelf.currentInfoTypeListIndex = 1;
         }];
-        [self.manager sendRequest:request];
+
+        voiceCommands = @[dailyToday, dailyTomorrow];
     }
+
+    return voiceCommands;
 }
 
-- (void)deleteListVoiceCommands:(MWInfoType)infoType {
-    SDLDeleteCommand *request;
-    
-    if ([MWInfoTypeDailyForecast isEqualToString:infoType] || [MWInfoTypeHourlyForecast isEqualToString:infoType]) {
-        request = [[SDLDeleteCommand alloc] initWithId:MWMenuCommandIdListShowList];
-        [self.manager sendRequest:request];
-    } else if ([MWInfoTypeAlerts isEqualToString:infoType]) {
-        request = [[SDLDeleteCommand alloc] initWithId:MWMenuCommandIdListShowMessage];
-        [self.manager sendRequest:request];
-    }
-    
-    request = [[SDLDeleteCommand alloc] initWithId:MWMenuCommandIdListBack];
-    [self.manager sendRequest:request];
-    
-    if ([infoType isEqualToString:MWInfoTypeHourlyForecast]) {
-        request = [[SDLDeleteCommand alloc] initWithId:MWMenuCommandIdListHourlyNow];
-        [self.manager sendRequest:request];
-    } else {
-        request = [[SDLDeleteCommand alloc] initWithId:MWMenuCommandIdListDailyToday];
-        [self.manager sendRequest:request];
-        
-        request = [[SDLDeleteCommand alloc] initWithId:MWMenuCommandIdListDailyTomorrow];
-        [self.manager sendRequest:request];
-    }
-}
-
-- (void)sendListNextVoiceCommand {
-    SDLMenuParams *menuparams = [[SDLMenuParams alloc] initWithMenuName:self.localization[@"cmd.next"]];
-    menuparams.position = @1;
-
-    __weak typeof(self) weakSelf = self;
-    SDLAddCommand *request = [[SDLAddCommand alloc] initWithId:MWMenuCommandIdListNext vrCommands:@[self.localization[@"vr.next"]] handler:^(SDLOnCommand * _Nonnull command) {
-        typeof(weakSelf) strongSelf = weakSelf;
-        MWInfoType infoType = strongSelf.currentInfoType;
-        if (strongSelf.currentInfoTypeListIndex + 1 < strongSelf.currentInfoTypeList.count) {
-            NSInteger index = strongSelf.currentInfoTypeListIndex + 1;
-            if ([infoType isEqualToString:MWInfoTypeDailyForecast] || [infoType isEqualToString:MWInfoTypeHourlyForecast]) {
-                [strongSelf sendForecastAtIndex:index fromList:strongSelf.currentInfoTypeList infoType:infoType withSpeak:YES];
-            } else if ([infoType isEqualToString:MWInfoTypeAlerts]) {
-                [strongSelf sendAlertAtIndex:index fromList:strongSelf.currentInfoTypeList withSpeak:YES];
-            }
-            strongSelf.currentInfoTypeListIndex = index;
-        }
-    }];
-    request.menuParams = menuparams;
-    
-    [self.manager sendRequest:request];
-}
-
-- (void)deleteListNextVoiceCommand {
-    SDLDeleteCommand *request = [[SDLDeleteCommand alloc] initWithId:MWMenuCommandIdListNext];
-    [self.manager sendRequest:request];
-}
-
-- (void)sendListPreviousVoiceCommand {
-    SDLMenuParams *menuparams = [[SDLMenuParams alloc] initWithMenuName:self.localization[@"cmd.previous"]];
-    menuparams.position = @2;
-
-    __weak typeof(self) weakSelf = self;
-    SDLAddCommand *request = [[SDLAddCommand alloc] initWithId:MWMenuCommandIdListPrevious vrCommands:@[self.localization[@"vr.previous"]] handler:^(SDLOnCommand * _Nonnull command) {
-        typeof(weakSelf) strongSelf = weakSelf;
-
-        MWInfoType infoType = strongSelf.currentInfoType;
-        if (strongSelf.currentInfoTypeListIndex <= 0) { return; }
-
-        NSInteger index = strongSelf.currentInfoTypeListIndex - 1;
-        if ([infoType isEqualToString:MWInfoTypeDailyForecast] || [infoType isEqualToString:MWInfoTypeHourlyForecast]) {
-            [strongSelf sendForecastAtIndex:index fromList:strongSelf.currentInfoTypeList infoType:infoType withSpeak:YES];
-        } else if ([infoType isEqualToString:MWInfoTypeAlerts]) {
-            [strongSelf sendAlertAtIndex:index fromList:strongSelf.currentInfoTypeList withSpeak:YES];
-        }
-        strongSelf.currentInfoTypeListIndex = index;
-    }];
-    request.menuParams = menuparams;
-    
-    [self.manager sendRequest:request];
-}
-
-- (void)deleteListPreviousVoiceCommand {
-    SDLDeleteCommand *request = [[SDLDeleteCommand alloc] initWithId:MWMenuCommandIdListPrevious];
-    [self.manager sendRequest:request];
-}
-
-- (BOOL)updateListVoiceCommandsWithNewIndex:(NSInteger)newIndex ofNewList:(NSArray *)newList withOldIndex:(NSInteger)oldIndex ofOldList:(NSArray *)oldList {
-    BOOL newIsFirst, newIsLast, oldIsFirst, oldIsLast, modified;
-    
-    modified = NO;
-    newIsFirst = (newIndex == 0);
-    newIsLast = (newIndex + 1 == newList.count);
-    
-    if (oldIndex == -1) {
-        oldIsFirst = YES;
-        oldIsLast = YES;
-    } else {
-        oldIsFirst = (oldIndex == 0);
-        oldIsLast = (oldIndex + 1 == oldList.count);
-    }
-    
-    if (newIsFirst == NO && oldIsFirst == YES) {
-        [self sendListPreviousVoiceCommand];
-        modified = YES;
-    } else if (newIsFirst == YES && oldIsFirst == NO) {
-        [self deleteListPreviousVoiceCommand];
-        modified = YES;
-    }
-    
-    if (newIsLast == NO && oldIsLast == YES) {
-        [self sendListNextVoiceCommand];
-        modified = YES;
-    } else if (newIsLast == YES && oldIsLast == NO) {
-        [self deleteListNextVoiceCommand];
-        modified = YES;
-    }
-    
-    return modified;
-}
+#pragma mark - Global Properties / Help Lists
 
 - (void)sendDefaultGlobalProperties {
     NSMutableArray *prompts = [NSMutableArray array];
@@ -1163,6 +873,30 @@ NS_ASSUME_NONNULL_BEGIN
 
     SDLSetGlobalProperties *request = [[SDLSetGlobalProperties alloc] initWithHelpText:promptstring timeoutText:promptstring vrHelpTitle:self.localization[@"app.name"] vrHelp:[items copy]];
     [self.manager sendRequest:request]; 
+}
+
+#pragma mark - SDLChoiceSetDelegate
+
+- (void)choiceSet:(SDLChoiceSet *)choiceSet didSelectChoice:(SDLChoiceCell *)choice withSource:(SDLTriggerSource)source atRowIndex:(NSUInteger)rowIndex {
+    if ([choiceSet.title isEqualToString:self.localization[@"pi.units.text"]]) {
+        [self mw_changeUnitsDidSelectChoice:choice atIndex:rowIndex];
+    } else {
+        [self mw_forecastDidSelectChoice:choice atIndex:rowIndex];
+    }
+}
+
+- (void)mw_changeUnitsDidSelectChoice:(SDLChoiceCell *)cell atIndex:(NSUInteger)rowIndex {
+    UnitType unit = (rowIndex == 0) ? UnitTypeMetric : UnitTypeImperial;
+    [WeatherDataManager sharedManager].unit = unit;
+}
+
+- (void)mw_forecastDidSelectChoice:(SDLChoiceCell *)cell atIndex:(NSUInteger)rowIndex {
+    [self showForecastAtIndex:rowIndex fromList:self.currentInfoTypeList infoType:self.currentInfoType withSpeak:YES];
+    self.currentInfoTypeListIndex = rowIndex;
+}
+
+- (void)choiceSet:(SDLChoiceSet *)choiceSet didReceiveError:(NSError *)error {
+
 }
 
 @end

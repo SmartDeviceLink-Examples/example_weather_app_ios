@@ -23,6 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UILabel *lockedLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *arrowUpImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *arrowDownImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *arrowLeftImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *arrowRightImageView;
+@property (strong, nonatomic) SwipeGestureCallbackBlock dismissGestureCallback;
+@property (strong, nonatomic, nullable) UISwipeGestureRecognizer *swipeGesture;
 
 @end
 
@@ -36,11 +40,19 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)shouldAutorotate {
-    return NO;
+    if (self.presentingViewController != nil) {
+        return self.presentingViewController.shouldAutorotate;
+    } else {
+        return YES;
+    }
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    if (self.presentingViewController != nil) {
+        return self.presentingViewController.supportedInterfaceOrientations;
+    } else {
+        return UIInterfaceOrientationMaskAll;
+    }
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -48,7 +60,6 @@ NS_ASSUME_NONNULL_BEGIN
 
     return useWhiteIcon ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
 }
-
 
 #pragma mark - Setters
 
@@ -70,6 +81,31 @@ NS_ASSUME_NONNULL_BEGIN
     [self sdl_layoutViews];
 }
 
+- (void)setLockedLabelText:(NSString *_Nullable)lockedLabelText {
+    _lockedLabelText = lockedLabelText;
+
+    [self sdl_layoutViews];
+}
+
+#pragma mark - Swipe Gesture
+
+- (void)addDismissGestureWithCallback:(SwipeGestureCallbackBlock)swipeGestureCallback {
+    if (!self.swipeGesture) {
+        self.dismissGestureCallback = swipeGestureCallback;
+        self.swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(sdl_didSwipeToDismiss:)];
+        [self.swipeGesture setDirection: UISwipeGestureRecognizerDirectionDown];
+        [self.view addGestureRecognizer:self.swipeGesture];
+    }
+}
+
+- (void)removeDismissGesture {
+    [self.view removeGestureRecognizer:self.swipeGesture];
+    self.swipeGesture = nil;
+}
+
+- (void)sdl_didSwipeToDismiss:(UISwipeGestureRecognizer *)gesture {
+    self.dismissGestureCallback();
+}
 
 #pragma mark - Layout
 
@@ -82,11 +118,21 @@ NS_ASSUME_NONNULL_BEGIN
 
         self.arrowUpImageView.image = [self.class sdl_imageWithName:@"lock_arrow_up_black"];
         self.arrowUpImageView.tintColor = iconColor;
-
         self.arrowDownImageView.image = [self.class sdl_imageWithName:@"lock_arrow_down_black"];
         self.arrowDownImageView.tintColor = iconColor;
+        self.arrowLeftImageView.image = [self.class sdl_imageWithName:@"lock_arrow_left_black"];
+        self.arrowLeftImageView.tintColor = iconColor;
+        self.arrowRightImageView.image = [self.class sdl_imageWithName:@"lock_arrow_right_black"];
+        self.arrowRightImageView.tintColor = iconColor;
 
         self.lockedLabel.textColor = iconColor;
+        self.lockedLabel.numberOfLines = 0;
+
+        if (self.lockedLabelText != nil) {
+            self.lockedLabel.text = self.lockedLabelText;
+        } else {
+            self.lockedLabel.text = NSLocalizedString(@"Locked for your safety", nil);
+        }
 
         self.view.backgroundColor = self.backgroundColor;
 
@@ -117,9 +163,11 @@ NS_ASSUME_NONNULL_BEGIN
 
     self.backupImageView.image = nil;
     self.backupImageView.tintColor = nil;
-    
+
     self.arrowUpImageView.alpha = 1.0;
     self.arrowDownImageView.alpha = 1.0;
+    self.arrowLeftImageView.alpha = 1.0;
+    self.arrowRightImageView.alpha = 1.0;
 
     self.sdlIconImageView.alpha = 1.0;
 }
@@ -130,9 +178,11 @@ NS_ASSUME_NONNULL_BEGIN
 
     self.backupImageView.image = self.appIcon;
     self.backupImageView.tintColor = nil;
-    
+
     self.arrowUpImageView.alpha = 0.0;
     self.arrowDownImageView.alpha = 0.0;
+    self.arrowLeftImageView.alpha = 0.0;
+    self.arrowRightImageView.alpha = 0.0;
 
     self.sdlIconImageView.alpha = 1.0;
 }
@@ -143,9 +193,11 @@ NS_ASSUME_NONNULL_BEGIN
 
     self.backupImageView.image = self.vehicleIcon;
     self.backupImageView.tintColor = nil;
-    
+
     self.arrowUpImageView.alpha = 0.0;
     self.arrowDownImageView.alpha = 0.0;
+    self.arrowLeftImageView.alpha = 0.0;
+    self.arrowRightImageView.alpha = 0.0;
 
     self.sdlIconImageView.alpha = 1.0;
 }
@@ -159,6 +211,8 @@ NS_ASSUME_NONNULL_BEGIN
 
     self.arrowUpImageView.alpha = 0.0;
     self.arrowDownImageView.alpha = 0.0;
+    self.arrowLeftImageView.alpha = 0.0;
+    self.arrowRightImageView.alpha = 0.0;
 
     self.sdlIconImageView.alpha = 0.0;
 }

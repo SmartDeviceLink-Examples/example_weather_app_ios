@@ -15,6 +15,7 @@
 @class SDLProxy;
 @class SDLPutFile;
 @class SDLRegisterAppInterfaceResponse;
+@class SDLRPCMessage;
 @class SDLRPCNotification;
 @class SDLRPCRequest;
 @class SDLRPCResponse;
@@ -27,10 +28,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
+/// The block called when the manager is ready to be used or an error occurs while attempting to become ready.
+///
+/// @param success a bool value if the set up succeeded
+/// @param error the error is any exists
 typedef void (^SDLManagerReadyBlock)(BOOL success, NSError *_Nullable error);
 
-
+/// The top level manager object for all of SDL's interactions with the app and the head unit
 @interface SDLManager : NSObject
 
 /**
@@ -84,6 +88,11 @@ typedef void (^SDLManagerReadyBlock)(BOOL success, NSError *_Nullable error);
 @property (strong, nonatomic, readonly, nullable) SDLRegisterAppInterfaceResponse *registerResponse;
 
 /**
+ *  The auth token, if received. This should be used to log into a user account. Primarily used for cloud apps with companion app stores.
+ */
+@property (strong, nonatomic, readonly, nullable) NSString *authToken;
+
+/**
  *  The manager's delegate.
  */
 @property (weak, nonatomic, nullable) id<SDLManagerDelegate> delegate;
@@ -92,15 +101,6 @@ typedef void (^SDLManagerReadyBlock)(BOOL success, NSError *_Nullable error);
  The currently pending RPC request send transactions
  */
 @property (copy, nonatomic, readonly) NSArray<__kindof NSOperation *> *pendingRPCTransactions;
-
-/**
- * Deprecated internal proxy object. This should only be accessed when the Manager is READY. This property may go to nil at any time.
- * The only reason to use this is to access the `putFileStream:withRequest:` method. All other functionality exists on managers in 4.3. This will be removed in 5.0 and the functionality replicated on `SDLFileManager`.
- */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-@property (strong, nonatomic, readonly, nullable) SDLProxy *proxy;
-#pragma clang diagnostic pop
 
 
 #pragma mark Lifecycle
@@ -129,8 +129,21 @@ typedef void (^SDLManagerReadyBlock)(BOOL success, NSError *_Nullable error);
  */
 - (void)stop;
 
+/**
+ *  Start the encryption lifecycle manager, which will attempt to open a secure service.
+ *
+ *  Please call this method in the successful callback of startWithReadyHandler. If you do call this method, you must wait for SDLServiceEncryptionDelegate's serviceEncryptionUpdatedOnService delegate method before you send any encrypted RPCs.
+ */
+- (void)startRPCEncryption;
 
 #pragma mark Manually Send RPC Requests
+
+/**
+ *  Send an RPC of type `Response`, `Notification` or `Request`. Responses and notifications sent to Core do not a response back from Core. Each request sent to Core does get a response, so if you need the response and/or error, call `sendRequest:withResponseHandler:` instead.
+ *
+ *  @param rpc An RPC of type `SDLRPCResponse`, `SDLRPCNotification` or `SDLRPCRequest`
+ */
+- (void)sendRPC:(__kindof SDLRPCMessage *)rpc;
 
 /**
  *  Send an RPC request and don't bother with the response or error. If you need the response or error, call sendRequest:withCompletionHandler: instead.
@@ -164,6 +177,47 @@ typedef void (^SDLManagerReadyBlock)(BOOL success, NSError *_Nullable error);
  @param completionHandler A handler to call when all requests have been responded to
  */
 - (void)sendSequentialRequests:(NSArray<SDLRPCRequest *> *)requests progressHandler:(nullable SDLMultipleSequentialRequestProgressHandler)progressHandler completionHandler:(nullable SDLMultipleRequestCompletionHandler)completionHandler NS_SWIFT_NAME(sendSequential(requests:progressHandler:completionHandler:));
+
+
+#pragma mark - RPC Subscriptions
+
+/// The block that will be called every time an RPC is received when subscribed to an RPC.
+///
+/// @param message The RPC message
+typedef void (^SDLRPCUpdatedBlock) (__kindof SDLRPCMessage *message);
+
+/**
+ * Subscribe to callbacks about a particular RPC request, notification, or response with a block callback.
+ *
+ * @param rpcName The name of the RPC request, response, or notification to subscribe to.
+ * @param block The block that will be called every time an RPC of the name and type specified is received.
+ * @return An object that can be passed to `unsubscribeFromRPC:ofType:withObserver:` to unsubscribe the block.
+ */
+- (id)subscribeToRPC:(SDLNotificationName)rpcName withBlock:(SDLRPCUpdatedBlock)block NS_SWIFT_NAME(subscribe(to:block:));
+
+/**
+ * Subscribe to callbacks about a particular RPC request, notification, or response with a selector callback.
+ *
+ * The selector supports the following parameters:
+ *
+ * 1. Zero parameters e.g. `- (void)registerAppInterfaceResponse`
+ * 2. One parameter e.g. `- (void)registerAppInterfaceResponse:(NSNotification *)notification;`
+ *
+ * Note that using this method to get a response instead of the `sendRequest:withResponseHandler:` method of getting a response, you will not be notifed of any `SDLGenericResponse` errors where the head unit doesn't understand the request.
+ *
+ * @param rpcName The name of the RPC request, response, or notification to subscribe to.
+ * @param observer The object that will have its selector called every time an RPC of the name and type specified is received.
+ * @param selector The selector on `observer` that will be called every time an RPC of the name and type specified is received.
+ */
+- (void)subscribeToRPC:(SDLNotificationName)rpcName withObserver:(id)observer selector:(SEL)selector NS_SWIFT_NAME(subscribe(to:observer:selector:));
+
+/**
+ * Unsubscribe to callbacks about a particular RPC request, notification, or response.
+ *
+ * @param rpcName The name of the RPC request, response, or notification to unsubscribe from.
+ * @param observer The object representing a block callback or selector callback to be unsubscribed
+ */
+- (void)unsubscribeFromRPC:(SDLNotificationName)rpcName withObserver:(id)observer NS_SWIFT_NAME(unsubscribe(from:observer:));
 
 @end
 

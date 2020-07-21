@@ -10,7 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// The view controller for the lockscreen.
 @interface SDLLockScreenViewController : UIViewController
+
+/// A block that can be used to close the lockscreen when the user swipes on the lockscreen. Override this in your own custom view controllers if you build a custom lock screen.
+typedef void (^SwipeGestureCallbackBlock)(void);
 
 /**
  *  The app's icon. This will be set by the lock screen configuration.
@@ -26,6 +30,21 @@ NS_ASSUME_NONNULL_BEGIN
  *  The designated background color set in the lock screen configuration, or the default SDL gray-blue.
  */
 @property (copy, nonatomic, nullable) UIColor *backgroundColor;
+
+/**
+ *  The locked label string. This will be set by the lock screen manager to inform the user about the dismissable state.
+ */
+@property (copy, nonatomic, nullable) NSString *lockedLabelText;
+
+/**
+ *  Adds a swipe gesture to the lock screen view controller.
+ */
+- (void)addDismissGestureWithCallback:(SwipeGestureCallbackBlock)swipeGestureCallback;
+
+/**
+ *  Remove swipe gesture to the lock screen view controller.
+ */
+- (void)removeDismissGesture;
 
 @end
 

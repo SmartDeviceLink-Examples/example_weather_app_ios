@@ -4,7 +4,7 @@
 
 #import "SDLRPCRequest.h"
 
-/*
+/**
  *  Allows encoded data in the form of SyncP packets to be sent to the SYNC module. Legacy / v1 Protocol implementation; use SyncPData instead.
  *
  *  *** DEPRECATED ***
@@ -12,6 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+__deprecated
 @interface SDLEncodedSyncPData : SDLRPCRequest
 
 /**

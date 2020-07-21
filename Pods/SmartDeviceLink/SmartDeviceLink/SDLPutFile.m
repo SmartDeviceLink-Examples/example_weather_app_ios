@@ -4,7 +4,8 @@
 #import "SDLPutFile.h"
 
 #import "NSMutableDictionary+Store.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
+#import "SDLRPCFunctionNames.h"
 
 #import <zlib.h>
 
@@ -12,11 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation SDLPutFile
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (instancetype)init {
-    if (self = [super initWithName:SDLNamePutFile]) {
+    if (self = [super initWithName:SDLRPCFunctionNamePutFile]) {
     }
     return self;
 }
+#pragma clang diagnostic pop
 
 - (instancetype)initWithFileName:(NSString *)fileName fileType:(SDLFileType)fileType {
     self = [self init];
@@ -24,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
         return nil;
     }
 
-    self.syncFileName = fileName;
+    self.sdlFileName = fileName;
     self.fileType = fileType;
 
     return self;
@@ -83,59 +87,70 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Getters and Setters
 
 - (void)setSyncFileName:(NSString *)syncFileName {
-    [parameters sdl_setObject:syncFileName forName:SDLNameSyncFileName];
+    [self.parameters sdl_setObject:syncFileName forName:SDLRPCParameterNameSyncFileName];
 }
 
 - (NSString *)syncFileName {
-    return [parameters sdl_objectForName:SDLNameSyncFileName];
+    NSError *error = nil;
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameSyncFileName ofClass:NSString.class error:&error];
+}
+
+- (void)setSdlFileName:(NSString *)syncFileName {
+    [self.parameters sdl_setObject:syncFileName forName:SDLRPCParameterNameSyncFileName];
+}
+
+- (NSString *)sdlFileName {
+    NSError *error = nil;
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameSyncFileName ofClass:NSString.class error:&error];
 }
 
 - (void)setFileType:(SDLFileType)fileType {
-    [parameters sdl_setObject:fileType forName:SDLNameFileType];
+    [self.parameters sdl_setObject:fileType forName:SDLRPCParameterNameFileType];
 }
 
 - (SDLFileType)fileType {
-    return [parameters sdl_objectForName:SDLNameFileType];
+    NSError *error = nil;
+    return [self.parameters sdl_enumForName:SDLRPCParameterNameFileType error:&error];
 }
 
 - (void)setPersistentFile:(nullable NSNumber<SDLBool> *)persistentFile {
-    [parameters sdl_setObject:persistentFile forName:SDLNamePersistentFile];
+    [self.parameters sdl_setObject:persistentFile forName:SDLRPCParameterNamePersistentFile];
 }
 
 - (nullable NSNumber<SDLBool> *)persistentFile {
-    return [parameters sdl_objectForName:SDLNamePersistentFile];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNamePersistentFile ofClass:NSNumber.class error:nil];
 }
 
 - (void)setSystemFile:(nullable NSNumber<SDLBool> *)systemFile {
-    [parameters sdl_setObject:systemFile forName:SDLNameSystemFile];
+    [self.parameters sdl_setObject:systemFile forName:SDLRPCParameterNameSystemFile];
 }
 
 - (nullable NSNumber<SDLBool> *)systemFile {
-    return [parameters sdl_objectForName:SDLNameSystemFile];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameSystemFile ofClass:NSNumber.class error:nil];
 }
 
 - (void)setOffset:(nullable NSNumber<SDLUInt> *)offset {
-    [parameters sdl_setObject:offset forName:SDLNameOffset];
+    [self.parameters sdl_setObject:offset forName:SDLRPCParameterNameOffset];
 }
 
 - (nullable NSNumber<SDLUInt> *)offset {
-    return [parameters sdl_objectForName:SDLNameOffset];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameOffset ofClass:NSNumber.class error:nil];
 }
 
 - (void)setLength:(nullable NSNumber<SDLUInt> *)length {
-    [parameters sdl_setObject:length forName:SDLNameLength];
+    [self.parameters sdl_setObject:length forName:SDLRPCParameterNameLength];
 }
 
 - (nullable NSNumber<SDLUInt> *)length {
-    return [parameters sdl_objectForName:SDLNameLength];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameLength ofClass:NSNumber.class error:nil];
 }
 
 - (void)setCrc:(nullable NSNumber<SDLUInt> *)crc {
-    [parameters sdl_setObject:crc forName:SDLNameCRC];
+    [self.parameters sdl_setObject:crc forName:SDLRPCParameterNameCRC];
 }
 
 - (nullable NSNumber<SDLUInt> *)crc {
-    return [parameters sdl_objectForName:SDLNameCRC];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameCRC ofClass:NSNumber.class error:nil];
 }
 
 #pragma mark - Helpers

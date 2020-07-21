@@ -8,9 +8,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SDLRPCStruct : NSObject <NSCopying> {
-    NSMutableDictionary<NSString *, id> *store;
-}
+/// Superclass of all RPC-related structs and messages
+@interface SDLRPCStruct : NSObject <NSCopying>
+
+/// The store that contains RPC data
+@property (strong, nonatomic, readonly) NSMutableDictionary<NSString *, id> *store;
+
+/// Declares if the RPC payload ought to be protected
+@property (assign, nonatomic, getter=isPayloadProtected) BOOL payloadProtected;
 
 /**
  *  Convenience init
@@ -19,13 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return     A SDLRPCStruct object
  */
 - (instancetype)initWithDictionary:(NSDictionary<NSString *, id> *)dict;
-
-/**
- *  Init
- *
- *  @return A SDLRPCStruct object
- */
-- (instancetype)init;
 
 /**
  *  Converts struct to JSON formatted data

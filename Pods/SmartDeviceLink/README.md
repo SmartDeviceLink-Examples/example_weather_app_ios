@@ -1,13 +1,11 @@
-
+[![Accio supported](https://img.shields.io/badge/Accio-supported-0A7CF5.svg?style=flat)](https://github.com/JamitLabs/Accio)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Version](https://img.shields.io/cocoapods/v/SmartDeviceLink-iOS.svg?style=flat)](https://cocoapods.org/pods/SmartDeviceLink-iOS)
 [![License](https://img.shields.io/cocoapods/l/SmartDeviceLink-iOS.svg?style=flat)](https://cocoapods.org/pods/SmartDeviceLink-iOS)
-[![Build Status](https://img.shields.io/travis/smartdevicelink/sdl_ios/master.svg?style=flat)](https://travis-ci.org/smartdevicelink/sdl_ios)
+![SmartDeviceLink Tests](https://github.com/smartdevicelink/sdl_ios/workflows/SmartDeviceLink%20Tests/badge.svg)
 [![codecov](https://codecov.io/gh/smartdevicelink/sdl_ios/branch/master/graph/badge.svg)](https://codecov.io/gh/smartdevicelink/sdl_ios)
 [![Documentation](docs/badge.svg)](https://smartdevicelink.com/en/guides/iOS/getting-started/installation/)
-[![CocoaPods Downloads](https://img.shields.io/cocoapods/dt/SmartDeviceLink-iOS.svg?maxAge=172800)](https://cocoapods.org/pods/SmartDeviceLink-iOS)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![Slack Status](http://sdlslack.herokuapp.com/badge.svg)](http://slack.smartdevicelink.com)
- 
+[![Slack Status](http://sdlslack.herokuapp.com/badge.svg)](http://slack.smartdevicelink.com) 
 
 # SmartDeviceLink (SDL)
 
@@ -35,14 +33,26 @@ See the [changelog](https://github.com/smartdevicelink/sdl_ios/blob/master/CHANG
 
 ### Installing
 
+#### Accio
+
+You can install this library using [Accio/SwiftPM](https://github.com/JamitLabs/Accio) documentation page.  Please follow the steps to install and initialization Accio into a current or new application. 
+
+In your Package.swift file , you want to add `.package(url: "https://github.com/smartdevicelink/sdl_ios.git", .from: "6.6.0"),`  to the dependencies array.  Then add  `SmartDeviceLink` to the targets dependencies array.
+
+Please see [Mainifest format](https://github.com/apple/swift-package-manager/blob/master/Documentation/PackageDescriptionV4.md) to specify dependencies to a specific branch / version of SDL.
+
+###### Swift
+
+If you are building a Swift app, then add this instead `SmartDeviceLinkSwift` to the targets dependencies array.
+
 ##### Cocoapods
 
 You can install this library using [Cocoapods](https://cocoapods.org/pods/SmartDeviceLink-iOS). You can get started with Cocoapods by [following their install guide](https://guides.cocoapods.org/using/getting-started.html#getting-started), and learn how to use Cocoapods to install dependencies [by following this guide](https://guides.cocoapods.org/using/using-cocoapods.html).
 
-In your podfile, you want to add `pod 'SmartDeviceLink', '~> 6.1'`. Then run `pod install` inside your terminal. With Cocoapods, we support iOS 8.0+.
+In your podfile, you want to add `pod 'SmartDeviceLink', '~> 6.6'`. Then run `pod install` inside your terminal. With Cocoapods, we support iOS 8.0+.
 
 ###### Swift
-If you are building a Swift app, then add this instead `pod 'SmartDeviceLink/Swift', '~> 6.1'`. Then run `pod install` in your terminal.
+If you are building a Swift app, then add this instead `pod 'SmartDeviceLink/Swift', '~> 6.6'`. Then run `pod install` in your terminal.
 
 ##### Carthage
 
@@ -150,3 +160,21 @@ xcodebuild -project "SmartDeviceLink-iOS.xcodeproj" -scheme "SmartDeviceLink" -s
 ```
 
 You can optionally pipe the result to [xcpretty](https://github.com/supermarin/xcpretty).
+
+#### Lock Screen Screenshot Tests
+We run some additional tests using [FBSnapshotTestCase](https://github.com/uber/ios-snapshot-test-case). These tests generate the lock screen view controller and compare it to generated screenshots. By default, the generated screenshots use the iPhone 11 / iPhone XR simulator. If you run unit tests against those simulators, the tests should pass.
+
+##### Re-Generating Lock Screen Screenshots
+If you need to change which simulator is used to generate the screenshots, or if you need to re-generate the screenshots for another reason, you can. Go to `SDLLockScreenViewControllerSnapshotTests.m` and take the following steps:
+
+1. Uncomment the following line:
+
+```objc
+//    self.recordMode = YES;
+```
+
+2. Run unit tests on the simulator that you want to use to generate the screenshots. Tests should fail because record mode is on.
+
+3. Re-comment out the line.
+
+4. Run unit tests again; they should pass this time.

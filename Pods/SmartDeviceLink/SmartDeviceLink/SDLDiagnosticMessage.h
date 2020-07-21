@@ -14,6 +14,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SDLDiagnosticMessage : SDLRPCRequest
 
+/// Convenience init
+/// 
+/// @param targetId Name of target ECU
+/// @param length Length of message (in bytes)
+/// @param data Array of bytes comprising CAN message
+/// @return An SDLDiagnosticMessage object
 - (instancetype)initWithTargetId:(UInt16)targetId length:(UInt16)length data:(NSArray<NSNumber<SDLUInt> *> *)data;
 
 /**
@@ -35,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  Required, Array of NSNumber (Integers), Array size 1 - 65535, Integer Size 0 - 255
  */
-@property (strong, nonatomic) NSArray<NSNumber<SDLInt> *> *messageData;
+@property (strong, nonatomic) NSArray<NSNumber *> *messageData;
 
 @end
 

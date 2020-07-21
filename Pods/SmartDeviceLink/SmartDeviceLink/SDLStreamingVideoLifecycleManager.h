@@ -10,16 +10,19 @@
 #import <VideoToolbox/VideoToolbox.h>
 
 #import "SDLHMILevel.h"
-#import "SDLProtocolListener.h"
+#import "SDLProtocolDelegate.h"
 #import "SDLStreamingMediaManagerConstants.h"
 #import "SDLVideoStreamingFormat.h"
 #import "SDLVideoStreamingState.h"
 
 @class SDLCarWindow;
+@class SDLConfiguration;
 @class SDLImageResolution;
 @class SDLProtocol;
 @class SDLStateMachine;
 @class SDLStreamingMediaConfiguration;
+@class SDLStreamingVideoScaleManager;
+@class SDLSystemCapabilityManager;
 @class SDLTouchManager;
 
 @protocol SDLConnectionManagerType;
@@ -27,10 +30,9 @@
 @protocol SDLStreamingMediaManagerDataSource;
 
 
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SDLStreamingVideoLifecycleManager : NSObject <SDLProtocolListener>
+@interface SDLStreamingVideoLifecycleManager : NSObject <SDLProtocolDelegate>
 
 @property (strong, nonatomic, readonly) SDLStateMachine *videoStreamStateMachine;
 @property (strong, nonatomic, readonly) SDLVideoStreamManagerState *currentVideoStreamState;
@@ -57,11 +59,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (weak, nonatomic, nullable) id<SDLStreamingMediaManagerDataSource> dataSource;
 
-/**
- *  Whether or not video streaming is supported
- *
- *  @see SDLRegisterAppInterface SDLDisplayCapabilities
- */
+/// Whether or not video/audio streaming is supported
+/// @discussion If connected to a module pre-SDL v4.5 there is no way to check if streaming is supported so `YES` is returned by default even though the module may not support video/audio streaming.
 @property (assign, nonatomic, readonly, getter=isStreamingSupported) BOOL streamingSupported;
 
 /**
@@ -80,9 +79,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic, readonly, getter=isVideoStreamingPaused) BOOL videoStreamingPaused;
 
 /**
- *  This is the current screen size of a connected display. This will be the size the video encoder uses to encode the raw image data.
+ Handles the logic of scaling between the view controller's coordinate system and the display's coordinate system
  */
-@property (assign, nonatomic, readonly) CGSize screenSize;
+@property (strong, nonatomic, readonly) SDLStreamingVideoScaleManager *videoScaleManager;
 
 /**
  This is the agreed upon format of video encoder that is in use, or nil if not currently connected.
@@ -129,26 +128,39 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (assign, nonatomic) SDLStreamingEncryptionFlag requestedEncryptionType;
 
+/**
+ When YES, the StreamingMediaManager will send a black screen with "Video Backgrounded String". Defaults to YES.
+ */
+@property (assign, nonatomic) BOOL showVideoBackgroundDisplay;
+
+
 - (instancetype)init NS_UNAVAILABLE;
 
-/**
- Create a new streaming media manager for navigation and VPM apps with a specified configuration
-
- @param connectionManager The pass-through for RPCs
- @param configuration The configuration of this streaming media session
- @return A new streaming manager
- */
-- (instancetype)initWithConnectionManager:(id<SDLConnectionManagerType>)connectionManager configuration:(SDLStreamingMediaConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
+/// Create a new streaming video manager for navigation and projection apps with a specified configuration.
+/// @param connectionManager The pass-through for RPCs
+/// @param configuration This session's configuration
+/// @param systemCapabilityManager The system capability manager object for reading window capabilities
+- (instancetype)initWithConnectionManager:(id<SDLConnectionManagerType>)connectionManager configuration:(SDLConfiguration *)configuration systemCapabilityManager:(nullable SDLSystemCapabilityManager *)systemCapabilityManager NS_DESIGNATED_INITIALIZER;
 
 /**
  *  Start the manager with a completion block that will be called when startup completes. This is used internally. To use an SDLStreamingMediaManager, you should use the manager found on `SDLManager`.
  */
 - (void)startWithProtocol:(SDLProtocol *)protocol;
 
-/**
- *  Stop the manager. This method is used internally.
- */
+/// This method is used internally to stop the manager when the device disconnects from the module.
 - (void)stop;
+
+/// This method is used internally to stop the manager when video needs to be stopped on the secondary transport. The primary transport is still open.
+/// 1. Since the primary transport is still open, do will not reset the `hmiLevel` and `videoStreamingState` because we can still get notifications from the module with the updated hmi status on the primary transport.
+/// 2. We need to send an end video service control frame to the module to ensure that the video session is shut down correctly. In order to do this the protocol must be kept open and only destroyed after the module ACKs or NAKs our end video service request.
+/// 3. Since the primary transport is still open, the video scale manager should not be reset because the default video dimensions are retrieved from the `RegisterAppInterfaceResponse`. Due to a bug with the video start service ACK sometimes returning a screen resolution of {0, 0} on subsequent request to start a video service, we need to keep the screen resolution from the very first start video service ACK. (This is not an issue if the head unit supports the `VideoStreamingCapability`).
+/// @param videoEndedCompletionHandler Called when the module ACKs or NAKs to the request to end the video service.
+- (void)endVideoServiceWithCompletionHandler:(void (^)(void))videoEndedCompletionHandler;
+
+/// This method is used internally to stop video streaming when the secondary transport has been closed due to an connection error. The primary transport is still open.
+/// 1. Since the transport has been closed, we can not send an end video service control frame to the module.
+/// 2. Since the primary transport is still open, we will not reset the `hmiLevel`, `videoStreamingState` or the video scale manager. This lets us resume video streaming if the secondary transport can be reestablished during the same app session.
+- (void)secondaryTransportDidDisconnect;
 
 /**
  *  This method receives raw image data and will run iOS8+'s hardware video encoder to turn the data into a video stream, which will then be passed to the connected head unit.

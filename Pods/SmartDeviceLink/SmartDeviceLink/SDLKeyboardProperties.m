@@ -4,13 +4,17 @@
 #import "SDLKeyboardProperties.h"
 
 #import "NSMutableDictionary+Store.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation SDLKeyboardProperties
 
 - (instancetype)initWithLanguage:(nullable SDLLanguage)language layout:(nullable SDLKeyboardLayout)layout keypressMode:(nullable SDLKeypressMode)keypressMode limitedCharacterList:(nullable NSArray<NSString *> *)limitedCharacterList autoCompleteText:(nullable NSString *)autoCompleteText {
+    return [self initWithLanguage:language layout:layout keypressMode:keypressMode limitedCharacterList:limitedCharacterList autoCompleteText:autoCompleteText autoCompleteList:nil];
+}
+
+- (instancetype)initWithLanguage:(nullable SDLLanguage)language layout:(nullable SDLKeyboardLayout)layout keypressMode:(nullable SDLKeypressMode)keypressMode limitedCharacterList:(nullable NSArray<NSString *> *)limitedCharacterList autoCompleteText:(nullable NSString *)autoCompleteText autoCompleteList:(nullable NSArray<NSString *> *)autoCompleteList {
     self = [self init];
     if (!self) {
         return nil;
@@ -21,48 +25,57 @@ NS_ASSUME_NONNULL_BEGIN
     self.keypressMode = keypressMode;
     self.limitedCharacterList = [limitedCharacterList mutableCopy];
     self.autoCompleteText = autoCompleteText;
+    self.autoCompleteList = autoCompleteList;
 
     return self;
 }
 
 - (void)setLanguage:(nullable SDLLanguage)language {
-    [store sdl_setObject:language forName:SDLNameLanguage];
+    [self.store sdl_setObject:language forName:SDLRPCParameterNameLanguage];
 }
 
 - (nullable SDLLanguage)language {
-    return [store sdl_objectForName:SDLNameLanguage];
+    return [self.store sdl_enumForName:SDLRPCParameterNameLanguage error:nil];
 }
 
 - (void)setKeyboardLayout:(nullable SDLKeyboardLayout)keyboardLayout {
-    [store sdl_setObject:keyboardLayout forName:SDLNameKeyboardLayout];
+    [self.store sdl_setObject:keyboardLayout forName:SDLRPCParameterNameKeyboardLayout];
 }
 
 - (nullable SDLKeyboardLayout)keyboardLayout {
-    return [store sdl_objectForName:SDLNameKeyboardLayout];
+    return [self.store sdl_enumForName:SDLRPCParameterNameKeyboardLayout error:nil];
 }
 
 - (void)setKeypressMode:(nullable SDLKeypressMode)keypressMode {
-    [store sdl_setObject:keypressMode forName:SDLNameKeypressMode];
+    [self.store sdl_setObject:keypressMode forName:SDLRPCParameterNameKeypressMode];
 }
 
 - (nullable SDLKeypressMode)keypressMode {
-    return [store sdl_objectForName:SDLNameKeypressMode];
+    return [self.store sdl_enumForName:SDLRPCParameterNameKeypressMode error:nil];
 }
 
 - (void)setLimitedCharacterList:(nullable NSArray<NSString *> *)limitedCharacterList {
-    [store sdl_setObject:limitedCharacterList forName:SDLNameLimitedCharacterList];
+    [self.store sdl_setObject:limitedCharacterList forName:SDLRPCParameterNameLimitedCharacterList];
 }
 
 - (nullable NSArray<NSString *> *)limitedCharacterList {
-    return [store sdl_objectForName:SDLNameLimitedCharacterList];
+    return [self.store sdl_objectsForName:SDLRPCParameterNameLimitedCharacterList ofClass:NSString.class error:nil];
 }
 
 - (void)setAutoCompleteText:(nullable NSString *)autoCompleteText {
-    [store sdl_setObject:autoCompleteText forName:SDLNameAutoCompleteText];
+    [self.store sdl_setObject:autoCompleteText forName:SDLRPCParameterNameAutoCompleteText];
 }
 
 - (nullable NSString *)autoCompleteText {
-    return [store sdl_objectForName:SDLNameAutoCompleteText];
+    return [self.store sdl_objectForName:SDLRPCParameterNameAutoCompleteText ofClass:NSString.class error:nil];
+}
+
+- (void)setAutoCompleteList:(nullable NSArray<NSString *> *)autoCompleteList {
+    [self.store sdl_setObject:autoCompleteList forName:SDLRPCParameterNameAutoCompleteList];
+}
+
+- (nullable NSArray<NSString *> *)autoCompleteList {
+    return [self.store sdl_objectsForName:SDLRPCParameterNameAutoCompleteList ofClass:NSString.class error:nil];
 }
 
 @end

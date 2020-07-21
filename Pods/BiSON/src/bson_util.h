@@ -116,6 +116,24 @@ int64_t read_int64_le(uint8_t **bytes);
 double read_double_le(uint8_t **bytes);
 
 /*
+  @brief Read a string from given buffer and return number of bytes read.
+         Update "data" and "dataSize" parameters on success.
+
+  @param output - Pointer to a char* value. On success, the value is updated to
+                  point to a malloc()-ed buffer that stores the output.
+                  Caller must call free() to release the buffer after use.
+  @param data - Pointer to the byte buffer from which to read. On success, this
+                 value will be advanced past the value that was read.
+  @param dataSize - Pointer to a value that indicates the size of data in the
+                    byte buffer. On success, this value will be decreased to
+                    indicate the remaining data size in the buffer.
+
+  @return - On success, a positive number of bytes read (including last '\0')
+            is returned. On failure, 0 is returned.
+*/
+size_t read_string_len(char **output, const uint8_t **data, size_t *dataSize);
+
+/*
   @brief Convert the give UTF-8 string into a byte array
 
   @param stringVal - the string value to be converted

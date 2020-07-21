@@ -13,6 +13,7 @@
 @class SDLFileManager;
 @class SDLSoftButtonObject;
 @class SDLSoftButtonState;
+@class SDLSystemCapabilityManager;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,6 +36,9 @@ typedef void(^SDLSoftButtonUpdateCompletionHandler)(NSError *__nullable error);
  */
 @property (copy, nonatomic) NSArray<SDLSoftButtonObject *> *softButtonObjects;
 
+/**
+ All transitions made in-between beginUpdates and this method will occur as one RPC update.
+ */
 @property (assign, nonatomic, getter=isBatchingUpdates) BOOL batchUpdates;
 
 - (instancetype)init NS_UNAVAILABLE;
@@ -44,21 +48,18 @@ typedef void(^SDLSoftButtonUpdateCompletionHandler)(NSError *__nullable error);
 
  @param connectionManager The manager that forwards RPCs
  @param fileManager The manager that updates images
+ @param systemCapabilityManager The system capability manager object for reading window capabilities
  @return A new instance of a soft button manager
  */
-- (instancetype)initWithConnectionManager:(id<SDLConnectionManagerType>)connectionManager fileManager:(SDLFileManager *)fileManager;
+- (instancetype)initWithConnectionManager:(id<SDLConnectionManagerType>)connectionManager fileManager:(SDLFileManager *)fileManager systemCapabilityManager:(SDLSystemCapabilityManager *)systemCapabilityManager;
+
+/// Starts the manager. This method is used internally.
+- (void)start;
 
 /**
  *  Stops the manager. This method is used internally.
  */
 - (void)stop;
-
-/**
- Cause all transitions in between `beginUpdates` and this method call to occur in one RPC update.
-
- @param handler The handler called once the update is completed.
- */
-- (void)updateWithCompletionHandler:(nullable SDLSoftButtonUpdateCompletionHandler)handler;
 
 /**
  Returns a soft button object associated with the manager that is named the specified name or nil if nothing corresponds.

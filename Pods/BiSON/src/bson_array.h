@@ -65,8 +65,23 @@ uint8_t *bson_array_to_bytes(BsonArray *array);
   @param data - The BSON data to be parsed
 
   @return - The BSON array created from the BSON data
+
+  @note DEPRECATED: use bson_array_from_bytes_len() instead
 */
 BsonArray bson_array_from_bytes(uint8_t *data);
+
+/*
+  @brief Parse BSON data into an array
+
+  @param output - Pointer to an uninitialized BsonArray. On success, it is
+                  initialized and stores converted data.
+  @param data - Byte buffer that contains BSON data to be parsed
+  @param dataSize - Number of bytes of the data stored in the byte buffer
+
+  @return - On success, a positive number indicating number of bytes consumed
+            is returned. On error, 0 is returned.
+*/
+size_t bson_array_from_bytes_len(BsonArray *output, const uint8_t *data, size_t dataSize);
 
 /*
   @brief Get a JSON string representation of a BSON array

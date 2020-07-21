@@ -4,26 +4,61 @@
 #import "SDLVehicleDataResult.h"
 
 #import "NSMutableDictionary+Store.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation SDLVehicleDataResult
 
+- (instancetype)initWithDataType:(SDLVehicleDataType)dataType resultCode:(SDLVehicleDataResultCode)resultCode {
+    self = [self init];
+    if (!self) {
+        return nil;
+    }
+
+    self.dataType = dataType;
+    self.resultCode = resultCode;
+
+    return self;
+}
+
+- (instancetype)initWithCustomOEMDataType:(NSString *)customDataType resultCode:(SDLVehicleDataResultCode)resultCode{
+    self = [self init];
+    if (!self) {
+        return nil;
+    }
+
+    self.customOEMDataType = customDataType;
+    self.resultCode = resultCode;
+
+    return self;
+}
+
 - (void)setDataType:(SDLVehicleDataType)dataType {
-    [store sdl_setObject:dataType forName:SDLNameDataType];
+    [self.store sdl_setObject:dataType forName:SDLRPCParameterNameDataType];
 }
 
 - (SDLVehicleDataType)dataType {
-    return [store sdl_objectForName:SDLNameDataType];
+    NSError *error = nil;
+    return [self.store sdl_enumForName:SDLRPCParameterNameDataType error:&error];
 }
 
 - (void)setResultCode:(SDLVehicleDataResultCode)resultCode {
-    [store sdl_setObject:resultCode forName:SDLNameResultCode];
+    [self.store sdl_setObject:resultCode forName:SDLRPCParameterNameResultCode];
 }
 
 - (SDLVehicleDataResultCode)resultCode {
-    return [store sdl_objectForName:SDLNameResultCode];
+    NSError *error = nil;
+    return [self.store sdl_enumForName:SDLRPCParameterNameResultCode error:&error];
+}
+
+- (nullable NSString *)customOEMDataType {
+    NSError *error = nil;
+    return [self.store sdl_enumForName:SDLRPCParameterNameOEMCustomDataType error:&error];
+}
+
+- (void)setCustomOEMDataType:(nullable NSString *)oemCustomDataType {
+    [self.store sdl_setObject:oemCustomDataType forName:SDLRPCParameterNameOEMCustomDataType];
 }
 
 @end

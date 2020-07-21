@@ -5,11 +5,14 @@
 #import "SDLSyncMsgVersion.h"
 
 #import "NSMutableDictionary+Store.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation SDLSyncMsgVersion
+#pragma clang diagnostic pop
 
 - (instancetype)initWithMajorVersion:(UInt8)majorVersion minorVersion:(UInt8)minorVersion patchVersion:(UInt8)patchVersion {
     self = [self init];
@@ -25,27 +28,29 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)setMajorVersion:(NSNumber<SDLInt> *)majorVersion {
-    [store sdl_setObject:majorVersion forName:SDLNameMajorVersion];
+    [self.store sdl_setObject:majorVersion forName:SDLRPCParameterNameMajorVersion];
 }
 
 - (NSNumber<SDLInt> *)majorVersion {
-    return [store sdl_objectForName:SDLNameMajorVersion];
+    NSError *error = nil;
+    return [self.store sdl_objectForName:SDLRPCParameterNameMajorVersion ofClass:NSNumber.class error:&error];
 }
 
 - (void)setMinorVersion:(NSNumber<SDLInt> *)minorVersion {
-    [store sdl_setObject:minorVersion forName:SDLNameMinorVersion];
+    [self.store sdl_setObject:minorVersion forName:SDLRPCParameterNameMinorVersion];
 }
 
 - (NSNumber<SDLInt> *)minorVersion {
-    return [store sdl_objectForName:SDLNameMinorVersion];
+    NSError *error = nil;
+    return [self.store sdl_objectForName:SDLRPCParameterNameMinorVersion ofClass:NSNumber.class error:&error];
 }
 
 - (void)setPatchVersion:(nullable NSNumber<SDLInt> *)patchVersion {
-    [store sdl_setObject:patchVersion forName:SDLNamePatchVersion];
+    [self.store sdl_setObject:patchVersion forName:SDLRPCParameterNamePatchVersion];
 }
 
 - (nullable NSNumber<SDLInt> *)patchVersion {
-    return [store sdl_objectForName:SDLNamePatchVersion];
+    return [self.store sdl_objectForName:SDLRPCParameterNamePatchVersion ofClass:NSNumber.class error:nil];
 }
 
 - (NSString *)description {

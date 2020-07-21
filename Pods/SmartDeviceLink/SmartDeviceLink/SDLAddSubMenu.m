@@ -4,31 +4,21 @@
 
 #import "NSMutableDictionary+Store.h"
 #import "SDLImage.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
+#import "SDLRPCFunctionNames.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation SDLAddSubMenu
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (instancetype)init {
-    if (self = [super initWithName:SDLNameAddSubMenu]) {
+    if (self = [super initWithName:SDLRPCFunctionNameAddSubMenu]) {
     }
     return self;
 }
-
-- (instancetype)initWithId:(UInt32)menuId menuName:(NSString *)menuName menuIcon:(nullable SDLImage *)icon position:(UInt8)position {
-    self = [self initWithId:menuId menuName:menuName];
-    if (!self) { return nil; }
-
-    self.position = @(position);
-    self.menuIcon = icon;
-
-    return self;
-}
-
-- (instancetype)initWithId:(UInt32)menuId menuName:(NSString *)menuName position:(UInt8)position {
-    return [self initWithId:menuId menuName:menuName menuIcon:nil position:position];
-}
+#pragma clang diagnostic pop
 
 - (instancetype)initWithId:(UInt32)menuId menuName:(NSString *)menuName {
     self = [self init];
@@ -42,36 +32,65 @@ NS_ASSUME_NONNULL_BEGIN
     return self;
 }
 
+- (instancetype)initWithId:(UInt32)menuId menuName:(NSString *)menuName position:(UInt8)position {
+    return [self initWithId:menuId menuName:menuName menuLayout:nil menuIcon:nil position:position];
+}
+
+- (instancetype)initWithId:(UInt32)menuId menuName:(NSString *)menuName menuIcon:(nullable SDLImage *)icon position:(UInt8)position {
+    return [self initWithId:menuId menuName:menuName menuLayout:nil menuIcon:icon position:position];
+}
+
+- (instancetype)initWithId:(UInt32)menuId menuName:(NSString *)menuName menuLayout:(nullable SDLMenuLayout)menuLayout menuIcon:(nullable SDLImage *)icon position:(UInt8)position {
+    self = [self initWithId:menuId menuName:menuName];
+    if (!self) { return nil; }
+
+    self.position = @(position);
+    self.menuIcon = icon;
+    self.menuLayout = menuLayout;
+
+    return self;
+}
+
 - (void)setMenuID:(NSNumber<SDLInt> *)menuID {
-    [parameters sdl_setObject:menuID forName:SDLNameMenuId];
+    [self.parameters sdl_setObject:menuID forName:SDLRPCParameterNameMenuId];
 }
 
 - (NSNumber<SDLInt> *)menuID {
-    return [parameters sdl_objectForName:SDLNameMenuId];
+    NSError *error = nil;
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameMenuId ofClass:NSNumber.class error:&error];
 }
 
 - (void)setPosition:(nullable NSNumber<SDLInt> *)position {
-    [parameters sdl_setObject:position forName:SDLNamePosition];
+    [self.parameters sdl_setObject:position forName:SDLRPCParameterNamePosition];
 }
 
 - (nullable NSNumber<SDLInt> *)position {
-    return [parameters sdl_objectForName:SDLNamePosition];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNamePosition ofClass:NSNumber.class error:nil];
 }
 
 - (void)setMenuName:(NSString *)menuName {
-    [parameters sdl_setObject:menuName forName:SDLNameMenuName];
+    [self.parameters sdl_setObject:menuName forName:SDLRPCParameterNameMenuName];
 }
 
 - (NSString *)menuName {
-    return [parameters sdl_objectForName:SDLNameMenuName];
+    NSError *error = nil;
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameMenuName ofClass:NSString.class error:&error];
 }
 
 - (void)setMenuIcon:(nullable SDLImage *)menuIcon {
-    [parameters sdl_setObject:menuIcon forName:SDLNameMenuIcon];
+    [self.parameters sdl_setObject:menuIcon forName:SDLRPCParameterNameMenuIcon];
 }
 
 - (nullable SDLImage *)menuIcon {
-    return [parameters sdl_objectForName:SDLNameMenuIcon ofClass:[SDLImage class]];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameMenuIcon ofClass:[SDLImage class] error:nil];
+}
+
+- (void)setMenuLayout:(nullable SDLMenuLayout)menuLayout {
+    [self.parameters sdl_setObject:menuLayout forName:SDLRPCParameterNameMenuLayout];
+}
+
+- (nullable SDLMenuLayout)menuLayout {
+    return [self.parameters sdl_enumForName:SDLRPCParameterNameMenuLayout error:nil];
 }
 
 @end

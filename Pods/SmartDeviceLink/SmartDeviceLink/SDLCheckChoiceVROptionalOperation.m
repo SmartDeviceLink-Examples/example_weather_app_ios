@@ -11,12 +11,14 @@
 #import "SDLChoice.h"
 #import "SDLCreateInteractionChoiceSet.h"
 #import "SDLConnectionManagerType.h"
+#import "SDLDeleteInteractionChoiceSet.h"
 #import "SDLLogMacros.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SDLCheckChoiceVROptionalOperation()
 
+@property (strong, nonatomic) NSUUID *operationId;
 @property (weak, nonatomic) id<SDLConnectionManagerType> connectionManager;
 @property (copy, nonatomic, nullable) NSError *internalError;
 
@@ -29,12 +31,14 @@ NS_ASSUME_NONNULL_BEGIN
     if (!self) { return nil; }
 
     _connectionManager = connectionManager;
+    _operationId = [NSUUID UUID];
 
     return self;
 }
 
 - (void)start {
     [super start];
+    if (self.isCancelled) { return; }
 
     [self sdl_sendTestChoices];
 }
@@ -47,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 
             weakself.vrOptional = YES;
             weakself.internalError = nil;
-            [weakself finishOperation];
+            [weakself sdl_deleteTestChoices];
             return;
         }
 
@@ -58,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
 
                 weakself.vrOptional = NO;
                 weakself.internalError = nil;
-                [weakself finishOperation];
+                [weakself sdl_deleteTestChoices];
                 return;
             }
 
@@ -67,6 +71,15 @@ NS_ASSUME_NONNULL_BEGIN
             weakself.internalError = error;
             [weakself finishOperation];
         }];
+    }];
+}
+
+- (void)sdl_deleteTestChoices {
+    SDLDeleteInteractionChoiceSet *deleteChoiceSet = [[SDLDeleteInteractionChoiceSet alloc] initWithId:0];
+
+    __weak typeof(self) weakself = self;
+    [self.connectionManager sendConnectionManagerRequest:deleteChoiceSet withResponseHandler:^(__kindof SDLRPCRequest * _Nullable request, __kindof SDLRPCResponse * _Nullable response, NSError * _Nullable error) {
+        [weakself finishOperation];
     }];
 }
 
@@ -84,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Property Overrides
 
 - (nullable NSString *)name {
-    return @"com.sdl.choicesetmanager.checkVROptional";
+    return [NSString stringWithFormat:@"%@ - %@", self.class, self.operationId];
 }
 
 - (NSOperationQueuePriority)queuePriority {

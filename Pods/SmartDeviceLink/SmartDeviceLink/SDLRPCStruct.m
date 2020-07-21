@@ -5,47 +5,53 @@
 #import "SDLRPCStruct.h"
 
 #import "SDLEnum.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation SDLRPCStruct
 
-- (id)initWithDictionary:(NSDictionary<NSString *, id> *)dict {
-    if (self = [super init]) {
-        if (dict != nil) {
-            store = [dict mutableCopy];
-        } else {
-            store = [NSMutableDictionary dictionary];
-        }
+- (instancetype)initWithDictionary:(NSDictionary<NSString *, id> *)dict {
+    self = [super init];
+    if (!self) {
+        return nil;
     }
+
+    _store = [dict mutableCopy];
+    _payloadProtected = NO;
+
     return self;
 }
 
-- (id)init {
-    if (self = [super init]) {
-        store = [NSMutableDictionary dictionary];
+- (instancetype)init {
+    self = [super init];
+    if (!self) {
+        return nil;
     }
+
+    _store = [NSMutableDictionary dictionary];
+    _payloadProtected = NO;
+
     return self;
 }
 
 - (NSDictionary<NSString *, id> *)serializeAsDictionary:(Byte)version {
     if (version >= 2) {
-        NSString *messageType = store.keyEnumerator.nextObject;
-        NSMutableDictionary<NSString *, id> *function = store[messageType];
+        NSString *messageType = self.store.keyEnumerator.nextObject;
+        NSMutableDictionary<NSString *, id> *function = _store[messageType];
         if ([function isKindOfClass:NSMutableDictionary.class]) {
-            NSMutableDictionary<NSString *, id> *parameters = function[SDLNameParameters];
+            NSMutableDictionary<NSString *, id> *parameters = function[SDLRPCParameterNameParameters];
             return [self.class sdl_serializeDictionary:parameters version:version];
         } else {
-            return [self.class sdl_serializeDictionary:store version:version];
+            return [self.class sdl_serializeDictionary:self.store version:version];
         }
     } else {
-        return [self.class sdl_serializeDictionary:store version:version];
+        return [self.class sdl_serializeDictionary:self.store version:version];
     }
 }
 
 - (NSString *)description {
-    return [store description];
+    return [self.store description];
 }
 
 + (NSDictionary<NSString *, id> *)sdl_serializeDictionary:(NSDictionary *)dict version:(Byte)version {
@@ -76,14 +82,14 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (id)copyWithZone:(nullable NSZone *)zone {
-    SDLRPCStruct *newStruct = [[[self class] allocWithZone:zone] init];
-    newStruct->store = [self->store mutableCopy];
+    SDLRPCStruct *newStruct = [[[self class] allocWithZone:zone] initWithDictionary:_store];
+    newStruct.payloadProtected = self.payloadProtected;
 
     return newStruct;
 }
 
 - (BOOL)isEqualToRPC:(SDLRPCStruct *)rpc {
-    return [rpc->store isEqualToDictionary:self->store];
+    return [rpc.store isEqualToDictionary:_store];
 }
 
 - (BOOL)isEqual:(id)object {

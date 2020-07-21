@@ -10,6 +10,7 @@
 
 #import "SDLNotificationConstants.h"
 
+@class SDLArtwork;
 @class SDLSoftButton;
 @class SDLSoftButtonObject;
 @class SDLSoftButtonState;
@@ -37,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (copy, nonatomic, readonly) SDLSoftButtonState *currentState;
 
+/// Describes an on-screen button which may be presented in various contexts, e.g. templates or alerts
 @property (strong, nonatomic, readonly) SDLSoftButton *currentStateSoftButton;
 
 /**
@@ -56,12 +58,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Create a single-state soft button. For example, a button that brings up a Perform Interaction menu.
-
  @param name The name of the button
- @param eventHandler The handler to be called when the button is in the current state and is pressed
  @param state The single state of the button
+ @param eventHandler The handler to be called when the button is pressed
+ @return The button object
  */
 - (instancetype)initWithName:(NSString *)name state:(SDLSoftButtonState *)state handler:(nullable SDLRPCButtonNotificationHandler)eventHandler;
+
+/**
+ Create a single-state soft button. For example, a button that brings up a Perform Interaction menu.
+
+ @param name The name of the button
+ @param text The text to be displayed on the button
+ @param artwork The artwork to be displayed on the button
+ @param eventHandler The handler to be called when the button is pressed
+ @return The button object
+ */
+- (instancetype)initWithName:(NSString *)name text:(nullable NSString *)text artwork:(nullable SDLArtwork *)artwork handler:(nullable SDLRPCButtonNotificationHandler)eventHandler;
 
 /**
  Transition the soft button to another state in the `states` property. The wrapper considers all transitions valid (assuming a state with that name exists).

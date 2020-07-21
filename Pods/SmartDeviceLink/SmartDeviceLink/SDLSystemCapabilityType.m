@@ -8,8 +8,10 @@
 
 #import "SDLSystemCapabilityType.h"
 
-
+SDLSystemCapabilityType const SDLSystemCapabilityTypeAppServices = @"APP_SERVICES";
 SDLSystemCapabilityType const SDLSystemCapabilityTypeNavigation = @"NAVIGATION";
 SDLSystemCapabilityType const SDLSystemCapabilityTypePhoneCall = @"PHONE_CALL";
 SDLSystemCapabilityType const SDLSystemCapabilityTypeVideoStreaming = @"VIDEO_STREAMING";
 SDLSystemCapabilityType const SDLSystemCapabilityTypeRemoteControl = @"REMOTE_CONTROL";
+SDLSystemCapabilityType const SDLSystemCapabilityTypeSeatLocation = @"SEAT_LOCATION";
+SDLSystemCapabilityType const SDLSystemCapabilityTypeDisplays = @"DISPLAYS";

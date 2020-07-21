@@ -42,7 +42,7 @@ int32_t read_int32_le(uint8_t **bytes) {
 }
 
 int64_t read_int64_le(uint8_t **bytes) {
-  int32_t value = 0;
+  int64_t value = 0;
   int i = 0;
   for (i = SIZE_INT64 - 1; i >= 0; i--) {
     value <<= 8;
@@ -66,6 +66,27 @@ double read_double_le(uint8_t **bytes) {
   }
   (*bytes) += SIZE_DOUBLE;
   return unionVal.value;
+}
+
+size_t read_string_len(char **output, const uint8_t **data, size_t *dataSize) {
+  size_t i = 0;
+  for (i = 0; i < *dataSize; i++) {
+    if ((*data)[i] == 0x00) {
+      break;
+    }
+  }
+  if (i == *dataSize) {
+    // '\0' is not found
+    return 0;
+  }
+
+  *output = byte_array_to_bson_string((uint8_t *)*data, i);
+
+  // add 1 since we also consumed '\0' at the end
+  size_t bytesRead = i + 1;
+  (*data) += bytesRead;
+  *dataSize -= bytesRead;
+  return bytesRead;
 }
 
 uint8_t *string_to_byte_array(char *stringVal) {

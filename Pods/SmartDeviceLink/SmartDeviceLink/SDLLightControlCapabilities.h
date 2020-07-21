@@ -2,11 +2,15 @@
 //
 
 #import "SDLRPCMessage.h"
+#import "SDLModuleInfo.h"
 
 @class SDLLightCapabilities;
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Current light control capabilities.
+///
+/// @since RPC 5.0
 @interface SDLLightControlCapabilities : SDLRPCStruct
 
 /**
@@ -17,7 +21,18 @@ NS_ASSUME_NONNULL_BEGIN
  @param supportedLights array of available LightCapabilities
  @return An instance of the SDLLightControlCapabilities class
  */
-- (instancetype)initWithModuleName:(NSString *)moduleName supportedLights:(NSArray<SDLLightCapabilities *> *)supportedLights;
+- (instancetype)initWithModuleName:(NSString *)moduleName supportedLights:(NSArray<SDLLightCapabilities *> *)supportedLights  __deprecated_msg("Use initWithModuleName:moduleInfo:supportedLights:");
+
+/**
+ Constructs a newly allocated SDLLightControlCapabilities object with given parameters
+ 
+ 
+ @param moduleName friendly name of the light control module
+ @param moduleInfo information about a RC module, including its id
+ @param supportedLights array of available LightCapabilities
+ @return An instance of the SDLLightControlCapabilities class
+ */
+- (instancetype)initWithModuleName:(NSString *)moduleName moduleInfo:(nullable SDLModuleInfo *)moduleInfo supportedLights:(NSArray<SDLLightCapabilities *> *)supportedLights;
 
 /**
  * @abstract  The short friendly name of the light control module.
@@ -34,6 +49,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (strong, nonatomic) NSArray<SDLLightCapabilities *> *supportedLights;
 
+/**
+ *  Information about a RC module, including its id.
+ *
+ *  Optional
+ */
+@property (nullable, strong, nonatomic) SDLModuleInfo *moduleInfo;
 
 @end
 

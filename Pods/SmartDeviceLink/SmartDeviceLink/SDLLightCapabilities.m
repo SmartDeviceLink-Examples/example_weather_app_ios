@@ -2,7 +2,7 @@
 //
 
 #import "SDLLightCapabilities.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
 #import "NSMutableDictionary+Store.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -33,35 +33,36 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)setName:(SDLLightName)name {
-    [store sdl_setObject:name forName:SDLNameName];
+    [self.store sdl_setObject:name forName:SDLRPCParameterNameName];
 }
 
 - (SDLLightName)name {
-    return [store sdl_objectForName:SDLNameName];
+    NSError *error = nil;
+    return [self.store sdl_enumForName:SDLRPCParameterNameName error:&error];
 }
 
 - (void)setDensityAvailable:(nullable NSNumber<SDLBool> *)densityAvailable {
-    [store sdl_setObject:densityAvailable forName:SDLNameDensityAvailable];
+    [self.store sdl_setObject:densityAvailable forName:SDLRPCParameterNameDensityAvailable];
 }
 
 - (nullable NSNumber<SDLBool> *)densityAvailable {
-    return [store sdl_objectForName:SDLNameDensityAvailable];
+    return [self.store sdl_objectForName:SDLRPCParameterNameDensityAvailable ofClass:NSNumber.class error:nil];
 }
 
 - (void)setColorAvailable:(nullable NSNumber<SDLBool> *)colorAvailable {
-    [store sdl_setObject:colorAvailable forName:SDLNameRGBColorSpaceAvailable];
+    [self.store sdl_setObject:colorAvailable forName:SDLRPCParameterNameRGBColorSpaceAvailable];
 }
 
 - (nullable NSNumber<SDLBool> *)colorAvailable {
-    return [store sdl_objectForName:SDLNameRGBColorSpaceAvailable];
+    return [self.store sdl_objectForName:SDLRPCParameterNameRGBColorSpaceAvailable ofClass:NSNumber.class error:nil];
 }
 
 - (void)setStatusAvailable:(nullable NSNumber<SDLBool> *)statusAvailable {
-    [store sdl_setObject:statusAvailable forName:SDLNameStatusAvailable];
+    [self.store sdl_setObject:statusAvailable forName:SDLRPCParameterNameStatusAvailable];
 }
 
 - (nullable NSNumber<SDLBool> *)statusAvailable {
-    return [store sdl_objectForName:SDLNameStatusAvailable];
+    return [self.store sdl_objectForName:SDLRPCParameterNameStatusAvailable ofClass:NSNumber.class error:nil];
 }
 
 @end

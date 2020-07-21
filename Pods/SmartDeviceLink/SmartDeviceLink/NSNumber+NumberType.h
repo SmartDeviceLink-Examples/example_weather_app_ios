@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 /**
- *  A decleration that this NSNumber contains an NSInteger.
+ *  A declaration that this NSNumber contains an NSInteger.
  */
 @protocol SDLInt
 @end
@@ -32,6 +32,7 @@
 @protocol SDLFloat
 @end
 
+/// Extensions to NSNumber allowing for details on what kind of NSNumber is contained within.
 @interface NSNumber (NumberType) <SDLInt, SDLUInt, SDLBool, SDLFloat>
 
 @end

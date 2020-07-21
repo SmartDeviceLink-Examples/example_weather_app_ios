@@ -13,6 +13,7 @@
 #import "SDLRectangle.h"
 #import "SDLHapticRect.h"
 #import "SDLSendHapticData.h"
+#import "SDLStreamingVideoScaleManager.h"
 #import "SDLTouch.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -23,17 +24,18 @@ NS_ASSUME_NONNULL_BEGIN
  Array of focusable view objects extracted from the projection window
  */
 @property (nonatomic, strong) NSMutableArray<UIView *> *focusableViews;
+@property (nonatomic, weak) id<SDLConnectionManagerType> connectionManager;
 
 /**
- reference to SDLConnectionManager
- */
-@property (nonatomic, weak) id<SDLConnectionManagerType> connectionManager;
-@end
+ The scale manager that scales from the display screen coordinate system to the app's viewport coordinate system
+*/
+@property (strong, nonatomic) SDLStreamingVideoScaleManager *videoScaleManager;
 
+@end
 
 @implementation SDLFocusableItemLocator
 
-- (instancetype)initWithViewController:(UIViewController *)viewController connectionManager:(id<SDLConnectionManagerType>)connectionManager {
+- (instancetype)initWithViewController:(UIViewController *)viewController connectionManager:(id<SDLConnectionManagerType>)connectionManager videoScaleManager:(SDLStreamingVideoScaleManager *)videoScaleManager {
     self = [super init];
     if(!self) {
         return nil;
@@ -41,24 +43,41 @@ NS_ASSUME_NONNULL_BEGIN
 
     _viewController = viewController;
     _connectionManager = connectionManager;
+    _videoScaleManager = videoScaleManager;
+    _focusableViews = [NSMutableArray array];
+
     _enableHapticDataRequests = NO;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sdl_projectionViewUpdated:) name:SDLDidUpdateProjectionView object:nil];
 
     return self;
 }
 
+- (void)start {
+    SDLLogD(@"Starting");
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sdl_projectionViewUpdated:) name:SDLDidUpdateProjectionView object:nil];
+}
+
+- (void)stop {
+    SDLLogD(@"Stopping");
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.focusableViews removeAllObjects];
+}
+
 - (void)updateInterfaceLayout {
     if (@available(iOS 9.0, *)) {
-        self.focusableViews = [[NSMutableArray alloc] init];
+        [self.focusableViews removeAllObjects];
         [self sdl_parseViewHierarchy:self.viewController.view];
 
-        // If there is a preferred view bring that into top of the array
+        // If there is a preferred view, move it to the front of the array
         NSUInteger preferredViewIndex = [self.focusableViews indexOfObject:self.viewController.view.subviews.lastObject.preferredFocusedView];
         if (preferredViewIndex != NSNotFound && self.focusableViews.count > 1) {
             [self.focusableViews exchangeObjectAtIndex:preferredViewIndex withObjectAtIndex:0];
         }
 
+        SDLLogD(@"Updated VC layout, sending new haptic rects");
+        SDLLogV(@"For focusable views: %@", self.focusableViews);
         [self sdl_sendHapticRPC];
+    } else {
+        SDLLogE(@"Attempted to update user interface layout, but it only works on iOS 9.0+");
     }
 }
 
@@ -73,10 +92,14 @@ NS_ASSUME_NONNULL_BEGIN
         return;
     }
 
+    SDLLogD(@"Parsing UIView heirarchy");
+    SDLLogV(@"UIView: %@", currentView);
     if (@available(iOS 9.0, *)) {
+        // Finding focusable subviews
         NSArray *focusableSubviews = [currentView.subviews filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(UIView *  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
             return (evaluatedObject.canBecomeFocused || [evaluatedObject isKindOfClass:[UIButton class]]);
         }]];
+        SDLLogV(@"Found focusable subviews: %@", focusableSubviews);
 
         BOOL isButton = [currentView isKindOfClass:[UIButton class]];
         if ((currentView.canBecomeFocused || isButton) && focusableSubviews.count == 0) {
@@ -101,29 +124,37 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)sdl_sendHapticRPC {
     if (!self.enableHapticDataRequests) {
+        SDLLogV(@"Attempting to send haptic data to a head unit that does not support haptic data. Haptic data will not be sent.");
+        return;
+    }
+
+    if (self.focusableViews.count == 0) {
+        SDLLogV(@"No haptic data to send for this view.");
         return;
     }
 
     NSMutableArray<SDLHapticRect *> *hapticRects = [[NSMutableArray alloc] init];
-    
     for (UIView *view in self.focusableViews) {
         CGPoint originOnScreen = [self.viewController.view convertPoint:view.frame.origin toView:nil];
         CGRect convertedRect = {originOnScreen, view.bounds.size};
-        SDLRectangle* rect = [[SDLRectangle alloc] initWithCGRect:(convertedRect)];
+        SDLRectangle *rect = [[SDLRectangle alloc] initWithCGRect:convertedRect];
         // using the view index as the id field in SendHapticData request (should be guaranteed unique)
         NSUInteger rectId = [self.focusableViews indexOfObject:view];
         SDLHapticRect *hapticRect = [[SDLHapticRect alloc] initWithId:(UInt32)rectId rect:rect];
+        hapticRect = [self.videoScaleManager scaleHapticRect:hapticRect];
+
         [hapticRects addObject:hapticRect];
     }
-    
-    SDLSendHapticData* hapticRPC = [[SDLSendHapticData alloc] initWithHapticRectData:hapticRects];
+
+    SDLLogV(@"Sending haptic data: %@", hapticRects);
+    SDLSendHapticData *hapticRPC = [[SDLSendHapticData alloc] initWithHapticRectData:hapticRects];
     [self.connectionManager sendConnectionManagerRequest:hapticRPC withResponseHandler:nil];
 }
 
 #pragma mark SDLFocusableItemHitTester functions
 - (nullable UIView *)viewForPoint:(CGPoint)point {
     UIView *selectedView = nil;
-    
+
     for (UIView *view in self.focusableViews) {
         //Convert the absolute location to local location and check if that falls within view boundary
         CGPoint localPoint = [view convertPoint:point fromView:self.viewController.view];
@@ -137,7 +168,8 @@ NS_ASSUME_NONNULL_BEGIN
             }
         }
     }
-    
+
+    SDLLogD(@"Found a focusable view: %@, for point: %@", selectedView, NSStringFromCGPoint(point));
     return selectedView;
 }
 
@@ -148,7 +180,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param notification object with notification data
  */
 - (void)sdl_projectionViewUpdated:(NSNotification *)notification {
-    [self updateInterfaceLayout];
+    if ([NSThread isMainThread]) {
+        [self updateInterfaceLayout];
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self updateInterfaceLayout];
+        });
+    }
 }
 
 @end

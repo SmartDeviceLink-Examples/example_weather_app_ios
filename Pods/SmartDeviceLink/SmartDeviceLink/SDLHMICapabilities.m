@@ -5,34 +5,66 @@
 #import "SDLHMICapabilities.h"
 
 #import "NSMutableDictionary+Store.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation SDLHMICapabilities
 
 - (void)setNavigation:(nullable NSNumber<SDLBool> *)navigation {
-    [store sdl_setObject:navigation forName:SDLNameNavigation];
+    [self.store sdl_setObject:navigation forName:SDLRPCParameterNameNavigation];
 }
 
 - (nullable NSNumber<SDLBool> *)navigation {
-    return [store sdl_objectForName:SDLNameNavigation];
+    return [self.store sdl_objectForName:SDLRPCParameterNameNavigation ofClass:NSNumber.class error:nil];
 }
 
 - (void)setPhoneCall:(nullable NSNumber<SDLBool> *)phoneCall {
-    [store sdl_setObject:phoneCall forName:SDLNamePhoneCall];
+    [self.store sdl_setObject:phoneCall forName:SDLRPCParameterNamePhoneCall];
 }
 
 - (nullable NSNumber<SDLBool> *)phoneCall {
-    return [store sdl_objectForName:SDLNamePhoneCall];
+    return [self.store sdl_objectForName:SDLRPCParameterNamePhoneCall ofClass:NSNumber.class error:nil];
 }
 
 - (void)setVideoStreaming:(nullable NSNumber<SDLBool> *)videoStreaming {
-    [store sdl_setObject:videoStreaming forName:SDLNameVideoStreaming];
+    [self.store sdl_setObject:videoStreaming forName:SDLRPCParameterNameVideoStreaming];
 }
 
 - (nullable NSNumber<SDLBool> *)videoStreaming {
-    return [store sdl_objectForName:SDLNameVideoStreaming];
+    return [self.store sdl_objectForName:SDLRPCParameterNameVideoStreaming ofClass:NSNumber.class error:nil];
+}
+
+- (void)setRemoteControl:(nullable NSNumber<SDLBool> *)remoteControl {
+    [self.store sdl_setObject:remoteControl forName:SDLRPCParameterNameRemoteControl];
+}
+
+- (nullable NSNumber<SDLBool> *)remoteControl {
+    return [self.store sdl_objectForName:SDLRPCParameterNameRemoteControl ofClass:NSNumber.class error:nil];
+}
+
+- (void)setAppServices:(nullable NSNumber<SDLBool> *)appServices {
+    [self.store sdl_setObject:appServices forName:SDLRPCParameterNameAppServices];
+}
+
+- (nullable NSNumber<SDLBool> *)appServices {
+    return [self.store sdl_objectForName:SDLRPCParameterNameAppServices ofClass:NSNumber.class error:nil];
+}
+
+- (void)setDisplays:(nullable NSNumber<SDLBool> *)displays {
+    [self.store sdl_setObject:displays forName:SDLRPCParameterNameDisplays];
+}
+
+- (nullable NSNumber<SDLBool> *)displays {
+    return [self.store sdl_objectForName:SDLRPCParameterNameDisplays ofClass:NSNumber.class error:nil];
+}
+
+- (void)setSeatLocation:(nullable NSNumber<SDLBool> *)seatLocation {
+    [self.store sdl_setObject:seatLocation forName:SDLRPCParameterNameSeatLocation];
+}
+
+- (nullable NSNumber<SDLBool> *)seatLocation {
+    return [self.store sdl_objectForName:SDLRPCParameterNameSeatLocation ofClass:NSNumber.class error:nil];
 }
 
 @end

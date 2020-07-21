@@ -5,10 +5,11 @@
 
 #import "SDLTransportType.h"
 #import "SDLProtocolConstants.h"
-#import "SDLProtocolListener.h"
+#import "SDLProtocolDelegate.h"
 #import "SDLSecurityType.h"
 #import "SDLTransportDelegate.h"
 
+@class SDLEncryptionLifecycleManager;
 @class SDLProtocolHeader;
 @class SDLProtocolRecievedMessageRouter;
 @class SDLRPCMessage;
@@ -27,7 +28,7 @@ typedef NS_ENUM(NSUInteger, SDLProtocolError) {
 extern NSString *const SDLProtocolSecurityErrorDomain;
 
 
-@interface SDLProtocol : NSObject <SDLProtocolListener, SDLTransportDelegate>
+@interface SDLProtocol : NSObject <SDLProtocolDelegate, SDLTransportDelegate>
 
 /**
  *  Deprecated debug logging tool.
@@ -37,24 +38,53 @@ extern NSString *const SDLProtocolSecurityErrorDomain;
 /**
  *  The transport layer for sending data between the app and Core
  */
-@property (nullable, weak, nonatomic) id<SDLTransportType> transport;
+@property (nullable, strong, nonatomic) id<SDLTransportType> transport;
 
 /**
  *  A table for tracking all subscribers
  *
  *  If you update protocolDelegateTable while the protocol is running, please make sure to guard with @synchronized.
  */
-@property (nullable, strong, nonatomic) NSHashTable<id<SDLProtocolListener>> *protocolDelegateTable;
+@property (nullable, strong, nonatomic) NSHashTable<id<SDLProtocolDelegate>> *protocolDelegateTable;
 
 /**
  *  A security manager for sending encrypted data.
  */
 @property (nullable, nonatomic, strong) id<SDLSecurityType> securityManager;
 
+/// The encryption manager for sending encrypted data
+@property (nullable, nonatomic, weak) SDLEncryptionLifecycleManager *encryptionLifecycleManager;
+
 /**
  *  The app's id
  */
 @property (nonatomic, copy) NSString *appId;
+
+/**
+ *  The auth token, if any, returned with the `StartServiceACK` for the RPC service from the module.
+ */
+@property (strong, nonatomic, readonly, nullable) NSString *authToken;
+
+#pragma mark - Init
+- (instancetype)init NS_UNAVAILABLE;
+
+/**
+ * Initialize the protocol with an encryption lifecycle manager
+ *
+ * @param transport The transport to send and receive data from
+ * @param encryptionManager An encryption lifecycle manager
+ *
+ * @return An instance of SDLProtocol
+ */
+- (instancetype)initWithTransport:(id<SDLTransportType>)transport encryptionManager:(nullable SDLEncryptionLifecycleManager *)encryptionManager;
+
+#pragma mark - Lifecycle
+
+/// Starts the connected transport
+- (void)start;
+
+/// Stops the connected transport
+- (void)stopWithCompletionHandler:(void (^)(void))disconnectCompletionHandler;
 
 #pragma mark - Sending
 
@@ -82,9 +112,9 @@ extern NSString *const SDLProtocolSecurityErrorDomain;
  *
  *  @param serviceType A SDLServiceType object
  *  @param payload The data to send in the message
- *  @param completionHandler The handler is called when the secure service is started. If a secure service can not be started, an error message is also returned
+ *  @param tlsInitializationHandler Handler called when the app is authenticated via TLS handshake and a secure service has started. If a secure service can not be started an error message is returned.
  */
-- (void)startSecureServiceWithType:(SDLServiceType)serviceType payload:(nullable NSData *)payload completionHandler:(void (^)(BOOL success, NSError *error))completionHandler;
+- (void)startSecureServiceWithType:(SDLServiceType)serviceType payload:(nullable NSData *)payload tlsInitializationHandler:(void (^)(BOOL success, NSError *error))tlsInitializationHandler;
 
 /**
  *  Sends an end service message to Core
@@ -106,16 +136,6 @@ extern NSString *const SDLProtocolSecurityErrorDomain;
 - (void)sendRPC:(SDLRPCMessage *)message;
 
 /**
- *  Sends an RPC to Core
- *
- *  @param message     A SDLRPCMessage message
- *  @param encryption  Whether or not the message should be encrypted
- *  @param error       A pointer to a NSError object
- *  @return            YES if the message was created successfully, NO if not
- */
-- (BOOL)sendRPC:(SDLRPCMessage *)message encrypted:(BOOL)encryption error:(NSError **)error;
-
-/**
  *  Sends an unencrypted message to Core
  *
  *  @param data The data to send
@@ -130,15 +150,6 @@ extern NSString *const SDLProtocolSecurityErrorDomain;
  *  @param serviceType  A SDLServiceType object
  */
 - (void)sendEncryptedRawData:(NSData *)data onService:(SDLServiceType)serviceType;
-
-#pragma mark - Recieving
-
-/**
- *  Turns received bytes into message objects.
- *
- *  @param receivedData The data received from Core
- */
-- (void)handleBytesFromTransport:(NSData *)receivedData;
 
 @end
 

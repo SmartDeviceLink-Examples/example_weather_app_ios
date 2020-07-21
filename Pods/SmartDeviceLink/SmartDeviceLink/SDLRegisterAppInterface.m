@@ -11,8 +11,10 @@
 #import "SDLGlobals.h"
 #import "SDLLanguage.h"
 #import "SDLLifecycleConfiguration.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
+#import "SDLRPCFunctionNames.h"
 #import "SDLSyncMsgVersion.h"
+#import "SDLMsgVersion.h"
 #import "SDLTemplateColorScheme.h"
 #import "SDLTTSChunk.h"
 
@@ -22,11 +24,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Lifecycle
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (instancetype)init {
-    if (self = [super initWithName:SDLNameRegisterAppInterface]) {
+    if (self = [super initWithName:SDLRPCFunctionNameRegisterAppInterface]) {
     }
     return self;
 }
+#pragma clang diagnostic pop
 
 - (instancetype)initWithLifecycleConfiguration:(SDLLifecycleConfiguration *)lifecycleConfiguration {
     NSArray<SDLAppHMIType> *allHMITypes = lifecycleConfiguration.additionalAppTypes ? [lifecycleConfiguration.additionalAppTypes arrayByAddingObject:lifecycleConfiguration.appType] : @[lifecycleConfiguration.appType];
@@ -62,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
     UInt8 majorVersion = (UInt8)[SDLMaxProxyRPCVersion substringWithRange:NSMakeRange(0, 1)].intValue;
     UInt8 minorVersion = (UInt8)[SDLMaxProxyRPCVersion substringWithRange:NSMakeRange(2, 1)].intValue;
     UInt8 patchVersion = (UInt8)[SDLMaxProxyRPCVersion substringWithRange:NSMakeRange(4, 1)].intValue;
-    self.syncMsgVersion = [[SDLSyncMsgVersion alloc] initWithMajorVersion:majorVersion minorVersion:minorVersion patchVersion:patchVersion];
+    self.sdlMsgVersion = [[SDLMsgVersion alloc] initWithMajorVersion:majorVersion minorVersion:minorVersion patchVersion:patchVersion];
     self.appInfo = [SDLAppInfo currentAppInfo];
     self.deviceInfo = [SDLDeviceInfo currentDevice];
     self.correlationID = @1;
@@ -115,132 +120,150 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Getters and Setters
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)setSyncMsgVersion:(SDLSyncMsgVersion *)syncMsgVersion {
-    [parameters sdl_setObject:syncMsgVersion forName:SDLNameSyncMessageVersion];
+    SDLMsgVersion * sdlMsgVersion = [[SDLMsgVersion alloc] initWithMajorVersion:(uint8_t)syncMsgVersion.majorVersion.unsignedIntValue minorVersion:(uint8_t)syncMsgVersion.minorVersion.unsignedIntValue patchVersion:(uint8_t)syncMsgVersion.patchVersion.unsignedIntValue];
+    [self.parameters sdl_setObject:sdlMsgVersion forName:SDLRPCParameterNameSyncMessageVersion];
 }
 
 - (SDLSyncMsgVersion *)syncMsgVersion {
-    return [parameters sdl_objectForName:SDLNameSyncMessageVersion ofClass:SDLSyncMsgVersion.class];
+    SDLMsgVersion * sdlMsgVersion = [self.parameters sdl_objectForName:SDLRPCParameterNameSyncMessageVersion ofClass:SDLMsgVersion.class error:nil];
+    return [[SDLSyncMsgVersion alloc] initWithMajorVersion:(uint8_t)sdlMsgVersion.majorVersion.unsignedIntValue minorVersion:(uint8_t)sdlMsgVersion.minorVersion.unsignedIntValue patchVersion:(uint8_t)sdlMsgVersion.patchVersion.unsignedIntValue];
+}
+#pragma clang diagnostic pop
+
+- (void)setSdlMsgVersion:(SDLMsgVersion *)sdlMsgVersion {
+    [self.parameters sdl_setObject:sdlMsgVersion forName:SDLRPCParameterNameSyncMessageVersion];
+}
+
+- (SDLMsgVersion *)sdlMsgVersion {
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameSyncMessageVersion ofClass:SDLMsgVersion.class error:nil];
 }
 
 - (void)setAppName:(NSString *)appName {
-    [parameters sdl_setObject:appName forName:SDLNameAppName];
+    [self.parameters sdl_setObject:appName forName:SDLRPCParameterNameAppName];
 }
 
 - (NSString *)appName {
-    return [parameters sdl_objectForName:SDLNameAppName];
+    NSError *error = nil;
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameAppName ofClass:NSString.class error:&error];
 }
 
 - (void)setTtsName:(nullable NSArray<SDLTTSChunk *> *)ttsName {
-    [parameters sdl_setObject:ttsName forName:SDLNameTTSName];
+    [self.parameters sdl_setObject:ttsName forName:SDLRPCParameterNameTTSName];
 }
 
 - (nullable NSArray<SDLTTSChunk *> *)ttsName {
-    return [parameters sdl_objectsForName:SDLNameTTSName ofClass:SDLTTSChunk.class];
+    return [self.parameters sdl_objectsForName:SDLRPCParameterNameTTSName ofClass:SDLTTSChunk.class error:nil];
 }
 
 - (void)setNgnMediaScreenAppName:(nullable NSString *)ngnMediaScreenAppName {
-    [parameters sdl_setObject:ngnMediaScreenAppName forName:SDLNameNGNMediaScreenAppName];
+    [self.parameters sdl_setObject:ngnMediaScreenAppName forName:SDLRPCParameterNameNGNMediaScreenAppName];
 }
 
 - (nullable NSString *)ngnMediaScreenAppName {
-    return [parameters sdl_objectForName:SDLNameNGNMediaScreenAppName];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameNGNMediaScreenAppName ofClass:NSString.class error:nil];
 }
 
 - (void)setVrSynonyms:(nullable NSArray<NSString *> *)vrSynonyms {
-    [parameters sdl_setObject:vrSynonyms forName:SDLNameVRSynonyms];
+    [self.parameters sdl_setObject:vrSynonyms forName:SDLRPCParameterNameVRSynonyms];
 }
 
 - (nullable NSArray<NSString *> *)vrSynonyms {
-    return [parameters sdl_objectForName:SDLNameVRSynonyms];
+    return [self.parameters sdl_objectsForName:SDLRPCParameterNameVRSynonyms ofClass:NSString.class error:nil];
 }
 
 - (void)setIsMediaApplication:(NSNumber<SDLBool> *)isMediaApplication {
-    [parameters sdl_setObject:isMediaApplication forName:SDLNameIsMediaApplication];
+    [self.parameters sdl_setObject:isMediaApplication forName:SDLRPCParameterNameIsMediaApplication];
 }
 
 - (NSNumber<SDLBool> *)isMediaApplication {
-    return [parameters sdl_objectForName:SDLNameIsMediaApplication];
+    NSError *error = nil;
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameIsMediaApplication ofClass:NSNumber.class error:&error];
 }
 
 - (void)setLanguageDesired:(SDLLanguage)languageDesired {
-    [parameters sdl_setObject:languageDesired forName:SDLNameLanguageDesired];
+    [self.parameters sdl_setObject:languageDesired forName:SDLRPCParameterNameLanguageDesired];
 }
 
 - (SDLLanguage)languageDesired {
-    return [parameters sdl_objectForName:SDLNameLanguageDesired];
+    NSError *error = nil;
+    return [self.parameters sdl_enumForName:SDLRPCParameterNameLanguageDesired error:&error];
 }
 
 - (void)setHmiDisplayLanguageDesired:(SDLLanguage)hmiDisplayLanguageDesired {
-    [parameters sdl_setObject:hmiDisplayLanguageDesired forName:SDLNameHMIDisplayLanguageDesired];
+    [self.parameters sdl_setObject:hmiDisplayLanguageDesired forName:SDLRPCParameterNameHMIDisplayLanguageDesired];
 }
 
 - (SDLLanguage)hmiDisplayLanguageDesired {
-    return [parameters sdl_objectForName:SDLNameHMIDisplayLanguageDesired];
+    NSError *error = nil;
+    return [self.parameters sdl_enumForName:SDLRPCParameterNameHMIDisplayLanguageDesired error:&error];
 }
 
 - (void)setAppHMIType:(nullable NSArray<SDLAppHMIType> *)appHMIType {
-    [parameters sdl_setObject:appHMIType forName:SDLNameAppHMIType];
+    [self.parameters sdl_setObject:appHMIType forName:SDLRPCParameterNameAppHMIType];
 }
 
 - (nullable NSArray<SDLAppHMIType> *)appHMIType {
-    return [parameters sdl_objectForName:SDLNameAppHMIType];
+    return [self.parameters sdl_enumsForName:SDLRPCParameterNameAppHMIType error:nil];
 }
 
 - (void)setHashID:(nullable NSString *)hashID {
-    [parameters sdl_setObject:hashID forName:SDLNameHashId];
+    [self.parameters sdl_setObject:hashID forName:SDLRPCParameterNameHashId];
 }
 
 - (nullable NSString *)hashID {
-    return [parameters sdl_objectForName:SDLNameHashId];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameHashId ofClass:NSString.class error:nil];
 }
 
 - (void)setDeviceInfo:(nullable SDLDeviceInfo *)deviceInfo {
-    [parameters sdl_setObject:deviceInfo forName:SDLNameDeviceInfo];
+    [self.parameters sdl_setObject:deviceInfo forName:SDLRPCParameterNameDeviceInfo];
 }
 
 - (nullable SDLDeviceInfo *)deviceInfo {
-    return [parameters sdl_objectForName:SDLNameDeviceInfo ofClass:SDLDeviceInfo.class];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameDeviceInfo ofClass:SDLDeviceInfo.class error:nil];
 }
 
 - (void)setAppID:(NSString *)appID {
-    [parameters sdl_setObject:appID forName:SDLNameAppId];
+    [self.parameters sdl_setObject:appID forName:SDLRPCParameterNameAppId];
 }
 
 - (NSString *)appID {
-    return [parameters sdl_objectForName:SDLNameAppId];
+    NSError *error = nil;
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameAppId ofClass:NSString.class error:&error];
 }
 
 - (void)setFullAppID:(nullable NSString *)fullAppID {
-    [parameters sdl_setObject:fullAppID forName:SDLNameFullAppID];
+    [self.parameters sdl_setObject:fullAppID forName:SDLRPCParameterNameFullAppID];
 }
 
 - (nullable NSString *)fullAppID {
-    return [parameters sdl_objectForName:SDLNameFullAppID];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameFullAppID ofClass:NSString.class error:nil];
 }
 
 - (void)setAppInfo:(nullable SDLAppInfo *)appInfo {
-    [parameters sdl_setObject:appInfo forName:SDLNameAppInfo];
+    [self.parameters sdl_setObject:appInfo forName:SDLRPCParameterNameAppInfo];
 }
 
 - (nullable SDLAppInfo *)appInfo {
-    return [parameters sdl_objectForName:SDLNameAppInfo ofClass:SDLAppInfo.class];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameAppInfo ofClass:SDLAppInfo.class error:nil];
 }
 
 - (void)setDayColorScheme:(nullable SDLTemplateColorScheme *)dayColorScheme {
-    [parameters sdl_setObject:dayColorScheme forName:SDLNameDayColorScheme];
+    [self.parameters sdl_setObject:dayColorScheme forName:SDLRPCParameterNameDayColorScheme];
 }
 
 - (nullable SDLTemplateColorScheme *)dayColorScheme {
-    return [parameters sdl_objectForName:SDLNameDayColorScheme ofClass:[SDLTemplateColorScheme class]];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameDayColorScheme ofClass:SDLTemplateColorScheme.class error:nil];
 }
 
 - (void)setNightColorScheme:(nullable SDLTemplateColorScheme *)nightColorScheme {
-    [parameters sdl_setObject:nightColorScheme forName:SDLNameNightColorScheme];
+    [self.parameters sdl_setObject:nightColorScheme forName:SDLRPCParameterNameNightColorScheme];
 }
 
 - (nullable SDLTemplateColorScheme *)nightColorScheme {
-    return [parameters sdl_objectForName:SDLNameNightColorScheme ofClass:[SDLTemplateColorScheme class]];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameNightColorScheme ofClass:SDLTemplateColorScheme.class error:nil];
 }
 
 @end

@@ -14,15 +14,26 @@
 @class SDLFile;
 @class SDLTemplateColorScheme;
 @class SDLTTSChunk;
+@class SDLVersion;
 
 
 NS_ASSUME_NONNULL_BEGIN
+
+/// List of secondary transports
+typedef NS_OPTIONS(NSUInteger, SDLSecondaryTransports) {
+    /// No secondary transport
+    SDLSecondaryTransportsNone = 0,
+
+    /// TCP as secondary transport
+    SDLSecondaryTransportsTCP = 1 << 0
+};
 
 /**
  *  Configuration options for SDLManager
  */
 @interface SDLLifecycleConfiguration : NSObject <NSCopying>
 
+/// Initializer unavailable
 - (instancetype)init NS_UNAVAILABLE;
 
 /**
@@ -166,6 +177,25 @@ NS_ASSUME_NONNULL_BEGIN
  *  The color scheme to use when the head unit is in a dark / night situation.
  */
 @property (copy, nonatomic, nullable) SDLTemplateColorScheme *nightColorScheme;
+
+/**
+ The minimum protocol version that will be permitted to connect. This defaults to 1.0.0. If the protocol version of the head unit connected is below this version, the app will disconnect with an EndService protocol message and will not register.
+ */
+@property (strong, nonatomic) SDLVersion *minimumProtocolVersion;
+
+/**
+ The minimum RPC version that will be permitted to connect. This defaults to 1.0.0. If the RPC version of the head unit connected is below this version, an UnregisterAppInterface will be sent.
+ */
+@property (strong, nonatomic) SDLVersion *minimumRPCVersion;
+
+/**
+ Which transports are permitted to be used as secondary transports. A secondary transport is a transport that is connected as an alternate, higher bandwidth transport for situations when a low-bandwidth primary transport (such as Bluetooth) will restrict certain features (such as video streaming navigation).
+
+ The only currently available secondary transport is TCP over WiFi. This is set to permit TCP by default, but it can be disabled by using SDLSecondaryTransportsNone instead.
+
+ This will only affect apps that have high-bandwidth requirements; currently that is only video streaming navigation apps.
+ */
+@property (assign, nonatomic) SDLSecondaryTransports allowedSecondaryTransports;
 
 @end
 

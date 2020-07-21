@@ -11,7 +11,7 @@
 #import "SDLRadioControlCapabilities.h"
 #import "SDLSeatControlCapabilities.h"
 #import "NSMutableDictionary+Store.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -40,59 +40,81 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)setClimateControlCapabilities:(nullable NSArray<SDLClimateControlCapabilities *> *)climateControlCapabilities {
-    [store sdl_setObject:climateControlCapabilities forName:SDLNameClimateControlCapabilities];
+    [self.store sdl_setObject:climateControlCapabilities forName:SDLRPCParameterNameClimateControlCapabilities];
 }
 
 - (nullable NSArray<SDLClimateControlCapabilities *> *)climateControlCapabilities {
-    return [store sdl_objectsForName:SDLNameClimateControlCapabilities ofClass:SDLClimateControlCapabilities.class];
+    return [self.store sdl_objectsForName:SDLRPCParameterNameClimateControlCapabilities ofClass:SDLClimateControlCapabilities.class error:nil];
 }
 
 -(void)setRadioControlCapabilities:(nullable NSArray<SDLRadioControlCapabilities *> *)radioControlCapabilities {
-    [store sdl_setObject:radioControlCapabilities forName:SDLNameRadioControlCapabilities ];
+    [self.store sdl_setObject:radioControlCapabilities forName:SDLRPCParameterNameRadioControlCapabilities ];
 }
 
 - (nullable NSArray<SDLRadioControlCapabilities *> *)radioControlCapabilities {
-    return [store sdl_objectsForName:SDLNameRadioControlCapabilities ofClass:SDLRadioControlCapabilities.class];
+    return [self.store sdl_objectsForName:SDLRPCParameterNameRadioControlCapabilities ofClass:SDLRadioControlCapabilities.class error:nil];
 }
 
 - (void)setButtonCapabilities:(nullable NSArray<SDLButtonCapabilities *> *)buttonCapabilities {
-    [store sdl_setObject:buttonCapabilities forName:SDLNameButtonCapabilities];}
+    [self.store sdl_setObject:buttonCapabilities forName:SDLRPCParameterNameButtonCapabilities];}
 
 - (nullable NSArray<SDLButtonCapabilities *> *)buttonCapabilities {
-    return [store sdl_objectsForName:SDLNameButtonCapabilities ofClass:SDLButtonCapabilities.class];
+    return [self.store sdl_objectsForName:SDLRPCParameterNameButtonCapabilities ofClass:SDLButtonCapabilities.class error:nil];
 }
 
 - (void)setSeatControlCapabilities:(nullable NSArray<SDLSeatControlCapabilities *> *)seatControlCapabilities {
-    [store sdl_setObject:seatControlCapabilities forName:SDLNameSeatControlCapabilities];
+    [self.store sdl_setObject:seatControlCapabilities forName:SDLRPCParameterNameSeatControlCapabilities];
 }
 
 - (nullable NSArray<SDLSeatControlCapabilities *> *)seatControlCapabilities {
-    return [store sdl_objectsForName:SDLNameSeatControlCapabilities ofClass:SDLSeatControlCapabilities.class];
+    return [self.store sdl_objectsForName:SDLRPCParameterNameSeatControlCapabilities ofClass:SDLSeatControlCapabilities.class error:nil];
 }
 
 - (void)setAudioControlCapabilities:(nullable NSArray<SDLAudioControlCapabilities *> *)audioControlCapabilities {
-    [store sdl_setObject:audioControlCapabilities forName:SDLNameAudioControlCapabilities];
+    [self.store sdl_setObject:audioControlCapabilities forName:SDLRPCParameterNameAudioControlCapabilities];
 }
 
 - (nullable NSArray<SDLAudioControlCapabilities *> *)audioControlCapabilities {
-    return [store sdl_objectsForName:SDLNameAudioControlCapabilities ofClass:SDLAudioControlCapabilities.class];
+    return [self.store sdl_objectsForName:SDLRPCParameterNameAudioControlCapabilities ofClass:SDLAudioControlCapabilities.class error:nil];
 
 }
 
 - (void)setHmiSettingsControlCapabilities:(nullable NSArray<SDLHMISettingsControlCapabilities *> *)hmiSettingsControlCapabilities {
-    [store sdl_setObject:hmiSettingsControlCapabilities forName:SDLNameHmiSettingsControlCapabilities];
+    // TODO: This parameter should not be an array according to the spec, in a future major version change, this parameter's type should be altered
+    if (hmiSettingsControlCapabilities.count == 0) {
+        [self.store sdl_setObject:nil forName:SDLRPCParameterNameHmiSettingsControlCapabilities];
+        return;
+    }
+
+    SDLHMISettingsControlCapabilities *capability = hmiSettingsControlCapabilities.firstObject;
+
+    [self.store sdl_setObject:capability forName:SDLRPCParameterNameHmiSettingsControlCapabilities];
 }
 
 - (nullable NSArray<SDLHMISettingsControlCapabilities *> *)hmiSettingsControlCapabilities {
-    return [store sdl_objectsForName:SDLNameHmiSettingsControlCapabilities ofClass:SDLHMISettingsControlCapabilities.class];
+    SDLHMISettingsControlCapabilities *capability = [self.store sdl_objectForName:SDLRPCParameterNameHmiSettingsControlCapabilities ofClass:SDLHMISettingsControlCapabilities.class error:nil];
+    if (capability == nil) { return nil; }
+
+    return @[capability];
 }
 
 - (void)setLightControlCapabilities:(nullable NSArray<SDLLightControlCapabilities *> *)lightControlCapabilities {
-    [store sdl_setObject:lightControlCapabilities forName:SDLNameLightControlCapabilities];
+    // TODO: This parameter should not be an array according to the spec, in a future major version change, this parameter's type should be altered
+    if (lightControlCapabilities.count == 0) {
+        [self.store sdl_setObject:nil forName:SDLRPCParameterNameLightControlCapabilities];
+        return;
+    }
+
+    SDLLightControlCapabilities *capability = lightControlCapabilities.firstObject;
+
+    [self.store sdl_setObject:capability forName:SDLRPCParameterNameLightControlCapabilities];
 }
 
 - (nullable NSArray<SDLLightControlCapabilities *> *)lightControlCapabilities {
-    return [store sdl_objectsForName:SDLNameLightControlCapabilities ofClass:SDLLightControlCapabilities.class];
+    SDLLightControlCapabilities *capability = [self.store sdl_objectForName:SDLRPCParameterNameLightControlCapabilities ofClass:SDLLightControlCapabilities.class error:nil];
+    if (capability == nil) { return nil; }
+
+    return @[capability];
 }
 
 @end

@@ -13,6 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Crates an SDLFile from a file
 @interface SDLFile : NSObject <NSCopying>
 
 /**
@@ -55,6 +56,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) NSInputStream *inputStream;
 
+/**
+ Describes whether or not this file is represented by static icon data. The head unit will present its representation of the static icon concept when sent this data.
+
+ A file that represents a static icon may not be uploaded via the File Manager. It must be set using the Screen Manager.
+
+ Support for this feature may vary by system, but it will generally be more supported in soft buttons and menus.
+ */
+@property (assign, nonatomic, readonly) BOOL isStaticIcon;
+
+/// Initializer unavailable
 - (instancetype)init NS_UNAVAILABLE;
 
 /**

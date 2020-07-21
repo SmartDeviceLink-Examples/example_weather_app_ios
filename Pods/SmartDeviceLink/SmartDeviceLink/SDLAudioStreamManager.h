@@ -16,13 +16,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString *const SDLErrorDomainAudioStreamManager;
-
-typedef NS_ENUM(NSInteger, SDLAudioStreamManagerError) {
-    SDLAudioStreamManagerErrorNotConnected = -1,
-    SDLAudioStreamManagerErrorNoQueuedAudio = -2
-};
-
+/**
+ The manager to control the audio stream
+ */
 @interface SDLAudioStreamManager : NSObject
 
 /**
@@ -65,6 +61,22 @@ typedef NS_ENUM(NSInteger, SDLAudioStreamManagerError) {
  @param fileURL File URL to convert
  */
 - (void)pushWithFileURL:(NSURL *)fileURL;
+
+/**
+ Push a new audio buffer onto the queue. Call `playNextWhenReady` to start playing the pushed audio buffer.
+
+ This data must be of the required PCM format. See SDLSystemCapabilityManager.pcmStreamCapability and SDLAudioPassThruCapability.h.
+
+ This is *an example* of a PCM format used by some head units:
+ - audioType: PCM
+ - samplingRate: 16kHZ
+ - bitsPerSample: 16 bits
+
+ There is generally only one channel to the data.
+
+ @param data The audio buffer to be pushed onto the queue
+ */
+- (void)pushWithData:(NSData *)data;
 
 /**
  Play the next item in the queue. If an item is currently playing, it will continue playing and this item will begin playing after it is completed.

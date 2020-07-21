@@ -7,11 +7,11 @@
 //
 
 #import "SDLScreenManager.h"
-
 #import "SDLArtwork.h"
 #import "SDLChoiceSetManager.h"
 #import "SDLMenuManager.h"
 #import "SDLSoftButtonManager.h"
+#import "SDLSubscribeButtonManager.h"
 #import "SDLTextAndGraphicManager.h"
 #import "SDLVoiceCommandManager.h"
 
@@ -24,32 +24,40 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) SDLMenuManager *menuManager;
 @property (strong, nonatomic) SDLVoiceCommandManager *voiceCommandMenuManager;
 @property (strong, nonatomic) SDLChoiceSetManager *choiceSetManager;
+@property (strong, nonatomic) SDLSubscribeButtonManager *subscribeButtonManager;
 
 @property (weak, nonatomic) id<SDLConnectionManagerType> connectionManager;
 @property (weak, nonatomic) SDLFileManager *fileManager;
+@property (weak, nonatomic) SDLSystemCapabilityManager *systemCapabilityManager;
 
 @end
 
 @implementation SDLScreenManager
 
-- (instancetype)initWithConnectionManager:(id<SDLConnectionManagerType>)connectionManager fileManager:(SDLFileManager *)fileManager {
+- (instancetype)initWithConnectionManager:(id<SDLConnectionManagerType>)connectionManager fileManager:(SDLFileManager *)fileManager systemCapabilityManager:(SDLSystemCapabilityManager *)systemCapabilityManager {
     self = [super init];
     if (!self) { return nil; }
 
     _connectionManager = connectionManager;
     _fileManager = fileManager;
+    _systemCapabilityManager = systemCapabilityManager;
 
-    _textAndGraphicManager = [[SDLTextAndGraphicManager alloc] initWithConnectionManager:connectionManager fileManager:fileManager];
-    _softButtonManager = [[SDLSoftButtonManager alloc] initWithConnectionManager:connectionManager fileManager:fileManager];
-    _menuManager = [[SDLMenuManager alloc] initWithConnectionManager:connectionManager fileManager:fileManager];
+    _textAndGraphicManager = [[SDLTextAndGraphicManager alloc] initWithConnectionManager:connectionManager fileManager:fileManager systemCapabilityManager:systemCapabilityManager];
+    _softButtonManager = [[SDLSoftButtonManager alloc] initWithConnectionManager:connectionManager fileManager:fileManager systemCapabilityManager:systemCapabilityManager];
+    _subscribeButtonManager = [[SDLSubscribeButtonManager alloc] initWithConnectionManager:connectionManager];
+    _menuManager = [[SDLMenuManager alloc] initWithConnectionManager:connectionManager fileManager:fileManager systemCapabilityManager:systemCapabilityManager];
     _voiceCommandMenuManager = [[SDLVoiceCommandManager alloc] initWithConnectionManager:connectionManager];
-    _choiceSetManager = [[SDLChoiceSetManager alloc] initWithConnectionManager:connectionManager fileManager:fileManager];
+    _choiceSetManager = [[SDLChoiceSetManager alloc] initWithConnectionManager:connectionManager fileManager:fileManager systemCapabilityManager:systemCapabilityManager];
 
     return self;
 }
 
 - (void)startWithCompletionHandler:(void (^)(NSError * _Nullable))handler {
+    [self.textAndGraphicManager start];
+    [self.softButtonManager start];
+    [self.menuManager start];
     [self.choiceSetManager start];
+    [self.subscribeButtonManager start];
 
     handler(nil);
 }
@@ -60,10 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self.menuManager stop];
     [self.voiceCommandMenuManager stop];
     [self.choiceSetManager stop];
-}
-
-- (nullable SDLSoftButtonObject *)softButtonObjectNamed:(NSString *)name {
-    return [self.softButtonManager softButtonObjectNamed:name];
+    [self.subscribeButtonManager stop];
 }
 
 #pragma mark - Setters
@@ -127,8 +132,16 @@ NS_ASSUME_NONNULL_BEGIN
     self.textAndGraphicManager.textField4Type = textField4Type;
 }
 
+- (void)setTitle:(nullable NSString *)title {
+    self.textAndGraphicManager.title = title;
+}
+
 - (void)setSoftButtonObjects:(NSArray<SDLSoftButtonObject *> *)softButtonObjects {
     self.softButtonManager.softButtonObjects = softButtonObjects;
+}
+
+- (void)setMenuConfiguration:(SDLMenuConfiguration *)menuConfiguration {
+    self.menuManager.menuConfiguration = menuConfiguration;
 }
 
 - (void)setMenu:(NSArray<SDLMenuCell *> *)menu {
@@ -141,6 +154,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setKeyboardConfiguration:(nullable SDLKeyboardProperties *)keyboardConfiguration {
     self.choiceSetManager.keyboardConfiguration = keyboardConfiguration;
+}
+
+- (void)setDynamicMenuUpdatesMode:(SDLDynamicMenuUpdatesMode)dynamicMenuUpdatesMode {
+    self.menuManager.dynamicMenuUpdatesMode = dynamicMenuUpdatesMode;
 }
 
 #pragma mark - Getters
@@ -205,6 +222,10 @@ NS_ASSUME_NONNULL_BEGIN
     return _softButtonManager.softButtonObjects;
 }
 
+- (SDLMenuConfiguration *)menuConfiguration {
+    return _menuManager.menuConfiguration;
+}
+
 - (NSArray<SDLMenuCell *> *)menu {
     return _menuManager.menuCells;
 }
@@ -237,7 +258,26 @@ NS_ASSUME_NONNULL_BEGIN
     self.textAndGraphicManager.batchUpdates = NO;
 
     [self.textAndGraphicManager updateWithCompletionHandler:handler];
-    [self.softButtonManager updateWithCompletionHandler:handler];
+}
+
+#pragma mark - Subscribe Buttons
+
+- (id<NSObject>)subscribeButton:(SDLButtonName)buttonName withUpdateHandler:(SDLSubscribeButtonHandler)updateHandler {
+    return [self.subscribeButtonManager subscribeButton:buttonName withUpdateHandler:updateHandler];
+}
+
+- (void)subscribeButton:(SDLButtonName)buttonName withObserver:(id<NSObject>)observer selector:(SEL)selector {
+    [self.subscribeButtonManager subscribeButton:buttonName withObserver:observer selector:selector];
+}
+
+- (void)unsubscribeButton:(SDLButtonName)buttonName withObserver:(id<NSObject>)observer withCompletionHandler:(SDLScreenManagerUpdateCompletionHandler)completionHandler {
+    [self.subscribeButtonManager unsubscribeButton:buttonName withObserver:observer withCompletionHandler:completionHandler];
+}
+
+#pragma mark - Soft Buttons
+
+- (nullable SDLSoftButtonObject *)softButtonObjectNamed:(NSString *)name {
+    return [self.softButtonManager softButtonObjectNamed:name];
 }
 
 #pragma mark - Choice Sets
@@ -258,8 +298,22 @@ NS_ASSUME_NONNULL_BEGIN
     [self.choiceSetManager presentChoiceSet:choiceSet mode:mode withKeyboardDelegate:delegate];
 }
 
-- (void)presentKeyboardWithInitialText:(NSString *)initialText delegate:(id<SDLKeyboardDelegate>)delegate {
-    [self.choiceSetManager presentKeyboardWithInitialText:initialText delegate:delegate];
+- (nullable NSNumber<SDLInt> *)presentKeyboardWithInitialText:(NSString *)initialText delegate:(id<SDLKeyboardDelegate>)delegate {
+    return [self.choiceSetManager presentKeyboardWithInitialText:initialText delegate:delegate];
+}
+
+- (void)dismissKeyboardWithCancelID:(NSNumber<SDLInt> *)cancelID{
+    [self.choiceSetManager dismissKeyboardWithCancelID:cancelID];
+}
+
+#pragma mark - Menu
+
+- (BOOL)openMenu {
+   return [self.menuManager openMenu];
+}
+
+- (BOOL)openSubmenu:(SDLMenuCell *)cell {
+  return [self.menuManager openSubmenu:cell];
 }
 
 @end

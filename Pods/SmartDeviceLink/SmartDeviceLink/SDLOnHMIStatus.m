@@ -6,52 +6,78 @@
 #import "NSMutableDictionary+Store.h"
 #import "SDLAudioStreamingState.h"
 #import "SDLHMILevel.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
+#import "SDLRPCFunctionNames.h"
 #import "SDLSystemContext.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation SDLOnHMIStatus
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (instancetype)init {
-    if (self = [super initWithName:SDLNameOnHMIStatus]) {
+    if (self = [super initWithName:SDLRPCFunctionNameOnHMIStatus]) {
     }
+    return self;
+}
+#pragma clang diagnostic pop
+
+- (instancetype)initWithHMILevel:(SDLHMILevel)hmiLevel systemContext:(SDLSystemContext)systemContext audioStreamingState:(SDLAudioStreamingState)audioStreamingState videoStreamingState:(nullable SDLVideoStreamingState)videoStreamingState windowID:(nullable NSNumber<SDLUInt> *)windowID {
+    self = [self init];
+    if (!self) { return nil; }
+
+    self.hmiLevel = hmiLevel;
+    self.systemContext = systemContext;
+    self.audioStreamingState = audioStreamingState;
+    self.videoStreamingState = videoStreamingState;
+    self.windowID = windowID;
+
     return self;
 }
 
 - (void)setHmiLevel:(SDLHMILevel)hmiLevel {
-    [parameters sdl_setObject:hmiLevel forName:SDLNameHMILevel];
+    [self.parameters sdl_setObject:hmiLevel forName:SDLRPCParameterNameHMILevel];
 }
 
 - (SDLHMILevel)hmiLevel {
-    NSObject *obj = [parameters sdl_objectForName:SDLNameHMILevel];
-    return (SDLHMILevel)obj;
+    NSError *error = nil;
+    return [self.parameters sdl_enumForName:SDLRPCParameterNameHMILevel error:&error];
 }
 
 - (void)setAudioStreamingState:(SDLAudioStreamingState)audioStreamingState {
-    [parameters sdl_setObject:audioStreamingState forName:SDLNameAudioStreamingState];
+    [self.parameters sdl_setObject:audioStreamingState forName:SDLRPCParameterNameAudioStreamingState];
 }
 
 - (SDLAudioStreamingState)audioStreamingState {
-    NSObject *obj = [parameters sdl_objectForName:SDLNameAudioStreamingState];
-    return (SDLAudioStreamingState)obj;
+    NSError *error = nil;
+    return [self.parameters sdl_enumForName:SDLRPCParameterNameAudioStreamingState error:&error];
 }
 
 - (void)setVideoStreamingState:(nullable SDLVideoStreamingState)videoStreamingState {
-    [parameters sdl_setObject:videoStreamingState forName:SDLNameVideoStreamingState];
+    [self.parameters sdl_setObject:videoStreamingState forName:SDLRPCParameterNameVideoStreamingState];
 }
 
 - (nullable SDLVideoStreamingState)videoStreamingState {
-    return [parameters sdl_objectForName:SDLNameVideoStreamingState];
+    return [self.parameters sdl_enumForName:SDLRPCParameterNameVideoStreamingState error:nil];
 }
 
 - (void)setSystemContext:(SDLSystemContext)systemContext {
-    [parameters sdl_setObject:systemContext forName:SDLNameSystemContext];
+    [self.parameters sdl_setObject:systemContext forName:SDLRPCParameterNameSystemContext];
 }
 
 - (SDLSystemContext)systemContext {
-    NSObject *obj = [parameters sdl_objectForName:SDLNameSystemContext];
-    return (SDLSystemContext)obj;
+    NSError *error = nil;
+    return [self.parameters sdl_enumForName:SDLRPCParameterNameSystemContext error:&error];
+}
+
+- (void)setWindowID:(nullable NSNumber<SDLUInt> *)windowID {
+    [self.parameters sdl_setObject:windowID forName:SDLRPCParameterNameWindowId];
+}
+
+- (nullable NSNumber<SDLUInt> *)windowID {
+    NSError *error = nil;
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameWindowId ofClass:NSNumber.class error:&error];
 }
 
 @end

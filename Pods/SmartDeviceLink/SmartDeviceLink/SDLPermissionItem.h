@@ -8,6 +8,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Permissions for a given set of RPCs
+///
+/// @since RPC 2.0
 @interface SDLPermissionItem : SDLRPCStruct
 
 /**
@@ -30,6 +33,13 @@ NS_ASSUME_NONNULL_BEGIN
  Required
  */
 @property (strong, nonatomic) SDLParameterPermissions *parameterPermissions;
+
+/**
+ Describes whether or not the RPC needs encryption
+ 
+ Optional, Boolean, since SDL 6.0
+ */
+@property (strong, nonatomic, nullable) NSNumber<SDLBool> *requireEncryption;
 
 @end
 

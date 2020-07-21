@@ -54,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)start {
     [super start];
+    if (self.isCancelled) { return; }
 
     [self sdl_sendNextRequest];
 }
@@ -81,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
 
     // Send the next request
     SDLRPCRequest *request = self.requests[self.currentRequestIndex];
-    [self.connectionManager sendConnectionRequest:request withResponseHandler:^(__kindof SDLRPCRequest * _Nullable request, __kindof SDLRPCResponse * _Nullable response, NSError * _Nullable error) {
+    [self.connectionManager sendConnectionRequest:(__kindof SDLRPCRequest *)request withResponseHandler:^(__kindof SDLRPCRequest * _Nullable request, __kindof SDLRPCResponse * _Nullable response, NSError * _Nullable error) {
         self.requestsComplete++;
 
         // If this request failed and no request has yet failed, set our internal request failed to YES

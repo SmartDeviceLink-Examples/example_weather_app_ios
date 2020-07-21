@@ -13,18 +13,21 @@
 #import "SDLStreamingMediaManagerConstants.h"
 
 @class SDLAudioStreamManager;
+@class SDLConfiguration;
 @class SDLProtocol;
-@class SDLStreamingMediaConfiguration;
+@class SDLSecondaryTransportManager;
+@class SDLSystemCapabilityManager;
 @class SDLTouchManager;
 @class SDLVideoStreamingFormat;
 
 @protocol SDLFocusableItemLocatorType;
 @protocol SDLConnectionManagerType;
 
+
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - Interface
 
+/// Manager to help control streaming (video and audio) media services.
 @interface SDLStreamingMediaManager : NSObject <SDLStreamingAudioManagerType>
 
 /**
@@ -80,7 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic, readonly, getter=isVideoStreamingPaused) BOOL videoStreamingPaused;
 
 /**
- *  This is the current screen size of a connected display. This will be the size the video encoder uses to encode the raw image data.
+ *  The current screen resolution of the connected display in pixels.
  */
 @property (assign, nonatomic, readonly) CGSize screenSize;
 
@@ -97,7 +100,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The pixel buffer pool reference returned back from an active VTCompressionSessionRef encoder.
  *
- *  @warning This will only return a valid pixel buffer pool after the encoder has been initialized (when the video     session has started).
+ *  @warning This will only return a valid pixel buffer pool after the encoder has been initialized (when the video session has started).
  *  @discussion Clients may call this once and retain the resulting pool, this call is cheap enough that it's OK to call it once per frame.
  */
 @property (assign, nonatomic, readonly, nullable) CVPixelBufferPoolRef pixelBufferPool;
@@ -109,31 +112,32 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (assign, nonatomic) SDLStreamingEncryptionFlag requestedEncryptionType;
 
+/**
+ When YES, the StreamingMediaManager will send a black screen with "Video Backgrounded String". Defaults to YES.
+ */
+@property (assign, nonatomic) BOOL showVideoBackgroundDisplay;
+
+
+#pragma mark - Lifecycle
+
+/// Initializer unavailable
 - (instancetype)init NS_UNAVAILABLE;
 
-/**
- Create a new streaming media manager for navigation and VPM apps with a specified configuration
+/// Create a new streaming media manager for navigation and projection apps with a specified configuration.
+/// @param connectionManager The pass-through for RPCs
+/// @param configuration This session's configuration
+- (instancetype)initWithConnectionManager:(id<SDLConnectionManagerType>)connectionManager configuration:(SDLConfiguration *)configuration __deprecated_msg("Use initWithConnectionManager:configuration:systemCapabilityManager: instead");
 
- @param connectionManager The pass-through for RPCs
- @param configuration The configuration of this streaming media session
- @return A new streaming manager
- */
-- (instancetype)initWithConnectionManager:(id<SDLConnectionManagerType>)connectionManager configuration:(SDLStreamingMediaConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
+/// Create a new streaming media manager for navigation and projection apps with a specified configuration.
+/// @param connectionManager The pass-through for RPCs
+/// @param configuration This session's configuration
+/// @param systemCapabilityManager The system capability manager object for reading window capabilities
+- (instancetype)initWithConnectionManager:(id<SDLConnectionManagerType>)connectionManager configuration:(SDLConfiguration *)configuration systemCapabilityManager:(nullable SDLSystemCapabilityManager *)systemCapabilityManager NS_DESIGNATED_INITIALIZER;
 
 /**
- *  Start the manager with a completion block that will be called when startup completes. This is used internally. To use an SDLStreamingMediaManager, you should use the manager found on `SDLManager`.
+ *  Start the manager. This is used internally. To use an SDLStreamingMediaManager, you should use the manager found on `SDLManager`.
  */
 - (void)startWithProtocol:(SDLProtocol *)protocol;
-
-/**
- *  Start the audio feature of the manager. This is used internally. To use an SDLStreamingMediaManager, you should use the manager found on `SDLManager`.
- */
-- (void)startAudioWithProtocol:(SDLProtocol *)protocol;
-
-/**
- *  Start the video feature of the manager. This is used internally. To use an SDLStreamingMediaManager, you should use the manager found on `SDLManager`.
- */
-- (void)startVideoWithProtocol:(SDLProtocol *)protocol;
 
 /**
  *  Stop the manager. This method is used internally.
@@ -149,6 +153,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  Stop the video feature of the manager. This method is used internally.
  */
 - (void)stopVideo;
+
+#pragma mark - Data Transfer
 
 /**
  *  This method receives raw image data and will run iOS8+'s hardware video encoder to turn the data into a video stream, which will then be passed to the connected head unit.
@@ -170,13 +176,27 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)sendVideoData:(CVImageBufferRef)imageBuffer presentationTimestamp:(CMTime)presentationTimestamp;
 
 /**
- *  This method receives PCM audio data and will attempt to send that data across to the head unit for immediate playback
+ *  This method receives PCM audio data and will attempt to send that data across to the head unit for immediate playback.
+ *
+ *  NOTE: See the `.audioManager` (SDLAudioStreamManager) `pushWithData:` method for a more modern API.
  *
  *  @param audioData The data in PCM audio format, to be played
  *
  *  @return Whether or not the data was successfully sent.
  */
 - (BOOL)sendAudioData:(NSData *)audioData;
+
+#pragma mark - Deprecated Methods
+
+ /**
+  *  Start the audio feature of the manager. This is used internally. To use an SDLStreamingMediaManager, you should use the manager found on `SDLManager`.
+  */
+- (void)startAudioWithProtocol:(SDLProtocol *)protocol __deprecated_msg("Use startWithProtocol: instead");
+
+ /**
+  *  Start the video feature of the manager. This is used internally. To use an SDLStreamingMediaManager, you should use the manager found on `SDLManager`.
+  */
+- (void)startVideoWithProtocol:(SDLProtocol *)protocol __deprecated_msg("Use startWithProtocol: instead");
 
 
 @end

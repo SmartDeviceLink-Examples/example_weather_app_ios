@@ -4,26 +4,48 @@
 #import "SDLOnDriverDistraction.h"
 
 #import "NSMutableDictionary+Store.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
+#import "SDLRPCFunctionNames.h"
 #import "SDLDriverDistractionState.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation SDLOnDriverDistraction
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (instancetype)init {
-    if (self = [super initWithName:SDLNameOnDriverDistraction]) {
+    if (self = [super initWithName:SDLRPCFunctionNameOnDriverDistraction]) {
     }
     return self;
 }
+#pragma clang diagnostic pop
 
 - (void)setState:(SDLDriverDistractionState)state {
-    [parameters sdl_setObject:state forName:SDLNameState];
+    [self.parameters sdl_setObject:state forName:SDLRPCParameterNameState];
 }
 
 - (SDLDriverDistractionState)state {
-    NSObject *obj = [parameters sdl_objectForName:SDLNameState];
-    return (SDLDriverDistractionState)obj;
+    NSError *error = nil;
+    return [self.parameters sdl_enumForName:SDLRPCParameterNameState error:&error];
+}
+
+- (void)setLockScreenDismissalEnabled:(NSNumber<SDLBool> *)lockScreenDismissalEnabled {
+    [self.parameters sdl_setObject:lockScreenDismissalEnabled forName:SDLRPCParameterNameLockScreenDismissalEnabled];
+}
+
+- (NSNumber<SDLBool> *)lockScreenDismissalEnabled {
+    NSError *error = nil;
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameLockScreenDismissalEnabled ofClass:NSNumber.class error:&error];
+}
+
+- (void)setLockScreenDismissalWarning:(NSString *)lockScreenDismissalWarning {
+    [self.parameters sdl_setObject:lockScreenDismissalWarning forName:SDLRPCParameterNameLockScreenDismissalWarning];
+}
+
+- (NSString *)lockScreenDismissalWarning {
+    NSError *error = nil;
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameLockScreenDismissalWarning ofClass:NSString.class error:&error];
 }
 
 @end

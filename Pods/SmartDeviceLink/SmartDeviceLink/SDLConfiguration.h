@@ -13,9 +13,11 @@
 @class SDLLockScreenConfiguration;
 @class SDLLogConfiguration;
 @class SDLStreamingMediaConfiguration;
+@class SDLEncryptionConfiguration;
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Contains information about the app's configurtion, such as lifecycle, lockscreen, encryption, etc.
 @interface SDLConfiguration : NSObject <NSCopying>
 
 /**
@@ -36,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The streaming media configuration.
  */
-@property (copy, nonatomic, readonly) SDLStreamingMediaConfiguration *streamingMediaConfig;
+@property (copy, nonatomic, readonly, nullable) SDLStreamingMediaConfiguration *streamingMediaConfig;
 
 /**
  *  The file manager configuration.
@@ -44,6 +46,39 @@ NS_ASSUME_NONNULL_BEGIN
 @property (copy, nonatomic, readonly) SDLFileManagerConfiguration *fileManagerConfig;
 
 /**
+ *  The encryption configuration.
+ */
+@property (copy, nonatomic, readonly) SDLEncryptionConfiguration *encryptionConfig;
+
+/**
+ *  Creates a new configuration to be passed to the SDLManager with custom lifecycle, lock screen, logging, file manager and encryption configurations.
+ *
+ *  @param lifecycleConfig      The lifecycle configuration to be used.
+ *  @param lockScreenConfig     The lockscreen configuration to be used. If nil, the `enabledConfiguration` will be used.
+ *  @param logConfig            The logging configuration to be used. If nil, the `defaultConfiguration` will be used.
+ *  @param fileManagerConfig    The file manager configuration to be used or `defaultConfiguration` if nil.
+ *  @param encryptionConfig     The encryption configuration to be used. If nil, the `defaultConfiguration` will be used.
+ *  @return                     The configuration
+ */
+- (instancetype)initWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig fileManager:(nullable SDLFileManagerConfiguration *)fileManagerConfig encryption:(nullable SDLEncryptionConfiguration *)encryptionConfig;
+
+/**
+ *  Creates a new configuration to be passed to the SDLManager with custom lifecycle, lock screen, logging, streaming media, file manager and encryption configurations.
+ *
+ *  @param lifecycleConfig      The lifecycle configuration to be used.
+ *  @param lockScreenConfig     The lockscreen configuration to be used. If nil, the `enabledConfiguration` will be used.
+ *  @param logConfig            The logging configuration to be used. If nil, the `defaultConfiguration` will be used.
+ *  @param streamingMediaConfig The streaming media configuration to be used or nil if not used.
+ *  @param fileManagerConfig    The file manager configuration to be used or `defaultConfiguration` if nil.
+ *  @param encryptionConfig     The encryption configuration to be used. If nil, the `defaultConfiguration` will be used.
+ *  @return                     The configuration
+ */
+- (instancetype)initWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig streamingMedia:(nullable SDLStreamingMediaConfiguration *)streamingMediaConfig fileManager:(nullable SDLFileManagerConfiguration *)fileManagerConfig encryption:(nullable SDLEncryptionConfiguration *)encryptionConfig;
+
+
+#pragma mark - Deprecated Initializers
+
+/**
  *  Creates a new configuration to be passed to the SDLManager with custom lifecycle, lock screen and logging configurations.
  *
  *  @param lifecycleConfig      The lifecycle configuration to be used.
@@ -51,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param logConfig            The logging configuration to be used. If nil, the `defaultConfiguration` will be used.
  *  @return                     The configuration
  */
-- (instancetype)initWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig __deprecated_msg("Use initWithLifecycle:lockScreen:logging:fileManager: instead");
+- (instancetype)initWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig __deprecated_msg("Use initWithLifecycle:lockScreen:logging:fileManager:encryption: instead");
 
 /**
  *  Creates a new configuration to be passed to the SDLManager with custom lifecycle, lock screen, logging and file manager configurations.
@@ -62,28 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param fileManagerConfig    The file manager configuration to be used or `defaultConfiguration` if nil.
  *  @return                     The configuration
  */
-- (instancetype)initWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig fileManager:(nullable SDLFileManagerConfiguration *)fileManagerConfig;
-
-/**
- *  Creates a new configuration to be passed to the SDLManager with custom lifecycle, lock screen and logging configurations.
- *
- *  @param lifecycleConfig      The lifecycle configuration to be used.
- *  @param lockScreenConfig     The lockscreen configuration to be used. If nil, the `enabledConfiguration` will be used.
- *  @param logConfig            The logging configuration to be used. If nil, the `defaultConfiguration` will be used.
- *  @return                     The configuration
- */
-+ (instancetype)configurationWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig __deprecated_msg("Use configurationWithLifecycle:lockScreen:logging:fileManager: instead") NS_SWIFT_UNAVAILABLE("Use an initializer instead");
-
-/**
- *  Creates a new configuration to be passed to the SDLManager with custom lifecycle, lock screen, logging and file manager configurations.
- *
- *  @param lifecycleConfig      The lifecycle configuration to be used.
- *  @param lockScreenConfig     The lockscreen configuration to be used. If nil, the `enabledConfiguration` will be used.
- *  @param logConfig            The logging configuration to be used. If nil, the `defaultConfiguration` will be used.
- *  @param fileManagerConfig    The file manager configuration to be used or `defaultConfiguration` if nil.
- *  @return                     The configuration
- */
-+ (instancetype)configurationWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig fileManager:(nullable SDLFileManagerConfiguration *)fileManagerConfig NS_SWIFT_UNAVAILABLE("Use an initializer instead");
+- (instancetype)initWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig fileManager:(nullable SDLFileManagerConfiguration *)fileManagerConfig __deprecated_msg("Use initWithLifecycle:lockScreen:logging:fileManager:encryption: instead");
 
 /**
  *  Creates a new configuration to be passed to the SDLManager with custom lifecycle, lock screen, logging and streaming media configurations.
@@ -94,7 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param streamingMediaConfig The streaming media configuration to be used or nil if not used.
  *  @return                     The configuration
  */
-- (instancetype)initWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig streamingMedia:(nullable SDLStreamingMediaConfiguration *)streamingMediaConfig __deprecated_msg("Use initWithLifecycle:lockScreen:logging:streamingMedia:fileManager: instead");
+- (instancetype)initWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig streamingMedia:(nullable SDLStreamingMediaConfiguration *)streamingMediaConfig __deprecated_msg("Use initWithLifecycle:lockScreen:logging:streamingMedia:fileManager:encryption: instead");
 
 /**
  *  Creates a new configuration to be passed to the SDLManager with custom lifecycle, lock screen, logging, streaming media and file manager configurations.
@@ -106,18 +120,18 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param fileManagerConfig    The file manager configuration to be used or `defaultConfiguration` if nil.
  *  @return                     The configuration
  */
-- (instancetype)initWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig streamingMedia:(nullable SDLStreamingMediaConfiguration *)streamingMediaConfig fileManager:(nullable SDLFileManagerConfiguration *)fileManagerConfig;
+- (instancetype)initWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig streamingMedia:(nullable SDLStreamingMediaConfiguration *)streamingMediaConfig fileManager:(nullable SDLFileManagerConfiguration *)fileManagerConfig __deprecated_msg("Use initWithLifecycle:lockScreen:logging:streamingMedia:fileManager:encryption: instead");
 
 /**
- *  Creates a new configuration to be passed to the SDLManager with custom lifecycle, lock screen, logging and streaming media configurations.
+ *  Creates a new configuration to be passed to the SDLManager with custom lifecycle, lock screen, logging and file manager configurations.
  *
  *  @param lifecycleConfig      The lifecycle configuration to be used.
  *  @param lockScreenConfig     The lockscreen configuration to be used. If nil, the `enabledConfiguration` will be used.
  *  @param logConfig            The logging configuration to be used. If nil, the `defaultConfiguration` will be used.
- *  @param streamingMediaConfig The streaming media configuration to be used or nil if not used.
+ *  @param fileManagerConfig    The file manager configuration to be used or `defaultConfiguration` if nil.
  *  @return                     The configuration
  */
-+ (instancetype)configurationWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig streamingMedia:(nullable SDLStreamingMediaConfiguration *)streamingMediaConfig __deprecated_msg("Use configurationWithLifecycle:lockScreen:logging:streamingMedia:fileManager: instead") NS_SWIFT_UNAVAILABLE("Use an initializer instead");
++ (instancetype)configurationWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig fileManager:(nullable SDLFileManagerConfiguration *)fileManagerConfig __deprecated_msg("Use initWithLifecycle:lockScreen:logging:fileManager:encryption: instead") NS_SWIFT_UNAVAILABLE("Use an initializer instead");
 
 /**
  *  Creates a new configuration to be passed to the SDLManager with custom lifecycle, lock screen, logging, streaming media and file manager configurations.
@@ -129,7 +143,28 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param fileManagerConfig    The file manager configuration to be used or `defaultConfiguration` if nil.
  *  @return                     The configuration
  */
-+ (instancetype)configurationWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig streamingMedia:(nullable SDLStreamingMediaConfiguration *)streamingMediaConfig fileManager:(nullable SDLFileManagerConfiguration *)fileManagerConfig NS_SWIFT_UNAVAILABLE("Use an initializer instead");
++ (instancetype)configurationWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig streamingMedia:(nullable SDLStreamingMediaConfiguration *)streamingMediaConfig fileManager:(nullable SDLFileManagerConfiguration *)fileManagerConfig __deprecated_msg("Use initWithLifecycle:lockScreen:logging:streamingMedia:fileManager:encryption: instead") NS_SWIFT_UNAVAILABLE("Use an initializer instead");
+
+/**
+ *  Creates a new configuration to be passed to the SDLManager with custom lifecycle, lock screen, logging and streaming media configurations.
+ *
+ *  @param lifecycleConfig      The lifecycle configuration to be used.
+ *  @param lockScreenConfig     The lockscreen configuration to be used. If nil, the `enabledConfiguration` will be used.
+ *  @param logConfig            The logging configuration to be used. If nil, the `defaultConfiguration` will be used.
+ *  @param streamingMediaConfig The streaming media configuration to be used or nil if not used.
+ *  @return                     The configuration
+ */
++ (instancetype)configurationWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig streamingMedia:(nullable SDLStreamingMediaConfiguration *)streamingMediaConfig __deprecated_msg("Use initWithLifecycle:lockScreen:logging:streamingMedia:fileManager:encryption: instead") NS_SWIFT_UNAVAILABLE("Use an initializer instead");
+
+/**
+ *  Creates a new configuration to be passed to the SDLManager with custom lifecycle, lock screen and logging configurations.
+ *
+ *  @param lifecycleConfig      The lifecycle configuration to be used.
+ *  @param lockScreenConfig     The lockscreen configuration to be used. If nil, the `enabledConfiguration` will be used.
+ *  @param logConfig            The logging configuration to be used. If nil, the `defaultConfiguration` will be used.
+ *  @return                     The configuration
+ */
++ (instancetype)configurationWithLifecycle:(SDLLifecycleConfiguration *)lifecycleConfig lockScreen:(nullable SDLLockScreenConfiguration *)lockScreenConfig logging:(nullable SDLLogConfiguration *)logConfig __deprecated_msg("Use initWithLifecycle:lockScreen:logging:fileManager:encryption: instead") NS_SWIFT_UNAVAILABLE("Use an initializer instead");
 
 @end
 

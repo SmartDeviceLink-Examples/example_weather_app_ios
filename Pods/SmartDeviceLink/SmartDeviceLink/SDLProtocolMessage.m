@@ -6,7 +6,7 @@
 
 #import "NSMutableDictionary+Store.h"
 #import "SDLFunctionID.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
 #import "SDLProtocolHeader.h"
 #import "SDLRPCPayload.h"
 #import "SDLV1ProtocolMessage.h"
@@ -54,13 +54,18 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableString *description = [[NSMutableString alloc] init];
     [description appendString:self.header.description];
 
+    if (self.header.encrypted) {
+        [description appendString:@", Payload is encrypted - no description can be provided"];
+        return description;
+    }
+
     // If it's an RPC, provide greater detail
     if (((self.header.serviceType == SDLServiceTypeRPC) || (self.header.serviceType == SDLServiceTypeBulkData)) && (self.header.frameType == SDLFrameTypeSingle)) {
         // version of RPC Message determines how we access the info.
         if (self.header.version >= 2) {
             SDLRPCPayload *rpcPayload = [SDLRPCPayload rpcPayloadWithData:self.payload];
             if (rpcPayload) {
-                SDLName functionName = [[SDLFunctionID sharedInstance] functionNameForId:rpcPayload.functionID];
+                SDLRPCParameterName functionName = [[SDLFunctionID sharedInstance] functionNameForId:rpcPayload.functionID];
 
                 UInt8 rpcType = rpcPayload.rpcType;
                 NSArray<NSString *> *rpcTypeNames = @[@"Request", @"Response", @"Notification"];

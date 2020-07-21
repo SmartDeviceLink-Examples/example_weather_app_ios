@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "SDLProtocolHeader.h"
-#import "SDLSyncMsgVersion.h"
+#import "SDLProtocolConstants.h"
+
+@class SDLProtocolHeader;
+@class SDLVersion;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,12 +26,17 @@ extern NSUInteger const SDLDefaultMTUSize;
 extern NSUInteger const SDLV1MTUSize;
 extern NSUInteger const SDLV3MTUSize;
 
+extern void *const SDLProcessingQueueName;
+extern void *const SDLConcurrentQueueName;
+
 @interface SDLGlobals : NSObject
 
-@property (copy, nonatomic, readonly) NSString *protocolVersion;
-@property (assign, nonatomic, readonly) NSInteger majorProtocolVersion;
-@property (strong, nonatomic) SDLSyncMsgVersion *rpcVersion;
-@property (copy, nonatomic) NSString *maxHeadUnitVersion;
+@property (copy, nonatomic, readonly) SDLVersion *protocolVersion;
+@property (strong, nonatomic) SDLVersion *rpcVersion;
+@property (copy, nonatomic) SDLVersion *maxHeadUnitProtocolVersion;
+
+@property (copy, nonatomic) dispatch_queue_t sdlProcessingQueue;
+@property (copy, nonatomic) dispatch_queue_t sdlConcurrentQueue;
 
 + (instancetype)sharedGlobals;
 

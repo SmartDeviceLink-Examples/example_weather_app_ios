@@ -13,6 +13,7 @@
 #import "SDLHMILevel.h"
 #import "SDLLanguage.h"
 #import "SDLSystemContext.h"
+#import "SDLVideoStreamingState.h"
 
 @class SDLConfiguration;
 @class SDLFileManager;
@@ -26,6 +27,7 @@
 @class SDLPutFile;
 @class SDLRegisterAppInterfaceResponse;
 @class SDLResponseDispatcher;
+@class SDLRPCMessage;
 @class SDLRPCNotification;
 @class SDLRPCRequest;
 @class SDLRPCResponse;
@@ -62,6 +64,7 @@ typedef void (^SDLManagerReadyBlock)(BOOL success, NSError *_Nullable error);
 
 @property (copy, nonatomic, readonly) SDLConfiguration *configuration;
 @property (weak, nonatomic, nullable) id<SDLManagerDelegate> delegate;
+@property (strong, nonatomic, readonly, nullable) NSString *authToken;
 
 @property (strong, nonatomic) SDLFileManager *fileManager;
 @property (strong, nonatomic) SDLPermissionManager *permissionManager;
@@ -74,16 +77,10 @@ typedef void (^SDLManagerReadyBlock)(BOOL success, NSError *_Nullable error);
 @property (strong, nonatomic, readonly) SDLResponseDispatcher *responseDispatcher;
 @property (strong, nonatomic, readonly) SDLStateMachine *lifecycleStateMachine;
 
-// Deprecated internal proxy object
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-@property (strong, nonatomic, nullable) SDLProxy *proxy;
-#pragma clang diagnostic pop
-
-@property (assign, nonatomic) UInt16 lastCorrelationId;
 @property (copy, nonatomic, readonly) SDLLifecycleState *lifecycleState;
 @property (copy, nonatomic, nullable) SDLHMILevel hmiLevel;
 @property (copy, nonatomic, nullable) SDLAudioStreamingState audioStreamingState;
+@property (copy, nonatomic, nullable) SDLVideoStreamingState videoStreamingState;
 @property (copy, nonatomic, nullable) SDLSystemContext systemContext;
 @property (strong, nonatomic, nullable) SDLRegisterAppInterfaceResponse *registerResponse;
 
@@ -104,24 +101,33 @@ typedef void (^SDLManagerReadyBlock)(BOOL success, NSError *_Nullable error);
 /**
  *  Start the manager, which will tell it to start looking for a connection. Once one does, it will automatically run the setup process and call the readyBlock when done.
  *
+ *  @warning If you call this method from SDLManager's `startWithReadyHandler` be sure to wrap the `stop` call inside a dispatch_async and send it to the main queue or a global queue, otherwise calling `stop` may cause a deadlock.
+ *
  *  @param readyHandler The block called when the manager is ready to be used or an error occurs while attempting to become ready.
  */
 - (void)startWithReadyHandler:(SDLManagerReadyBlock)readyHandler;
 
 /**
  *  Stop the manager, it will disconnect if needed and no longer look for a connection. You probably don't need to call this method ever.
+ *
+ *  @warning If you call this method from SDLManager's `startWithReadyHandler` be sure to wrap the `stop` call inside a dispatch_async and send it to the main queue or a global queue, otherwise calling `stop` may cause a deadlock.
  */
 - (void)stop;
 
+/**
+ *  Start the encryption lifecycle manager, which will attempt to open a secure service.
+ *
+ */
+- (void)startRPCEncryption;
 
 #pragma mark Send RPC Requests
 
 /**
- *  Send an RPC request and don't bother with the response or error. If you need the response or error, call sendRequest:withCompletionHandler: instead.
+ *  Send an RPC of type `Response`, `Notification` or `Request`. Responses and notifications sent to Core do not a response back from Core. Each request sent to Core does get a response, so if you need the response and/or error, call sendRequest:withCompletionHandler: instead.
  *
- *  @param request The RPC request to send
+ *  @param rpc  An RPC of type `SDLRPCRequest`, `SDLRPCResponse`, or `SDLRPCNotification` to send
  */
-- (void)sendRequest:(SDLRPCRequest *)request;
+- (void)sendRPC:(__kindof SDLRPCMessage *)rpc;
 
 /**
  *  Send an RPC request and set a completion handler that will be called with the response when the response returns.
@@ -129,7 +135,7 @@ typedef void (^SDLManagerReadyBlock)(BOOL success, NSError *_Nullable error);
  *  @param request The RPC request to send
  *  @param handler The handler that will be called when the response returns
  */
-- (void)sendRequest:(SDLRPCRequest *)request withResponseHandler:(nullable SDLResponseHandler)handler;
+- (void)sendRequest:(__kindof SDLRPCMessage *)request withResponseHandler:(nullable SDLResponseHandler)handler;
 
 /**
  Send all of the requests given as quickly as possible, but in order. Call the completionHandler after all requests have either failed or given a response.

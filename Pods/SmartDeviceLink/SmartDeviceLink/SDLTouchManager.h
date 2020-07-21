@@ -14,12 +14,17 @@
 @protocol SDLTouchManagerDelegate;
 
 @class SDLTouch;
+@class SDLStreamingVideoScaleManager;
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Handler for touch events
+///
+/// @param touch Describes a touch location
+/// @param type The type of touch
 typedef void(^SDLTouchEventHandler)(SDLTouch *touch, SDLTouchType type);
 
-
+/// Touch Manager responsible for processing touch event notifications.
 @interface SDLTouchManager : NSObject
 
 /**
@@ -28,39 +33,35 @@ typedef void(^SDLTouchEventHandler)(SDLTouch *touch, SDLTouchType type);
 @property (nonatomic, weak, nullable) id<SDLTouchManagerDelegate> touchEventDelegate;
 
 /**
- *  @abstract
- *      Returns all OnTouchEvent notifications as SDLTouch and SDLTouchType objects.
+ Returns all OnTouchEvent notifications as SDLTouch and SDLTouchType objects.
  */
 @property (copy, nonatomic, nullable) SDLTouchEventHandler touchEventHandler;
 
 /**
  Distance between two taps on the screen, in the head unit's coordinate system, used for registering double-tap callbacks.
 
- @note Defaults to 50 px.
+ Defaults to 50 px.
  */
 @property (nonatomic, assign) CGFloat tapDistanceThreshold;
 
 /**
  Minimum distance for a pan gesture in the head unit's coordinate system, used for registering pan callbacks.
  
- @note Defaults to 8 px.
+ Defaults to 8 px.
  */
 @property (nonatomic, assign) CGFloat panDistanceThreshold;
 
 /**
- *  @abstract
- *      Time (in seconds) between tap events to register a double-tap callback.
- *  @remark
- *      Default is 0.4 seconds.
+ Time (in seconds) between tap events to register a double-tap callback. This must be greater than 0.0.
+
+ Default is 0.4 seconds.
  */
 @property (nonatomic, assign) CGFloat tapTimeThreshold;
 
 /**
- *  @abstract
- *      Time (in seconds) between movement events to register panning or pinching 
- *      callbacks.
- *  @remark
- *      Default is 0.05 seconds.
+ Time (in seconds) between movement events to register panning or pinching callbacks.
+
+ Default is 0.05 seconds.
  */
 @property (nonatomic, assign) CGFloat movementTimeThreshold __deprecated_msg("This is now unused, the movement time threshold is now synced to the framerate automatically");
 
@@ -70,22 +71,20 @@ typedef void(^SDLTouchEventHandler)(SDLTouch *touch, SDLTouchType type);
 @property (assign, nonatomic) BOOL enableSyncedPanning;
 
 /**
- *  @abstract
- *      Boolean denoting whether or not the touch manager should deliver touch event
- *      callbacks.
- *  @remark
- *      Default is true.
+ Boolean denoting whether or not the touch manager should deliver touch event callbacks.
+
+ Default is true.
  */
 @property (nonatomic, assign, getter=isTouchEnabled) BOOL touchEnabled;
 
 /**
- *  @abstract
- *      Cancels pending touch event timers that may be in progress.
- *  @remark
- *      Currently only impacts the timer used to register single taps.
+ Cancels pending touch event timers that may be in progress.
+
+ Currently only impacts the timer used to register single taps.
  */
 - (void)cancelPendingTouches;
 
+/// Initializer unavailable
 - (instancetype)init NS_UNAVAILABLE;
 
 /**
@@ -94,7 +93,16 @@ typedef void(^SDLTouchEventHandler)(SDLTouch *touch, SDLTouchType type);
  @param hitTester The hit tester to be used to correlate a point with a view
  @return The initialized touch manager
  */
-- (instancetype)initWithHitTester:(nullable id<SDLFocusableItemHitTester>)hitTester;
+- (instancetype)initWithHitTester:(nullable id<SDLFocusableItemHitTester>)hitTester __deprecated_msg("Use initWithHitTester:hitTester videoScaleManager: instead");
+
+/**
+ Initialize a touch manager with a hit tester and a video scale manager.
+
+ @param hitTester The hit tester to be used to correlate a point with a view
+ @param videoScaleManager The scale manager that scales from the display screen coordinate system to the app's viewport coordinate system
+ @return The initialized touch manager
+ */
+- (instancetype)initWithHitTester:(nullable id<SDLFocusableItemHitTester>)hitTester videoScaleManager:(SDLStreamingVideoScaleManager *)videoScaleManager;
 
 /**
  Called by SDLStreamingMediaManager in sync with the streaming framerate. This helps to moderate panning gestures by allowing the UI to be modified in time with the framerate.

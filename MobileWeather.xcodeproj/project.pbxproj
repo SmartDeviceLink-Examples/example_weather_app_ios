@@ -468,7 +468,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-MobileWeather/Pods-MobileWeather-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-MobileWeather/Pods-MobileWeather-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/BiSON/BiSON.framework",
 				"${BUILT_PRODUCTS_DIR}/SmartDeviceLink/SmartDeviceLink.framework",
 			);
@@ -479,7 +479,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MobileWeather/Pods-MobileWeather-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MobileWeather/Pods-MobileWeather-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

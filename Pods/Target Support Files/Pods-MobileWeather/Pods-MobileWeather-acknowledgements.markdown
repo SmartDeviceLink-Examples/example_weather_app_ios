@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## SmartDeviceLink
 
-Copyright (c) 2017 - 2018 SmartDeviceLink Consortium, Inc. 
+Copyright (c) 2017 - 2020 SmartDeviceLink Consortium, Inc. 
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

@@ -9,14 +9,25 @@
 #import <UIKit/UIKit.h>
 
 #import "SDLFile.h"
+#import "SDLStaticIconName.h"
 
+@class SDLImage;
+
+/// Image format of an artwork file
 typedef NS_ENUM(NSUInteger, SDLArtworkImageFormat) {
+
+    /// Image format: PNG
     SDLArtworkImageFormatPNG,
+
+    /// Image format: JPG
     SDLArtworkImageFormatJPG
 };
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ An SDLFile subclass specifically designed for images
+ */
 @interface SDLArtwork : SDLFile
 
 /**
@@ -25,6 +36,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  @discussion An image should be templated if it is intended to be used as an icon in a button or menu.
  */
 @property (assign, nonatomic, readonly) BOOL isTemplate;
+
+/**
+ The Image RPC representing this artwork. Generally for use internally, you should instead pass an artwork to a Screen Manager method.
+ */
+@property (strong, nonatomic, readonly) SDLImage *imageRPC;
 
 /**
  *  Convenience helper to create an ephemeral artwork from an image.
@@ -58,6 +74,15 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return An instance of this class to be passed to the file manager.
  */
 + (instancetype)artworkWithImage:(UIImage *)image asImageFormat:(SDLArtworkImageFormat)imageFormat NS_SWIFT_UNAVAILABLE("Use the standard initializer and set persistant to false");
+
+/**
+ Create an SDLArtwork that represents a static icon. This can only be passed to the screen manager; passing this directly to the file manager will fail.
+
+ @param staticIcon The static icon to be shown on the remote system.
+
+ @return An instance of this class to be passed to a screen manager.
+ */
++ (instancetype)artworkWithStaticIcon:(SDLStaticIconName)staticIcon NS_SWIFT_UNAVAILABLE("Use the standard initializer");
 
 /**
  *  Convenience helper to create a persistent artwork from an image.
@@ -114,6 +139,15 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return An instance of this class to be passed to the file manager.
  */
 - (instancetype)initWithImage:(UIImage *)image persistent:(BOOL)persistent asImageFormat:(SDLArtworkImageFormat)imageFormat;
+
+/**
+ Create an SDLArtwork that represents a static icon. This can only be passed to the screen manager; passing this directly to the file manager will fail.
+
+ @param staticIcon The static icon to be shown on the remote system.
+
+ @return An instance of this class to be passed to a screen manager.
+ */
+- (instancetype)initWithStaticIcon:(SDLStaticIconName)staticIcon;
 
 @end
 

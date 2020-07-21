@@ -1,6 +1,6 @@
-platform :ios, '8.0'
+platform :ios, '9.0'
 use_frameworks!
 
 target 'MobileWeather' do
-    pod 'SmartDeviceLink', '~> 6.1'
+    pod 'SmartDeviceLink/Swift', :git => 'https://github.com/smartdevicelink/sdl_ios.git', :branch => 'develop'
 end

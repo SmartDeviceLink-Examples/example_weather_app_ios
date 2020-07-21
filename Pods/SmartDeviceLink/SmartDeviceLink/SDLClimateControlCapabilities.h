@@ -5,6 +5,7 @@
 #import "SDLRPCMessage.h"
 #import "SDLDefrostZone.h"
 #import "SDLVentilationMode.h"
+#import "SDLModuleInfo.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -13,9 +14,81 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface SDLClimateControlCapabilities : SDLRPCStruct
 
-- (instancetype)initWithModuleName:(NSString *)moduleName fanSpeedAvailable:(BOOL)fanSpeedAvailable desiredTemperatureAvailable:(BOOL)desiredTemperatureAvailable acEnableAvailable:(BOOL)acEnableAvailable acMaxEnableAvailable:(BOOL)acMaxEnableAvailable circulateAirAvailable:(BOOL)circulateAirEnableAvailable autoModeEnableAvailable:(BOOL)autoModeEnableAvailable dualModeEnableAvailable:(BOOL)dualModeEnableAvailable defrostZoneAvailable:(BOOL)defrostZoneAvailable ventilationModeAvailable:(BOOL)ventilationModeAvailable __deprecated_msg("Use initWithModuleName:fanSpeedAvailable:desiredTemperatureAvailable:acEnableAvailable:acMaxEnableAvailable:circulateAirAvailable:autoModeEnableAvailable: dualModeEnableAvailable:defrostZoneAvailable:ventilationModeAvailable: heatedSteeringWheelAvailable:heatedWindshieldAvailable: heatedRearWindowAvailable:heatedMirrorsAvailable: instead");
+/// Convenience init to describe the climate control capabilities.
+///
+/// @param moduleName The short friendly name of the climate control module
+/// @param fanSpeedAvailable Availability of the control of fan speed
+/// @param desiredTemperatureAvailable Availability of the control of desired temperature
+/// @param acEnableAvailable Availability of the control of turn on/off AC
+/// @param acMaxEnableAvailable Availability of the control of enable/disable air conditioning is ON on the maximum level
+/// @param circulateAirEnableAvailable Availability of the control of enable/disable circulate Air mode
+/// @param autoModeEnableAvailable Availability of the control of enable/disable auto mode
+/// @param dualModeEnableAvailable Availability of the control of enable/disable dual mode
+/// @param defrostZoneAvailable Availability of the control of defrost zones
+/// @param ventilationModeAvailable Availability of the control of air ventilation mode
+/// @return An SDLClimateControlCapabilities object
+- (instancetype)initWithModuleName:(NSString *)moduleName fanSpeedAvailable:(BOOL)fanSpeedAvailable desiredTemperatureAvailable:(BOOL)desiredTemperatureAvailable acEnableAvailable:(BOOL)acEnableAvailable acMaxEnableAvailable:(BOOL)acMaxEnableAvailable circulateAirAvailable:(BOOL)circulateAirEnableAvailable autoModeEnableAvailable:(BOOL)autoModeEnableAvailable dualModeEnableAvailable:(BOOL)dualModeEnableAvailable defrostZoneAvailable:(BOOL)defrostZoneAvailable ventilationModeAvailable:(BOOL)ventilationModeAvailable __deprecated_msg("Use initWithModuleName:fanSpeedAvailable:desiredTemperatureAvailable:acEnableAvailable:acMaxEnableAvailable:circulateAirAvailable:autoModeEnableAvailable: dualModeEnableAvailable:defrostZoneAvailable:ventilationModeAvailable: heatedSteeringWheelAvailable:heatedWindshieldAvailable: heatedRearWindowAvailable:heatedMirrorsAvailable: climateEnableAvailable: instead");
 
-- (instancetype)initWithModuleName:(NSString *)moduleName fanSpeedAvailable:(BOOL)fanSpeedAvailable desiredTemperatureAvailable:(BOOL)desiredTemperatureAvailable acEnableAvailable:(BOOL)acEnableAvailable acMaxEnableAvailable:(BOOL)acMaxEnableAvailable circulateAirAvailable:(BOOL)circulateAirEnableAvailable autoModeEnableAvailable:(BOOL)autoModeEnableAvailable dualModeEnableAvailable:(BOOL)dualModeEnableAvailable defrostZoneAvailable:(BOOL)defrostZoneAvailable ventilationModeAvailable:(BOOL)ventilationModeAvailable heatedSteeringWheelAvailable:(BOOL)heatedSteeringWheelAvailable heatedWindshieldAvailable:(BOOL)heatedWindshieldAvailable heatedRearWindowAvailable:(BOOL)heatedRearWindowAvailable heatedMirrorsAvailable:(BOOL)heatedMirrorsAvailable;
+
+/// Convenience init to describe the climate control capabilities.
+///
+/// @param moduleName The short friendly name of the climate control module
+/// @param fanSpeedAvailable Availability of the control of fan speed
+/// @param desiredTemperatureAvailable Availability of the control of desired temperature
+/// @param acEnableAvailable Availability of the control of turn on/off AC
+/// @param acMaxEnableAvailable Availability of the control of enable/disable air conditioning is ON on the maximum level
+/// @param circulateAirEnableAvailable Availability of the control of enable/disable circulate Air mode
+/// @param autoModeEnableAvailable Availability of the control of enable/disable auto mode
+/// @param dualModeEnableAvailable Availability of the control of enable/disable dual mode
+/// @param defrostZoneAvailable Availability of the control of defrost zones
+/// @param ventilationModeAvailable Availability of the control of air ventilation mode
+/// @param heatedSteeringWheelAvailable Availability of the control (enable/disable) of heated Steering Wheel
+/// @param heatedWindshieldAvailable Availability of the control (enable/disable) of heated Windshield
+/// @param heatedRearWindowAvailable  Availability of the control (enable/disable) of heated Rear Window
+/// @param heatedMirrorsAvailable Availability of the control (enable/disable) of heated Mirrors
+/// @return An SDLClimateControlCapabilities object
+- (instancetype)initWithModuleName:(NSString *)moduleName fanSpeedAvailable:(BOOL)fanSpeedAvailable desiredTemperatureAvailable:(BOOL)desiredTemperatureAvailable acEnableAvailable:(BOOL)acEnableAvailable acMaxEnableAvailable:(BOOL)acMaxEnableAvailable circulateAirAvailable:(BOOL)circulateAirEnableAvailable autoModeEnableAvailable:(BOOL)autoModeEnableAvailable dualModeEnableAvailable:(BOOL)dualModeEnableAvailable defrostZoneAvailable:(BOOL)defrostZoneAvailable ventilationModeAvailable:(BOOL)ventilationModeAvailable heatedSteeringWheelAvailable:(BOOL)heatedSteeringWheelAvailable heatedWindshieldAvailable:(BOOL)heatedWindshieldAvailable heatedRearWindowAvailable:(BOOL)heatedRearWindowAvailable heatedMirrorsAvailable:(BOOL)heatedMirrorsAvailable __deprecated_msg("Use initWithModuleName:fanSpeedAvailable:desiredTemperatureAvailable:acEnableAvailable:acMaxEnableAvailable:circulateAirAvailable:autoModeEnableAvailable: dualModeEnableAvailable:defrostZoneAvailable:ventilationModeAvailable: heatedSteeringWheelAvailable:heatedWindshieldAvailable: heatedRearWindowAvailable:heatedMirrorsAvailable: climateEnableAvailable: instead");
+
+/// Convenience init to describe the climate control capabilities.
+///
+/// @param moduleName The short friendly name of the climate control module
+/// @param fanSpeedAvailable Availability of the control of fan speed
+/// @param desiredTemperatureAvailable Availability of the control of desired temperature
+/// @param acEnableAvailable Availability of the control of turn on/off AC
+/// @param acMaxEnableAvailable Availability of the control of enable/disable air conditioning is ON on the maximum level
+/// @param circulateAirEnableAvailable Availability of the control of enable/disable circulate Air mode
+/// @param autoModeEnableAvailable Availability of the control of enable/disable auto mode
+/// @param dualModeEnableAvailable Availability of the control of enable/disable dual mode
+/// @param defrostZoneAvailable Availability of the control of defrost zones
+/// @param ventilationModeAvailable Availability of the control of air ventilation mode
+/// @param heatedSteeringWheelAvailable Availability of the control (enable/disable) of heated Steering Wheel
+/// @param heatedWindshieldAvailable Availability of the control (enable/disable) of heated Windshield
+/// @param heatedRearWindowAvailable  Availability of the control (enable/disable) of heated Rear Window
+/// @param heatedMirrorsAvailable Availability of the control (enable/disable) of heated Mirrors
+/// @param climateEnableAvailable Availability of the control of enable/disable climate control
+/// @return An SDLClimateControlCapabilities object
+- (instancetype)initWithModuleName:(NSString *)moduleName fanSpeedAvailable:(BOOL)fanSpeedAvailable desiredTemperatureAvailable:(BOOL)desiredTemperatureAvailable acEnableAvailable:(BOOL)acEnableAvailable acMaxEnableAvailable:(BOOL)acMaxEnableAvailable circulateAirAvailable:(BOOL)circulateAirEnableAvailable autoModeEnableAvailable:(BOOL)autoModeEnableAvailable dualModeEnableAvailable:(BOOL)dualModeEnableAvailable defrostZoneAvailable:(BOOL)defrostZoneAvailable ventilationModeAvailable:(BOOL)ventilationModeAvailable heatedSteeringWheelAvailable:(BOOL)heatedSteeringWheelAvailable heatedWindshieldAvailable:(BOOL)heatedWindshieldAvailable heatedRearWindowAvailable:(BOOL)heatedRearWindowAvailable heatedMirrorsAvailable:(BOOL)heatedMirrorsAvailable climateEnableAvailable:(BOOL)climateEnableAvailable __deprecated_msg("Use initWithModuleName: moduleId:fanSpeedAvailable:desiredTemperatureAvailable:acEnableAvailable:acMaxEnableAvailable:circulateAirAvailable:autoModeEnableAvailable: dualModeEnableAvailable:defrostZoneAvailable:ventilationModeAvailable: heatedSteeringWheelAvailable:heatedWindshieldAvailable: heatedRearWindowAvailable:heatedMirrorsAvailable: climateEnableAvailable: instead");
+
+/// Convenience init to describe the climate control capabilities with all properities.
+///
+/// @param moduleName The short friendly name of the climate control module.
+/// @param moduleInfo Information about a RC module, including its id
+/// @param fanSpeedAvailable Availability of the control of fan speed
+/// @param desiredTemperatureAvailable Availability of the control of desired temperature
+/// @param acEnableAvailable Availability of the control of turn on/off AC
+/// @param acMaxEnableAvailable Availability of the control of enable/disable air conditioning is ON on the maximum level
+/// @param circulateAirEnableAvailable Availability of the control of enable/disable circulate Air mode.
+/// @param autoModeEnableAvailable Availability of the control of enable/disable auto mode
+/// @param dualModeEnableAvailable Availability of the control of enable/disable dual mode
+/// @param defrostZoneAvailable Availability of the control of defrost zones
+/// @param ventilationModeAvailable Availability of the control of air ventilation mode
+/// @param heatedSteeringWheelAvailable Availability of the control (enable/disable) of heated Steering Wheel
+/// @param heatedWindshieldAvailable Availability of the control (enable/disable) of heated Windshield
+/// @param heatedRearWindowAvailable  Availability of the control (enable/disable) of heated Rear Window
+/// @param heatedMirrorsAvailable Availability of the control (enable/disable) of heated Mirrors
+/// @param climateEnableAvailable Availability of the control of enable/disable climate control
+/// @return An SDLClimateControlCapabilities object
+- (instancetype)initWithModuleName:(NSString *)moduleName moduleInfo:(nullable SDLModuleInfo *)moduleInfo fanSpeedAvailable:(BOOL)fanSpeedAvailable desiredTemperatureAvailable:(BOOL)desiredTemperatureAvailable acEnableAvailable:(BOOL)acEnableAvailable acMaxEnableAvailable:(BOOL)acMaxEnableAvailable circulateAirAvailable:(BOOL)circulateAirEnableAvailable autoModeEnableAvailable:(BOOL)autoModeEnableAvailable dualModeEnableAvailable:(BOOL)dualModeEnableAvailable defrostZoneAvailable:(BOOL)defrostZoneAvailable ventilationModeAvailable:(BOOL)ventilationModeAvailable heatedSteeringWheelAvailable:(BOOL)heatedSteeringWheelAvailable heatedWindshieldAvailable:(BOOL)heatedWindshieldAvailable heatedRearWindowAvailable:(BOOL)heatedRearWindowAvailable heatedMirrorsAvailable:(BOOL)heatedMirrorsAvailable climateEnableAvailable:(BOOL)climateEnableAvailable;
 
 /**
  * The short friendly name of the climate control module.
@@ -145,6 +218,21 @@ NS_ASSUME_NONNULL_BEGIN
  * Optional, Boolean
  */
 @property (nullable, strong, nonatomic) NSNumber<SDLBool> *heatedMirrorsAvailable;
+
+/**
+ * @abstract Availability of the control of enable/disable climate control.
+ * True: Available, False: Not Available, Not present: Not Available.
+ *
+ * Optional, Boolean
+ */
+@property (nullable, strong, nonatomic) NSNumber<SDLBool> *climateEnableAvailable;
+
+/**
+ *  Information about a RC module, including its id.
+ *
+ *  Optional
+ */
+@property (nullable, strong, nonatomic) SDLModuleInfo *moduleInfo;
 
 @end
 

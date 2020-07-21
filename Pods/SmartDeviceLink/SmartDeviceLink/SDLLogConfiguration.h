@@ -17,6 +17,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Information about the current logging configuration
 @interface SDLLogConfiguration : NSObject <NSCopying>
 
 /**
@@ -48,6 +49,11 @@ NS_ASSUME_NONNULL_BEGIN
  Whether or not error logs will be dispatched to loggers asynchronously. Defaults to NO.
  */
 @property (assign, nonatomic, getter=areErrorsAsynchronous) BOOL errorsAsynchronous;
+
+/**
+ Whether or not assert logs will fire assertions in DEBUG mode. Assertions are always disabled in RELEASE builds. If assertions are disabled, only an error log will fire instead. Defaults to NO.
+ */
+@property (assign, nonatomic, getter=areAssertionsDisabled) BOOL disableAssertions;
 
 /**
  Any modules that do not have an explicitly specified level will by default use the global log level. Defaults to Error.

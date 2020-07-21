@@ -5,41 +5,47 @@
 
 #import "NSMutableDictionary+Store.h"
 #import "SDLModuleData.h"
-#import "SDLNames.h"
+#import "SDLRPCParameterNames.h"
+#import "SDLRPCFunctionNames.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation SDLOnRCStatus
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (instancetype)init {
-    if (self = [super initWithName:SDLNameOnRCStatus]) {
+    if (self = [super initWithName:SDLRPCFunctionNameOnRCStatus]) {
     }
     return self;
 }
+#pragma clang diagnostic pop
 
 - (nullable NSNumber<SDLBool> *)allowed {
-    return [parameters sdl_objectForName:SDLNameAllowed];
+    return [self.parameters sdl_objectForName:SDLRPCParameterNameAllowed ofClass:NSNumber.class error:nil];
 }
 
 - (void)setAllowed:(nullable NSNumber<SDLBool> *)allowed {
-    [parameters sdl_setObject:allowed forName:SDLNameAllowed];
+    [self.parameters sdl_setObject:allowed forName:SDLRPCParameterNameAllowed];
 }
 
 - (void)setAllocatedModules:(NSArray<SDLModuleData *> *)allocatedModules {
-    [parameters sdl_setObject:allocatedModules forName:SDLNameAllocatedModules];
+    [self.parameters sdl_setObject:allocatedModules forName:SDLRPCParameterNameAllocatedModules];
 
 }
 
 - (NSArray<SDLModuleData *> *)allocatedModules {
-    return [parameters sdl_objectsForName:SDLNameAllocatedModules ofClass:SDLModuleData.class];
+    NSError *error = nil;
+    return [self.parameters sdl_objectsForName:SDLRPCParameterNameAllocatedModules ofClass:SDLModuleData.class error:&error];
 }
 
 - (void)setFreeModules:(NSArray<SDLModuleData *> *)freeModules {
-    [parameters sdl_setObject:freeModules forName:SDLNameFreeModules];
+    [self.parameters sdl_setObject:freeModules forName:SDLRPCParameterNameFreeModules];
 }
 
 - (NSArray<SDLModuleData *> *)freeModules {
-    return [parameters sdl_objectsForName:SDLNameFreeModules ofClass:SDLModuleData.class];
+    NSError *error = nil;
+    return [self.parameters sdl_objectsForName:SDLRPCParameterNameFreeModules ofClass:SDLModuleData.class error:&error];
 }
 
 @end

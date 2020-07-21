@@ -83,7 +83,43 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param wiperStatus                  Subscribe to wiperStatus
  *  @return                             A SDLSubscribeVehicleData object
  */
-- (instancetype)initWithAccelerationPedalPosition:(BOOL)accelerationPedalPosition airbagStatus:(BOOL)airbagStatus beltStatus:(BOOL)beltStatus bodyInformation:(BOOL)bodyInformation clusterModeStatus:(BOOL)clusterModeStatus deviceStatus:(BOOL)deviceStatus driverBraking:(BOOL)driverBraking eCallInfo:(BOOL)eCallInfo electronicParkBrakeStatus:(BOOL)electronicParkBrakeStatus emergencyEvent:(BOOL)emergencyEvent engineOilLife:(BOOL)engineOilLife engineTorque:(BOOL)engineTorque externalTemperature:(BOOL)externalTemperature fuelLevel:(BOOL)fuelLevel fuelLevelState:(BOOL)fuelLevelState fuelRange:(BOOL)fuelRange gps:(BOOL)gps headLampStatus:(BOOL)headLampStatus instantFuelConsumption:(BOOL)instantFuelConsumption myKey:(BOOL)myKey odometer:(BOOL)odometer prndl:(BOOL)prndl rpm:(BOOL)rpm speed:(BOOL)speed steeringWheelAngle:(BOOL)steeringWheelAngle tirePressure:(BOOL)tirePressure turnSignal:(BOOL)turnSignal wiperStatus:(BOOL)wiperStatus;
+- (instancetype)initWithAccelerationPedalPosition:(BOOL)accelerationPedalPosition airbagStatus:(BOOL)airbagStatus beltStatus:(BOOL)beltStatus bodyInformation:(BOOL)bodyInformation clusterModeStatus:(BOOL)clusterModeStatus deviceStatus:(BOOL)deviceStatus driverBraking:(BOOL)driverBraking eCallInfo:(BOOL)eCallInfo electronicParkBrakeStatus:(BOOL)electronicParkBrakeStatus emergencyEvent:(BOOL)emergencyEvent engineOilLife:(BOOL)engineOilLife engineTorque:(BOOL)engineTorque externalTemperature:(BOOL)externalTemperature fuelLevel:(BOOL)fuelLevel fuelLevelState:(BOOL)fuelLevelState fuelRange:(BOOL)fuelRange gps:(BOOL)gps headLampStatus:(BOOL)headLampStatus instantFuelConsumption:(BOOL)instantFuelConsumption myKey:(BOOL)myKey odometer:(BOOL)odometer prndl:(BOOL)prndl rpm:(BOOL)rpm speed:(BOOL)speed steeringWheelAngle:(BOOL)steeringWheelAngle tirePressure:(BOOL)tirePressure turnSignal:(BOOL)turnSignal wiperStatus:(BOOL)wiperStatus __deprecated_msg("Use initWithAccelerationPedalPosition:airbagStatus:beltStatus:bodyInformation:cloudAppVehicleID:clusterModeStatus:deviceStatus:driverBraking:eCallInfo:electronicParkBrakeStatus:emergencyEvent:engineOilLife:engineTorque:externalTemperature:fuelLevel:fuelLevelState:fuelRange:gps:headLampStatus:instantFuelConsumption:myKey:odometer:prndl:rpm:speed:steeringWheelAngle:tirePressure:turnSignal:wiperStatus: instead");
+
+/**
+ *  Convenience init for subscribing to all possible vehicle data items.
+ *
+ *  @param accelerationPedalPosition    Subscribe to accelerationPedalPosition
+ *  @param airbagStatus                 Subscribe to airbagStatus
+ *  @param beltStatus                   Subscribe to beltStatus
+ *  @param bodyInformation              Subscribe to bodyInformation
+ *  @param cloudAppVehicleID            Subscribe to cloudAppVehicleID
+ *  @param clusterModeStatus            Subscribe to clusterModeStatus
+ *  @param deviceStatus                 Subscribe to deviceStatus
+ *  @param driverBraking                Subscribe to driverBraking
+ *  @param eCallInfo                    Subscribe to eCallInfo
+ *  @param electronicParkBrakeStatus    Subscribe to electronicParkBrakeStatus
+ *  @param emergencyEvent               Subscribe to emergencyEvent
+ *  @param engineOilLife                Subscribe to engineOilLife
+ *  @param engineTorque                 Subscribe to engineTorque
+ *  @param externalTemperature          Subscribe to externalTemperature
+ *  @param fuelLevel                    Subscribe to fuelLevel
+ *  @param fuelLevelState               Subscribe to fuelLevelState
+ *  @param fuelRange                    Subscribe to fuelRange
+ *  @param gps                          Subscribe to gps
+ *  @param headLampStatus               Subscribe to headLampStatus
+ *  @param instantFuelConsumption       Subscribe to instantFuelConsumption
+ *  @param myKey                        Subscribe to myKey
+ *  @param odometer                     Subscribe to odometer
+ *  @param prndl                        Subscribe to prndl
+ *  @param rpm                          Subscribe to rpm
+ *  @param speed                        Subscribe to speed
+ *  @param steeringWheelAngle           Subscribe to steeringWheelAngle
+ *  @param tirePressure                 Subscribe to tirePressure
+ *  @param turnSignal                   Subscribe to turnSignal
+ *  @param wiperStatus                  Subscribe to wiperStatus
+ *  @return                             A SDLSubscribeVehicleData object
+ */
+- (instancetype)initWithAccelerationPedalPosition:(BOOL)accelerationPedalPosition airbagStatus:(BOOL)airbagStatus beltStatus:(BOOL)beltStatus bodyInformation:(BOOL)bodyInformation cloudAppVehicleID:(BOOL)cloudAppVehicleID clusterModeStatus:(BOOL)clusterModeStatus deviceStatus:(BOOL)deviceStatus driverBraking:(BOOL)driverBraking eCallInfo:(BOOL)eCallInfo electronicParkBrakeStatus:(BOOL)electronicParkBrakeStatus emergencyEvent:(BOOL)emergencyEvent engineOilLife:(BOOL)engineOilLife engineTorque:(BOOL)engineTorque externalTemperature:(BOOL)externalTemperature fuelLevel:(BOOL)fuelLevel fuelLevelState:(BOOL)fuelLevelState fuelRange:(BOOL)fuelRange gps:(BOOL)gps headLampStatus:(BOOL)headLampStatus instantFuelConsumption:(BOOL)instantFuelConsumption myKey:(BOOL)myKey odometer:(BOOL)odometer prndl:(BOOL)prndl rpm:(BOOL)rpm speed:(BOOL)speed steeringWheelAngle:(BOOL)steeringWheelAngle tirePressure:(BOOL)tirePressure turnSignal:(BOOL)turnSignal wiperStatus:(BOOL)wiperStatus;
 
 /**
  * A boolean value. If true, subscribes GPS data.
@@ -224,6 +260,32 @@ NS_ASSUME_NONNULL_BEGIN
  * A boolean value. If true, subscribes to the turn signal status.
  */
 @property (strong, nonatomic, nullable) NSNumber<SDLBool> *turnSignal;
+
+/**
+ * A boolean value. If true, subscribes to the cloud app vehicle ID.
+ */
+@property (strong, nonatomic, nullable) NSNumber<SDLBool> *cloudAppVehicleID;
+
+/**
+ Sets the OEM custom vehicle data state for any given OEM custom vehicle data name.
+ 
+ @param vehicleDataName The name of the OEM custom vehicle data item.
+ @param vehicleDataState A boolean value.  If true, requests the OEM custom vehicle data item.
+
+  Added in SmartDeviceLink 6.0
+ */
+- (void)setOEMCustomVehicleData:(NSString *)vehicleDataName withVehicleDataState:(BOOL)vehicleDataState NS_SWIFT_NAME(setOEMCustomVehicleData(name:state:));
+
+/**
+ Gets the OEM custom vehicle data value for any given OEM custom vehicle data name.
+ 
+ @param vehicleDataName The name of the OEM custom vehicle data item.
+ @return The state of an OEM custom vehicle data item for the given vehicle data name.
+
+  Added in SmartDeviceLink 6.0
+ */
+- (nullable NSNumber<SDLBool> *)getOEMCustomVehicleData:(NSString *)vehicleDataName;
+
 
 
 @end

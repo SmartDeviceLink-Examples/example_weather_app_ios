@@ -5,6 +5,8 @@
 //  Copyright (c) 2013-2015 Ford Motor Company. All rights reserved.
 //
 
+@import SmartDeviceLink;
+
 #import "DarkSkyProcessor.h"
 
 #import "Forecast.h"
@@ -67,12 +69,12 @@
 }
 
 + (NSArray *)dailyForecast:(NSDictionary *)json {
-    NSLog(@"starting daily forecast");
+    SDLLogD(@"Processing daily forecast");
     return [self processForecast:json forType:KEY_DAILY];
 }
 
 + (NSArray *)hourlyForecast:(NSDictionary *)json {
-    NSLog(@"starting hourly forecast");
+    SDLLogD(@"Processing hourly forecast");
     return [self processForecast:json forType:KEY_HOURLY];
 }
 

@@ -1,13 +1,13 @@
 PODS:
   - BiSON (1.2.0)
+  - SmartDeviceLink (6.6.0):
+    - BiSON (~> 1.2.0)
+    - SmartDeviceLink/Default (= 6.6.0)
   - SmartDeviceLink/Default (6.6.0):
     - BiSON (~> 1.2.0)
-  - SmartDeviceLink/Swift (6.6.0):
-    - BiSON (~> 1.2.0)
-    - SmartDeviceLink/Default
 
 DEPENDENCIES:
-  - SmartDeviceLink/Swift (from `https://github.com/smartdevicelink/sdl_ios.git`, branch `develop`)
+  - SmartDeviceLink (from `https://github.com/smartdevicelink/sdl_ios.git`, branch `develop`)
 
 SPEC REPOS:
   trunk:
@@ -27,6 +27,6 @@ SPEC CHECKSUMS:
   BiSON: 1165a5486ee9755400b096cf374e1f03cb73a980
   SmartDeviceLink: 7971e530adc02d0540c8dba7a049a0edbebf97a1
 
-PODFILE CHECKSUM: d9878e8cf4f7224a831c7962f7b83b4dd3b8a7bb
+PODFILE CHECKSUM: 6ca963dcdb2e354f2dc698c9fadf910a0c5a71b9
 
 COCOAPODS: 1.9.3

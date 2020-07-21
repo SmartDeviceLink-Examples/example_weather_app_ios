@@ -11,6 +11,7 @@
 		1E555E3918466B6500B143B4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E555E3818466B6500B143B4 /* UIKit.framework */; };
 		1E555E4518466B6500B143B4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E555E4418466B6500B143B4 /* AppDelegate.m */; };
 		1E555E4B18466B6500B143B4 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E555E4A18466B6500B143B4 /* MainViewController.m */; };
+		4A55CAFA24C76D35008065DA /* Launch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A55CAF924C76D35008065DA /* Launch.storyboard */; };
 		5DB7EDC91D89CC2C00B62BB7 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5DB7EDC81D89CC2C00B62BB7 /* Settings.bundle */; };
 		5DB7EDCB1D89CC3800B62BB7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DB7EDCA1D89CC3800B62BB7 /* Images.xcassets */; };
 		6E04EAC31CF4E52A00115C2F /* Localization.m in Sources */ = {isa = PBXBuildFile; fileRef = E4BD7AEE1B023A2C006BE23B /* Localization.m */; };
@@ -68,6 +69,7 @@
 		1E555E4418466B6500B143B4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1E555E4918466B6500B143B4 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		1E555E4A18466B6500B143B4 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		4A55CAF924C76D35008065DA /* Launch.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
 		56FBAA80C3ED8E16429896CD /* Pods-MobileWeather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWeather.release.xcconfig"; path = "Pods/Target Support Files/Pods-MobileWeather/Pods-MobileWeather.release.xcconfig"; sourceTree = "<group>"; };
 		5DB7EDC81D89CC2C00B62BB7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = MobileWeather/Settings.bundle; sourceTree = SOURCE_ROOT; };
 		5DB7EDCA1D89CC3800B62BB7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MobileWeather/Images.xcassets; sourceTree = SOURCE_ROOT; };
@@ -227,6 +229,7 @@
 				5DB7EDC81D89CC2C00B62BB7 /* Settings.bundle */,
 				E427582D1A0B75C000AA42B1 /* main.m */,
 				E427582E1A0B75C000AA42B1 /* Info.plist */,
+				4A55CAF924C76D35008065DA /* Launch.storyboard */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -389,7 +392,7 @@
 		1E555E2918466B6500B143B4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 1160;
 				ORGANIZATIONNAME = Ford;
 				TargetAttributes = {
 					1E555E3018466B6500B143B4 = {
@@ -411,6 +414,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				de,
 				es,
@@ -436,6 +440,7 @@
 				E44272FB1B00A5FC0018EA4F /* Localizable.strings in Resources */,
 				5DB7EDCB1D89CC3800B62BB7 /* Images.xcassets in Resources */,
 				E436919A19F556D800678C1D /* Main.storyboard in Resources */,
+				4A55CAFA24C76D35008065DA /* Launch.storyboard in Resources */,
 				E43D8D5D1B32E50D00FB8717 /* Localizable.stringsdict in Resources */,
 				5DB7EDC91D89CC2C00B62BB7 /* Settings.bundle in Resources */,
 			);
@@ -657,12 +662,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C407ED364EBBDDB306D541A8 /* Pods-MobileWeather.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NCVC2MHU7M;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = MobileWeather/Info.plist;
@@ -681,10 +687,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NCVC2MHU7M;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = MobileWeather/Info.plist;

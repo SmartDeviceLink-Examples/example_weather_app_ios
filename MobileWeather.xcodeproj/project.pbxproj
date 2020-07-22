@@ -62,7 +62,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1E555E3118466B6500B143B4 /* MobileWeather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileWeather.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E555E3118466B6500B143B4 /* SDL Weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SDL Weather.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E555E3418466B6500B143B4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1E555E3818466B6500B143B4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1E555E4318466B6500B143B4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -179,7 +179,7 @@
 		1E555E3218466B6500B143B4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1E555E3118466B6500B143B4 /* MobileWeather.app */,
+				1E555E3118466B6500B143B4 /* SDL Weather.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -383,7 +383,7 @@
 			);
 			name = MobileWeather;
 			productName = MobileWeather;
-			productReference = 1E555E3118466B6500B143B4 /* MobileWeather.app */;
+			productReference = 1E555E3118466B6500B143B4 /* SDL Weather.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -675,8 +675,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 5.3.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.mobileweather;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdl.sdlweather;
+				PRODUCT_NAME = "SDL Weather";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -698,8 +698,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 5.3.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.mobileweather;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdl.sdlweather;
+				PRODUCT_NAME = "SDL Weather";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};

@@ -5,6 +5,8 @@
 //  Copyright (c) 2013-2015 Ford Motor Company. All rights reserved.
 //
 
+@import SmartDeviceLink;
+
 #import "DarkSkyService.h"
 
 #import "Notifications.h"
@@ -62,13 +64,13 @@ NSString *const DarkSkyLanguage = @"lang=%@";
 
     self.currentTask = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error != nil) {
-            NSLog(@"Error retrieving weather data");
+            SDLLogE(@"Error retrieving weather data");
             return;
         }
 
         NSDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         if (jsonData == nil) {
-            NSLog(@"Error parsing weather data");
+            SDLLogE(@"Error parsing weather data");
             return;
         }
 

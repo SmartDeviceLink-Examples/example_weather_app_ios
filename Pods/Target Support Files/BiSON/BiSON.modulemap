@@ -1,6 +1,0 @@
-framework module BiSON {
-  umbrella header "BiSON-umbrella.h"
-
-  export *
-  module * { export * }
-}

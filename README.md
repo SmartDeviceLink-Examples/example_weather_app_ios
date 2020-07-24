@@ -4,6 +4,13 @@ This example app uses the DarkSky API to present a basic connected weather app w
 
 ## Configuration
 
+### Install Dependencies
+Use [Cocoapods](https://cocoapods.org/) to install the dependencies:
+
+1. Install Cocoapods if necessary.
+2. Navigate to the root directory in terminal.
+3. Run `pod install`.
+
 ### DarkSky
 1. Sign up and get your own [DarkSky](https://www.darksky.net/dev) API key.
 1. Set the API key into `Settings.h` to use.

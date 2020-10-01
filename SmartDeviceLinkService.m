@@ -103,8 +103,8 @@ NS_ASSUME_NONNULL_BEGIN
         
         // set the app display layout to the non-media template
         if ([self.templatesAvailable containsObject:SDLPredefinedLayoutNonMedia]) {
-            SDLSetDisplayLayout *request = [[SDLSetDisplayLayout alloc] initWithLayout:SDLPredefinedLayoutNonMedia];
-            [self.manager sendRequest:request];
+            SDLTemplateConfiguration *template = [[SDLTemplateConfiguration alloc] initWithPredefinedLayout:SDLPredefinedLayoutNonMedia];
+            [self.manager.screenManager changeLayout:template withCompletionHandler:nil];
         } else {
             // This head unit isn't supported
             SDLLogE(@"The non-media template isn't supported. This app may not work properly");
@@ -819,7 +819,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     NSString *promptString = [prompts componentsJoinedByString:@","];
 
-    SDLSetGlobalProperties *request = [[SDLSetGlobalProperties alloc] initWithHelpText:promptString timeoutText:promptString vrHelpTitle:self.localization[@"app.name"] vrHelp:[helpitems copy] menuTitle:nil menuIcon:nil keyboardProperties:nil menuLayout:nil];
+    SDLSetGlobalProperties *request = [[SDLSetGlobalProperties alloc] initWithUserLocation:nil helpPrompt:[SDLTTSChunk textChunksFromString:promptString] timeoutPrompt:[SDLTTSChunk textChunksFromString:promptString] vrHelpTitle:self.localization[@"app.name"] vrHelp:[helpitems copy] menuTitle:nil menuIcon:nil keyboardProperties:nil menuLayout:nil];
     [self.manager sendRequest:request];
 }
 
@@ -861,7 +861,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     NSString *promptString = [prompts componentsJoinedByString:@","];
 
-    SDLSetGlobalProperties *request = [[SDLSetGlobalProperties alloc] initWithHelpText:promptString timeoutText:promptString vrHelpTitle:self.localization[@"app.name"] vrHelp:[items copy] menuTitle:nil menuIcon:nil keyboardProperties:nil menuLayout:nil];
+    SDLSetGlobalProperties *request = [[SDLSetGlobalProperties alloc] initWithUserLocation:nil helpPrompt:[SDLTTSChunk textChunksFromString:promptString] timeoutPrompt:[SDLTTSChunk textChunksFromString:promptString] vrHelpTitle:self.localization[@"app.name"] vrHelp:[items copy] menuTitle:nil menuIcon:nil keyboardProperties:nil menuLayout:nil];
     [self.manager sendRequest:request]; 
 }
 

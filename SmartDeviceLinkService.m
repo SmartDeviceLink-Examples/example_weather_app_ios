@@ -513,7 +513,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)sendAlertList:(NSArray *)alerts withSpeak:(BOOL)withSpeak {
     if (alerts.count == 0) {
-        SDLAlert *alertRequest = [[SDLAlert alloc] initWithAlertText1:self.localization[@"alert.no-alerts.field1"] alertText2:self.localization[@"alert.no-alerts.field2"] alertText3:nil softButtons:nil playTone:NO ttsChunks:self.localization[@"alert.no-alerts.prompt"] duration:10000 progressIndicator:NO alertIcon:nil cancelID:0];
+        NSString *chunk = self.localization[@"alert.no-alerts.prompt"];
+        NSArray *chunks = [SDLTTSChunk textChunksFromString:chunk];
+
+        SDLAlert *alertRequest = [[SDLAlert alloc] initWithAlertText1:self.localization[@"alert.no-alerts.field1"] alertText2:self.localization[@"alert.no-alerts.field2"] alertText3:nil softButtons:nil playTone:NO ttsChunks:chunks duration:4000 progressIndicator:NO alertIcon:nil cancelID:0];
         [self.manager sendRequest:alertRequest];
         return;
     }

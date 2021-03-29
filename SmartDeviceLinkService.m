@@ -80,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     // Change which config you need based on if you want to connect to a TDK (default) or a wifi based emulator (debug)
 //    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration defaultConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107"];
-    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration debugConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107" ipAddress:@"m.sdl.tools" port:11427];
+    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration debugConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107" ipAddress:@"m.sdl.tools" port:14000];
     lifecycleConfig.ttsName = [SDLTTSChunk textChunksFromString:NSLocalizedString(@"app.tts-name", nil)];
     lifecycleConfig.voiceRecognitionCommandNames = @[NSLocalizedString(@"app.vr-synonym", nil)];
     lifecycleConfig.appIcon = [SDLArtwork persistentArtworkWithImage:[UIImage imageNamed:@"sdl-appicon"] name:@"AppIcon" asImageFormat:SDLArtworkImageFormatPNG];
@@ -719,23 +719,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray<SDLMenuCell *> *)weatherMenuCells {
     __weak typeof(self) weakSelf = self;
-    SDLMenuCell *showWeatherConditions = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.current-conditions"] icon:[[SDLArtwork alloc] initWithImage:[[UIImage imageNamed:@"clear-day"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] voiceCommands:@[self.localization[@"vr.current"],self.localization[@"vr.conditions"], self.localization[@"vr.current-conditions"], self.localization[@"vr.show-conditions"], self.localization[@"vr.show-current-conditions"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
+    SDLMenuCell *showWeatherConditions = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.current-conditions"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[[UIImage imageNamed:@"clear-day"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.current"],self.localization[@"vr.conditions"], self.localization[@"vr.current-conditions"], self.localization[@"vr.show-conditions"], self.localization[@"vr.show-current-conditions"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
         [weakSelf sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES];
     }];
 
-    SDLMenuCell *showDailyForecast = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.daily-forecast"] icon:[[SDLArtwork alloc] initWithImage:[[UIImage imageNamed:@"menu-day"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] voiceCommands:@[self.localization[@"vr.daily"], self.localization[@"vr.daily-forecast"], self.localization[@"vr.show-daily-forecast"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
+    SDLMenuCell *showDailyForecast = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.daily-forecast"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[[UIImage imageNamed:@"menu-day"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.daily"], self.localization[@"vr.daily-forecast"], self.localization[@"vr.show-daily-forecast"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
         [weakSelf sendForecastList:[WeatherDataManager sharedManager].dailyForecast infoType:MWInfoTypeDailyForecast withSpeak:YES];
     }];
 
-    SDLMenuCell *showHourlyForecast = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.hourly-forecast"] icon:[[SDLArtwork alloc] initWithImage:[[UIImage imageNamed:@"menu-time"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] voiceCommands:@[self.localization[@"vr.hourly"], self.localization[@"vr.hourly-forecast"], self.localization[@"vr.show-hourly-forecast"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
+    SDLMenuCell *showHourlyForecast = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.hourly-forecast"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[[UIImage imageNamed:@"menu-time"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.hourly"], self.localization[@"vr.hourly-forecast"], self.localization[@"vr.show-hourly-forecast"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
         [weakSelf sendForecastList:[WeatherDataManager sharedManager].hourlyForecast infoType:MWInfoTypeHourlyForecast withSpeak:YES];
     }];
 
-    SDLMenuCell *showAlerts = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.alerts"] icon:[[SDLArtwork alloc] initWithImage:[[UIImage imageNamed:@"menu-alert"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] voiceCommands:@[self.localization[@"vr.alerts"], self.localization[@"vr.show-alerts"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
+    SDLMenuCell *showAlerts = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.alerts"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[[UIImage imageNamed:@"menu-alert"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.alerts"], self.localization[@"vr.show-alerts"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
         [weakSelf sendAlertList:[WeatherDataManager sharedManager].alerts withSpeak:YES];
     }];
 
-    SDLMenuCell *changeUnits = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.change-units"] icon:[[SDLArtwork alloc] initWithImage:[[UIImage imageNamed:@"menu-units"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] voiceCommands:@[self.localization[@"vr.units"], self.localization[@"vr.change-units"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
+    SDLMenuCell *changeUnits = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.change-units"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[[UIImage imageNamed:@"menu-units"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.units"], self.localization[@"vr.change-units"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
         SDLInteractionMode mode = [triggerSource isEqualToEnum:SDLTriggerSourceMenu] ? SDLInteractionModeManualOnly : SDLInteractionModeBoth;
         [weakSelf presentChangeUnitsInteraction:mode];
     }];
@@ -748,18 +748,18 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableArray<SDLMenuCell *> *menu = [NSMutableArray array];
 
     if ([infoType isEqualToString:MWInfoTypeDailyForecast] || [infoType isEqualToString:MWInfoTypeHourlyForecast]) {
-         [menu addObject:[[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.show-list"] icon:nil voiceCommands:@[self.localization[@"vr.list"], self.localization[@"vr.show-list"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
+        [menu addObject:[[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.show-list"] secondaryText:nil tertiaryText:nil icon:nil secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.list"], self.localization[@"vr.show-list"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
             SDLInteractionMode mode = [triggerSource isEqualToEnum:SDLTriggerSourceMenu] ? SDLInteractionModeManualOnly : SDLInteractionModeBoth;
              [weakSelf presentForecastInteractionWithList:weakSelf.currentInfoTypeList ofType:infoType mode:mode];
         }]];
     } else if ([MWInfoTypeAlerts isEqualToString:infoType]) {
-        [menu addObject:[[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.show-message"] icon:nil voiceCommands:@[self.localization[@"vr.message"], self.localization[@"vr.show-message"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
+        [menu addObject:[[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.show-message"] secondaryText:nil tertiaryText:nil icon:nil secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.message"], self.localization[@"vr.show-message"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
             SDLInteractionMode mode = [triggerSource isEqualToEnum:SDLTriggerSourceMenu] ? SDLInteractionModeManualOnly : SDLInteractionModeBoth;
             [weakSelf presentForecastInteractionWithList:weakSelf.currentInfoTypeList ofType:infoType mode:mode];
         }]];
     }
 
-    [menu addObject:[[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.back"] icon:nil voiceCommands:@[self.localization[@"vr.back"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
+    [menu addObject:[[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.back"] secondaryText:nil tertiaryText: nil icon:nil secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.back"]] handler:^(SDLTriggerSource  _Nonnull triggerSource) {
         [weakSelf closeListInfoType:weakSelf.currentInfoType];
     }]];
 

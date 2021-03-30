@@ -282,8 +282,8 @@ NS_ASSUME_NONNULL_BEGIN
             }
         }
 
-        NSString *pp = [NSString stringWithFormat:@"Precipitation chance: %@", [forecast.precipitationChance stringValueForUnit:UnitPercentageDefault shortened:YES localization:self.localization]];
-        SDLChoiceCell *cell = [[SDLChoiceCell alloc] initWithText:[dateFormatShow stringFromDate:forecast.date] secondaryText:pp tertiaryText:nil voiceCommands:[vrCommands copy] artwork:[SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil];
+        NSString *percipitationChanceString = [NSString stringWithFormat:@"Precipitation chance: %@", [forecast.precipitationChance stringValueForUnit:UnitPercentageDefault shortened:YES localization:self.localization]];
+        SDLChoiceCell *cell = [[SDLChoiceCell alloc] initWithText:[dateFormatShow stringFromDate:forecast.date] secondaryText:percipitationChanceString tertiaryText:nil voiceCommands:[vrCommands copy] artwork:[SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil];
         [choices addObject:cell];
     }
 

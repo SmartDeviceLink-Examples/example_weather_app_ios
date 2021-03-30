@@ -80,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     // Change which config you need based on if you want to connect to a TDK (default) or a wifi based emulator (debug)
 //    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration defaultConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107"];
-    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration debugConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107" ipAddress:@"m.sdl.tools" port:14000];
+    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration debugConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107" ipAddress:@"10.0.0.139" port:12345];
     lifecycleConfig.ttsName = [SDLTTSChunk textChunksFromString:NSLocalizedString(@"app.tts-name", nil)];
     lifecycleConfig.voiceRecognitionCommandNames = @[NSLocalizedString(@"app.vr-synonym", nil)];
     lifecycleConfig.appIcon = [SDLArtwork persistentArtworkWithImage:[UIImage imageNamed:@"sdl-appicon"] name:@"AppIcon" asImageFormat:SDLArtworkImageFormatPNG];
@@ -282,7 +282,8 @@ NS_ASSUME_NONNULL_BEGIN
             }
         }
 
-        SDLChoiceCell *cell = [[SDLChoiceCell alloc] initWithText:[dateFormatShow stringFromDate:forecast.date] artwork:[SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG] voiceCommands:[vrCommands copy]];
+        NSString *pp = [NSString stringWithFormat:@"Precipitation chance: %@", [forecast.precipitationChance stringValueForUnit:UnitPercentageDefault shortened:YES localization:self.localization]];
+        SDLChoiceCell *cell = [[SDLChoiceCell alloc] initWithText:[dateFormatShow stringFromDate:forecast.date] secondaryText:pp tertiaryText:nil voiceCommands:[vrCommands copy] artwork:[SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil];
         [choices addObject:cell];
     }
 
@@ -318,8 +319,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)sendWeatherConditions:(WeatherConditions *)conditions withSpeak:(BOOL)withSpeak {
     if (conditions == nil) {
-        SDLAlert *alertRequest = [[SDLAlert alloc] initWithAlertText1:self.localization[@"alert.no-conditions.field1"] alertText2:self.localization[@"alert.no-conditions.field2"] alertText3:nil softButtons:nil playTone:NO ttsChunks:self.localization[@"alert.no-forecast.prompt"] duration:10000 progressIndicator:NO alertIcon:nil cancelID:0];
-        [self.manager sendRequest:alertRequest];
+        SDLAlertView *alertRequest = [[SDLAlertView alloc] initWithText:self.localization[@"alert.no-conditions.field1"] secondaryText:self.localization[@"alert.no-conditions.field2"] tertiaryText:nil timeout:@(10) showWaitIndicator:nil audioIndication:[[SDLAlertAudioData alloc] initWithSpeechSynthesizerString:self.localization[@"alert.no-forecast.prompt"]] buttons:nil icon:nil];
+        [self.manager.screenManager presentAlert:alertRequest withCompletionHandler:nil];
     }
 
     self.currentInfoType = MWInfoTypeWeatherConditions;
@@ -360,8 +361,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)sendForecastList:(NSArray *)forecasts infoType:(MWInfoType)infoType withSpeak:(BOOL)withSpeak {
     if (forecasts == nil || forecasts.count == 0) {
-        SDLAlert *alertRequest = [[SDLAlert alloc] initWithAlertText1:self.localization[@"alert.no-forecast.field1"] alertText2:self.localization[@"alert.no-forecast.field2"] alertText3:nil softButtons:nil playTone:NO ttsChunks:self.localization[@"alert.no-forecast.prompt"] duration:10000 progressIndicator:NO alertIcon:nil cancelID:0];
-        [self.manager sendRequest:alertRequest];
+        SDLAlertView *alertRequest = [[SDLAlertView alloc] initWithText:self.localization[@"alert.no-forecast.field1"] secondaryText:self.localization[@"alert.no-forecast.field2"] tertiaryText:nil timeout:@(10) showWaitIndicator:nil audioIndication:[[SDLAlertAudioData alloc] initWithSpeechSynthesizerString:self.localization[@"alert.no-forecast.prompt"]] buttons:nil icon:nil];
+        [self.manager.screenManager presentAlert:alertRequest withCompletionHandler:nil];
     }
 
     if ([infoType isEqualToString:MWInfoTypeDailyForecast]) {
@@ -513,11 +514,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)sendAlertList:(NSArray *)alerts withSpeak:(BOOL)withSpeak {
     if (alerts.count == 0) {
-        NSString *chunk = self.localization[@"alert.no-alerts.prompt"];
-        NSArray *chunks = [SDLTTSChunk textChunksFromString:chunk];
 
-        SDLAlert *alertRequest = [[SDLAlert alloc] initWithAlertText1:self.localization[@"alert.no-alerts.field1"] alertText2:self.localization[@"alert.no-alerts.field2"] alertText3:nil softButtons:nil playTone:NO ttsChunks:chunks duration:4000 progressIndicator:NO alertIcon:nil cancelID:0];
-        [self.manager sendRequest:alertRequest];
+        SDLAlertView *alertRequest = [[SDLAlertView alloc] initWithText:self.localization[@"alert.no-alerts.field1"] secondaryText:self.localization[@"alert.no-alerts.field2"] tertiaryText:nil timeout:@(4) showWaitIndicator:nil audioIndication:[[SDLAlertAudioData alloc] initWithSpeechSynthesizerString:self.localization[@"alert.no-alerts.prompt"]] buttons:nil icon:nil];
+
+        [self.manager.screenManager presentAlert:alertRequest withCompletionHandler:nil];
+
         return;
     }
 

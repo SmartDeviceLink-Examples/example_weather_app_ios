@@ -80,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     // Change which config you need based on if you want to connect to a TDK (default) or a wifi based emulator (debug)
 //    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration defaultConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107"];
-    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration debugConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107" ipAddress:@"10.0.0.139" port:12345];
+    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration debugConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107" ipAddress:@"m.sdl.tools" port:11427];
     lifecycleConfig.ttsName = [SDLTTSChunk textChunksFromString:NSLocalizedString(@"app.tts-name", nil)];
     lifecycleConfig.voiceRecognitionCommandNames = @[NSLocalizedString(@"app.vr-synonym", nil)];
     lifecycleConfig.appIcon = [SDLArtwork persistentArtworkWithImage:[UIImage imageNamed:@"sdl-appicon"] name:@"AppIcon" asImageFormat:SDLArtworkImageFormatPNG];
@@ -282,8 +282,8 @@ NS_ASSUME_NONNULL_BEGIN
             }
         }
 
-        NSString *percipitationChanceString = [NSString stringWithFormat:@"Precipitation chance: %@", [forecast.precipitationChance stringValueForUnit:UnitPercentageDefault shortened:YES localization:self.localization]];
-        SDLChoiceCell *cell = [[SDLChoiceCell alloc] initWithText:[dateFormatShow stringFromDate:forecast.date] secondaryText:percipitationChanceString tertiaryText:nil voiceCommands:[vrCommands copy] artwork:[SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil];
+        NSString *precipitationChanceString = [NSString stringWithFormat:@"Precipitation chance: %@", [forecast.precipitationChance stringValueForUnit:UnitPercentageDefault shortened:YES localization:self.localization]];
+        SDLChoiceCell *cell = [[SDLChoiceCell alloc] initWithText:[dateFormatShow stringFromDate:forecast.date] secondaryText:precipitationChanceString tertiaryText:nil voiceCommands:[vrCommands copy] artwork:[SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil];
         [choices addObject:cell];
     }
 
@@ -514,7 +514,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)sendAlertList:(NSArray *)alerts withSpeak:(BOOL)withSpeak {
     if (alerts.count == 0) {
-
         SDLAlertView *alertRequest = [[SDLAlertView alloc] initWithText:self.localization[@"alert.no-alerts.field1"] secondaryText:self.localization[@"alert.no-alerts.field2"] tertiaryText:nil timeout:@(4) showWaitIndicator:nil audioIndication:[[SDLAlertAudioData alloc] initWithSpeechSynthesizerString:self.localization[@"alert.no-alerts.prompt"]] buttons:nil icon:nil];
 
         [self.manager.screenManager presentAlert:alertRequest withCompletionHandler:nil];

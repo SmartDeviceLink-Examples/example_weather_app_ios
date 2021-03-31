@@ -12,6 +12,6 @@
 #define PREFS_UNITS_KEY            @"unit"
 #define PREFS_UNITS_METRIC_KEY     @"unitmetric"
 #define PREFS_UNITS_IMPERIAL_KEY   @"unitimperial"
-#define PREFS_WEATHER_API_KEY      @"ec6ad25d888132c41cf12d36b17ff529"
+#define PREFS_WEATHER_API_KEY      @""
 
 #endif

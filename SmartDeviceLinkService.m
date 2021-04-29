@@ -64,7 +64,6 @@ NS_ASSUME_NONNULL_BEGIN
     self.graphicsAvailable = NO;
     self.templatesAvailable = nil;
     self.language = nil;
-    self.localization = nil;
     self.firstHMIFullOccurred = NO;
     self.currentKnownAlerts = [NSMutableSet set];
     self.currentInfoType = nil;

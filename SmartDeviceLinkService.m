@@ -138,7 +138,7 @@ NS_ASSUME_NONNULL_BEGIN
     if ([SDLHMILevelFull isEqualToEnum:newLevel] && !self.hasFirstHMIFullOccurred) {
         self.firstHMIFullOccurred = YES;
         // the app is just started by the user. Send everything needed to be done once
-        [self sendWelcomeMessageWithSpeak:YES];
+        [self sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES];
         [self sendDefaultGlobalProperties];
         [self preloadChangeUnitsChoices];
 
@@ -353,7 +353,11 @@ NS_ASSUME_NONNULL_BEGIN
     [self.manager.screenManager endUpdatesWithCompletionHandler:nil];
 
     if (withSpeak) {
-        SDLSpeak *speakRequest = [[SDLSpeak alloc] initWithTTS:[self.localization stringForKey:@"conditions.speak", conditions.conditionTitle, [conditions.temperature stringValueForUnit:temperatureType shortened:NO localization:self.localization], [conditions.humidity stringValueForUnit:percentageType shortened:NO localization:self.localization], [conditions.windSpeed stringValueForUnit:speedType shortened:NO localization:self.localization]]];
+        SDLTTSChunk *welcomeTTS = [[SDLTTSChunk alloc] initWithText:self.localization[@"speak.welcome"] type: SDLSpeechCapabilitiesText];
+
+        SDLTTSChunk *weatherConditionTTS = [[SDLTTSChunk alloc] initWithText:[self.localization stringForKey:@"conditions.speak", conditions.conditionTitle, [conditions.temperature stringValueForUnit:temperatureType shortened:NO localization:self.localization], [conditions.humidity stringValueForUnit:percentageType shortened:NO localization:self.localization], [conditions.windSpeed stringValueForUnit:speedType shortened:NO localization:self.localization]] type:SDLSpeechCapabilitiesText];
+
+        SDLSpeak *speakRequest = [[SDLSpeak alloc] initWithTTSChunks:@[welcomeTTS, weatherConditionTTS]];
         [self.manager sendRequest:speakRequest];
     }
 }

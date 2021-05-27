@@ -5,11 +5,14 @@
 //  Copyright (c) 2013-2015 Ford Motor Company. All rights reserved.
 //
 
+#import "ImageResources.h"
 @import UIKit;
 
 @interface ImageProcessor : NSObject
 
 + (ImageProcessor *)sharedProcessor;
+
++ (UIImage *)imageByName:(NSString *) imageName;
 
 - (UIImage *)imageFromConditionImage:(NSString *)conditionImage;
 

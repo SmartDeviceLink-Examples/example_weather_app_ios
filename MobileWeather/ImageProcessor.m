@@ -35,7 +35,7 @@
     UIImage *imageReturned;
 
     if (@available(iOS 13.0, *)) {
-        return imageReturned = [[UIImage systemImageNamed:[ImageResources systemImageFromAssetsImage:imageName]] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        return imageReturned = [[UIImage systemImageNamed:[ImageProcessor systemImageFromAssetsImage:imageName]] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     } else {
         return imageReturned = [[UIImage imageNamed:imageName] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
@@ -45,7 +45,7 @@
     UIImage *image;
 
     if (@available(iOS 13.0, *)) {
-        image = [UIImage systemImageNamed:[ImageResources  systemImageFromAssetsImage:conditionImage]];
+        image = [UIImage systemImageNamed:[ImageProcessor  systemImageFromAssetsImage:conditionImage]];
     } else {
         image = [UIImage imageNamed:conditionImage];
     }
@@ -62,6 +62,52 @@
     NSData *data = UIImagePNGRepresentation(image);
     
     return data;
+}
+
++ (NSString *)systemImageFromAssetsImage:(NSString *) imageName {
+    NSString *newImageName = imageName;
+    if ([imageName isEqual:@"chancerain"]) {
+        newImageName = @"cloud.drizzle";
+    } else if ([imageName isEqual:@"chancesnow"]) {
+        newImageName = @"cloud.snow";
+    } else if ([imageName isEqual:@"clear-day"]) {
+        newImageName = @"sun.max";
+    } else if ([imageName isEqual:@"clear-night"]) {
+        newImageName = @"moon";
+    } else if ([imageName isEqual:@"cloudy"]) {
+        newImageName = @"smoke";
+    } else if ([imageName isEqual:@"flurries"]) {
+        newImageName = @"snow";
+    } else if ([imageName isEqual:@"fog"]) {
+        newImageName = @"cloud.fog";
+    } else if ([imageName isEqual:@"hazy"]) {
+        newImageName = @"sun.haze";
+    } else if ([imageName isEqual:@"partly-cloudy-day"]) {
+        newImageName = @"cloud.sun";
+    } else if ([imageName isEqual:@"partly-cloudy-night"]) {
+        newImageName = @"cloud.moon";
+    } else if ([imageName isEqual:@"partlycloudy"]) {
+        newImageName = @"cloud";
+    } else if ([imageName isEqual:@"partlysunny"]) {
+        newImageName = @"cloud.sun";
+    } else if ([imageName isEqual:@"rain"]) {
+        newImageName = @"cloud.rain";
+    } else if ([imageName isEqual:@"sleet"]) {
+        newImageName = @"cloud.sleet";
+    } else if ([imageName isEqual:@"snow"]) {
+        newImageName = @"cloud.snow";
+    } else if ([imageName isEqual:@"sunny"]) {
+        newImageName = @"sun.max";
+    } else if ([imageName isEqual:@"tstorms"]) {
+        newImageName = @"cloud.bolt";
+    } else if ([imageName isEqual:@"menu-alert"]) {
+        newImageName = @"exclamationmark.triangle";
+    } else if ([imageName isEqual:@"menu-day"]) {
+        newImageName = @"calendar";
+    } else if ([imageName isEqual:@"menu-time"]) {
+        newImageName = @"clock";
+    }
+    return newImageName;
 }
 
 @end

@@ -31,7 +31,7 @@
     return self;
 }
 
-+ (UIImage *)imageByName:(NSString *) imageName {
+- (UIImage *)imageByName:(NSString *) imageName {
     UIImage *imageReturned;
 
     if (@available(iOS 13.0, *)) {
@@ -45,7 +45,7 @@
     UIImage *image;
 
     if (@available(iOS 13.0, *)) {
-        image = [UIImage systemImageNamed:[ImageProcessor  systemImageFromAssetsImage:conditionImage]];
+        image = [UIImage systemImageNamed:[self systemImageFromAssetsImage:conditionImage]];
     } else {
         image = [UIImage imageNamed:conditionImage];
     }
@@ -64,7 +64,7 @@
     return data;
 }
 
-+ (NSString *)systemImageFromAssetsImage:(NSString *) imageName {
+- (NSString *)systemImageFromAssetsImage:(NSString *) imageName {
     NSString *newImageName = imageName;
     if ([imageName isEqual:@"chancerain"]) {
         newImageName = @"cloud.drizzle";

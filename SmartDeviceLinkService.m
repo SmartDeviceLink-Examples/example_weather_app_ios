@@ -614,7 +614,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray<SDLSoftButtonObject *> *)buildDefaultSoftButtons {
     __weak typeof(self) weakSelf = self;
-    SDLSoftButtonState *currentWeatherState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.current"] image:[ImageProcessor imageByName:@"clear-day"]];
+    SDLSoftButtonState *currentWeatherState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.current"] image:[[ImageProcessor sharedProcessor] imageByName:@"clear-day"]];
     SDLSoftButtonObject *currentWeatherObject = [[SDLSoftButtonObject alloc] initWithName:@"CurrentWeather" state:currentWeatherState handler:^(SDLOnButtonPress * _Nullable buttonPress, SDLOnButtonEvent * _Nullable buttonEvent) {
         if (!buttonPress) {
             return;
@@ -623,7 +623,7 @@ NS_ASSUME_NONNULL_BEGIN
         [weakSelf sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES];
     }];
 
-    SDLSoftButtonState *dailyForecastState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.daily"] image:[ImageProcessor imageByName:@"menu-day"]];
+    SDLSoftButtonState *dailyForecastState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.daily"] image:[[ImageProcessor sharedProcessor] imageByName:@"menu-day"]];
     SDLSoftButtonObject *dailyForecastObject = [[SDLSoftButtonObject alloc] initWithName:@"DailyForecast" state:dailyForecastState handler:^(SDLOnButtonPress * _Nullable buttonPress, SDLOnButtonEvent * _Nullable buttonEvent) {
         if (!buttonPress) {
             return;
@@ -632,7 +632,7 @@ NS_ASSUME_NONNULL_BEGIN
         [weakSelf sendForecastList:[WeatherDataManager sharedManager].dailyForecast infoType:MWInfoTypeDailyForecast withSpeak:YES];
     }];
 
-    SDLSoftButtonState *hourlyForecastState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.hourly"] image:[ImageProcessor imageByName:@"menu-time"]];
+    SDLSoftButtonState *hourlyForecastState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.hourly"] image:[[ImageProcessor sharedProcessor] imageByName:@"menu-time"]];
     SDLSoftButtonObject *hourlyForecastObject = [[SDLSoftButtonObject alloc] initWithName:@"HourlyForecast" state:hourlyForecastState handler:^(SDLOnButtonPress * _Nullable buttonPress, SDLOnButtonEvent * _Nullable buttonEvent) {
         if (!buttonPress) {
             return;
@@ -641,7 +641,7 @@ NS_ASSUME_NONNULL_BEGIN
         [weakSelf sendForecastList:[WeatherDataManager sharedManager].hourlyForecast infoType:MWInfoTypeHourlyForecast withSpeak:YES];
     }];
 
-    SDLSoftButtonState *alertsState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.alerts"] image:[ImageProcessor imageByName:@"menu-alert"]];
+    SDLSoftButtonState *alertsState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.alerts"] image:[[ImageProcessor sharedProcessor] imageByName:@"menu-alert"]];
     SDLSoftButtonObject *alertsObject = [[SDLSoftButtonObject alloc] initWithName:@"Alerts" state:alertsState handler:^(SDLOnButtonPress * _Nullable buttonPress, SDLOnButtonEvent * _Nullable buttonEvent) {
         if (!buttonPress) {
             return;
@@ -721,19 +721,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray<SDLMenuCell *> *)weatherMenuCells {
     __weak typeof(self) weakSelf = self;
-    SDLMenuCell *showWeatherConditions = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.current-conditions"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[ImageProcessor imageByName:@"clear-day"] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.current"],self.localization[@"vr.conditions"], self.localization[@"vr.current-conditions"], self.localization[@"vr.show-conditions"], self.localization[@"vr.show-current-conditions"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
+    SDLMenuCell *showWeatherConditions = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.current-conditions"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[[ImageProcessor sharedProcessor] imageByName:@"clear-day"] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.current"],self.localization[@"vr.conditions"], self.localization[@"vr.current-conditions"], self.localization[@"vr.show-conditions"], self.localization[@"vr.show-current-conditions"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
         [weakSelf sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES];
     }];
 
-    SDLMenuCell *showDailyForecast = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.daily-forecast"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[ImageProcessor imageByName:@"menu-day"] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.daily"], self.localization[@"vr.daily-forecast"], self.localization[@"vr.show-daily-forecast"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
+    SDLMenuCell *showDailyForecast = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.daily-forecast"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[[ImageProcessor sharedProcessor] imageByName:@"menu-day"] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.daily"], self.localization[@"vr.daily-forecast"], self.localization[@"vr.show-daily-forecast"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
         [weakSelf sendForecastList:[WeatherDataManager sharedManager].dailyForecast infoType:MWInfoTypeDailyForecast withSpeak:YES];
     }];
 
-    SDLMenuCell *showHourlyForecast = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.hourly-forecast"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[ImageProcessor imageByName:@"menu-time"] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.hourly"], self.localization[@"vr.hourly-forecast"], self.localization[@"vr.show-hourly-forecast"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
+    SDLMenuCell *showHourlyForecast = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.hourly-forecast"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[[ImageProcessor sharedProcessor] imageByName:@"menu-time"] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.hourly"], self.localization[@"vr.hourly-forecast"], self.localization[@"vr.show-hourly-forecast"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
         [weakSelf sendForecastList:[WeatherDataManager sharedManager].hourlyForecast infoType:MWInfoTypeHourlyForecast withSpeak:YES];
     }];
 
-    SDLMenuCell *showAlerts = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.alerts"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[ImageProcessor imageByName:@"menu-alert"] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.alerts"], self.localization[@"vr.show-alerts"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
+    SDLMenuCell *showAlerts = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.alerts"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[[ImageProcessor sharedProcessor] imageByName:@"menu-alert"] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.alerts"], self.localization[@"vr.show-alerts"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
         [weakSelf sendAlertList:[WeatherDataManager sharedManager].alerts withSpeak:YES];
     }];
 

@@ -138,7 +138,7 @@ NS_ASSUME_NONNULL_BEGIN
     if ([SDLHMILevelFull isEqualToEnum:newLevel] && !self.hasFirstHMIFullOccurred) {
         self.firstHMIFullOccurred = YES;
         // the app is just started by the user. Send everything needed to be done once
-        [self sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES];
+        [self sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES firstWindow:YES];
         [self sendDefaultGlobalProperties];
         [self preloadChangeUnitsChoices];
 
@@ -215,7 +215,7 @@ NS_ASSUME_NONNULL_BEGIN
     MWInfoType infoType = self.currentInfoType;
     if ([MWInfoTypeWeatherConditions isEqualToString:infoType]) {
         WeatherConditions *conditions = notification.userInfo[@"weatherConditions"];
-        [self sendWeatherConditions:conditions withSpeak:NO];
+        [self sendWeatherConditions:conditions withSpeak:NO firstWindow:NO];
     } else if ([MWInfoTypeDailyForecast isEqualToString:infoType]) {
         NSArray *forecast = notification.userInfo[@"dailyForecast"];
         [self sendForecastList:forecast infoType:infoType withSpeak:NO];
@@ -299,24 +299,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Template updates
 
-- (void)sendWelcomeMessageWithSpeak:(BOOL)withSpeak {
-    self.currentInfoType = MWInfoTypeNone;
-    [self.manager.screenManager beginUpdates];
-    self.manager.screenManager.textField1 = self.localization[@"show.welcome.field1"];
-    self.manager.screenManager.textField2 = self.localization[@"show.welcome.field2"];
-    self.manager.screenManager.textField3 = self.localization[@"show.welcome.field3"];
-    self.manager.screenManager.textField4 = self.localization[@"show.welcome.field4"];
-    self.manager.screenManager.textAlignment = SDLTextAlignmentCenter;
-    self.manager.screenManager.softButtonObjects = [self buildDefaultSoftButtons];
-    [self.manager.screenManager endUpdatesWithCompletionHandler:nil];
-    
-    if (withSpeak) {
-        SDLSpeak *speak = [[SDLSpeak alloc] initWithTTS:self.localization[@"speak.welcome"]];
-        [self.manager sendRequest:speak];
-    }
-}
-
-- (void)sendWeatherConditions:(WeatherConditions *)conditions withSpeak:(BOOL)withSpeak {
+- (void)sendWeatherConditions:(WeatherConditions *)conditions withSpeak:(BOOL)withSpeak firstWindow:(BOOL)firstWindow {
     if (conditions == nil) {
         SDLAlertView *alertRequest = [[SDLAlertView alloc] initWithText:self.localization[@"alert.no-conditions.field1"] secondaryText:self.localization[@"alert.no-conditions.field2"] tertiaryText:nil timeout:@(10) showWaitIndicator:nil audioIndication:[[SDLAlertAudioData alloc] initWithSpeechSynthesizerString:self.localization[@"alert.no-forecast.prompt"]] buttons:nil icon:nil];
         [self.manager.screenManager presentAlert:alertRequest withCompletionHandler:nil];
@@ -353,11 +336,15 @@ NS_ASSUME_NONNULL_BEGIN
     [self.manager.screenManager endUpdatesWithCompletionHandler:nil];
 
     if (withSpeak) {
+        SDLSpeak *speakRequest;
         SDLTTSChunk *welcomeTTS = [[SDLTTSChunk alloc] initWithText:self.localization[@"speak.welcome"] type: SDLSpeechCapabilitiesText];
-
         SDLTTSChunk *weatherConditionTTS = [[SDLTTSChunk alloc] initWithText:[self.localization stringForKey:@"conditions.speak", conditions.conditionTitle, [conditions.temperature stringValueForUnit:temperatureType shortened:NO localization:self.localization], [conditions.humidity stringValueForUnit:percentageType shortened:NO localization:self.localization], [conditions.windSpeed stringValueForUnit:speedType shortened:NO localization:self.localization]] type:SDLSpeechCapabilitiesText];
+        if (firstWindow) {
+            speakRequest = [[SDLSpeak alloc] initWithTTSChunks:@[welcomeTTS, weatherConditionTTS]];
+        } else {
+            speakRequest = [[SDLSpeak alloc] initWithTTSChunks:@[weatherConditionTTS]];
+        }
 
-        SDLSpeak *speakRequest = [[SDLSpeak alloc] initWithTTSChunks:@[welcomeTTS, weatherConditionTTS]];
         [self.manager sendRequest:speakRequest];
     }
 }
@@ -597,7 +584,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self setCurrentInfoTypeList:nil];
     self.currentInfoTypeListIndex = -1;
     
-    [self sendWelcomeMessageWithSpeak:NO];
+    [self sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES firstWindow:NO];
     [self sendDefaultGlobalProperties];
 
     self.manager.screenManager.menu = [self weatherMenuCells];
@@ -606,7 +593,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)repeatWeatherInformation {
     MWInfoType infoType = self.currentInfoType;
     if ([MWInfoTypeWeatherConditions isEqualToString:infoType]) {
-        [self sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES];
+        [self sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES firstWindow:NO];
     } else if ([MWInfoTypeDailyForecast isEqualToString:infoType] || [MWInfoTypeHourlyForecast isEqualToString:infoType]) {
         [self showForecastAtIndex:self.currentInfoTypeListIndex fromList:self.currentInfoTypeList infoType:infoType withSpeak:YES];
     } else if ([MWInfoTypeAlerts isEqualToString:infoType]) {
@@ -624,7 +611,7 @@ NS_ASSUME_NONNULL_BEGIN
             return;
         }
 
-        [weakSelf sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES];
+        [weakSelf sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES firstWindow:NO];
     }];
 
     SDLSoftButtonState *dailyForecastState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.daily"] image:[[UIImage imageNamed:@"menu-day"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
@@ -726,7 +713,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<SDLMenuCell *> *)weatherMenuCells {
     __weak typeof(self) weakSelf = self;
     SDLMenuCell *showWeatherConditions = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.current-conditions"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[[UIImage imageNamed:@"clear-day"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.current"],self.localization[@"vr.conditions"], self.localization[@"vr.current-conditions"], self.localization[@"vr.show-conditions"], self.localization[@"vr.show-current-conditions"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {
-        [weakSelf sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES];
+        [weakSelf sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES firstWindow:NO];
     }];
 
     SDLMenuCell *showDailyForecast = [[SDLMenuCell alloc] initWithTitle:self.localization[@"cmd.daily-forecast"] secondaryText:nil tertiaryText:nil icon:[[SDLArtwork alloc] initWithImage:[[UIImage imageNamed:@"menu-day"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:YES asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil voiceCommands:@[self.localization[@"vr.daily"], self.localization[@"vr.daily-forecast"], self.localization[@"vr.show-daily-forecast"]] handler:^(SDLTriggerSource _Nonnull triggerSource) {

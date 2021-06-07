@@ -5,12 +5,13 @@
 //  Copyright (c) 2013-2015 Ford Motor Company. All rights reserved.
 //
 
+@import WeatherLocationService;
+
 #import "AppDelegate.h"
 
 #import "NSUserDefaults+RegisterSettings.h"
 #import "Notifications.h"
 #import "DarkSkyService.h"
-#import "LocationService.h"
 #import "SmartDeviceLinkService.h"
 
 @interface AppDelegate ()
@@ -40,7 +41,7 @@
         // is it started? (API key etc. works)
         if ([DarkSkyService sharedService].isStarted) {
             // Start the services
-            [[LocationService sharedService] start];
+            [[LocationService shared] start];
             
             // Setup background app refresh time.
             [application setMinimumBackgroundFetchInterval:30.0];

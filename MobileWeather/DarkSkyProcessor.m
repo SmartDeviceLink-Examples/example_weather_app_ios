@@ -6,6 +6,7 @@
 //
 
 @import SmartDeviceLink;
+@import WeatherLocationService;
 
 #import "DarkSkyProcessor.h"
 
@@ -51,7 +52,7 @@
         NSDictionary *currently = json[KEY_CURRENTLY];
 
         if (currently != nil) {
-            conditions.date = [self dateFromTime:currently[KEY_TIME] withOffset:json[KEY_OFFSET]];
+            conditions.date = [self mw_dateFromTime:currently[KEY_TIME] withOffset:json[KEY_OFFSET]];
             
             conditions.conditionTitle = currently[KEY_SUMMARY];
             conditions.conditionIcon = currently[KEY_ICON];
@@ -70,59 +71,52 @@
 
 + (NSArray *)dailyForecast:(NSDictionary *)json {
     SDLLogD(@"Processing daily forecast");
-    return [self processForecast:json forType:KEY_DAILY];
+    return [self mw_processForecast:json forType:KEY_DAILY];
 }
 
 + (NSArray *)hourlyForecast:(NSDictionary *)json {
     SDLLogD(@"Processing hourly forecast");
-    return [self processForecast:json forType:KEY_HOURLY];
+    return [self mw_processForecast:json forType:KEY_HOURLY];
 }
 
-+ (NSArray *)processForecast:(NSDictionary *)json forType:(NSString *)type {
-    NSMutableArray *forecasts = [NSMutableArray array];
++ (NSArray<Forecast *> *)mw_processForecast:(NSDictionary *)json forType:(NSString *)type {
+    NSMutableArray<Forecast *> *forecasts = [NSMutableArray array];
     NSDictionary *section = json[type];
     NSArray *data = nil;
 
-    if (section != nil) {
-        data = section[KEY_DATA];
+    if (section == nil) { return nil; }
 
-        if (data != nil) {
-            NSUInteger numberOfDays = data.count;
-            
-            for (int dayCounter = 0; dayCounter < numberOfDays; dayCounter++) {
-                NSDictionary *day = data[dayCounter];
-                Forecast *currentForecast = [[Forecast alloc] init];
-                
-                if (day != nil && currentForecast != nil) {
-                    currentForecast.date = [self dateFromTime:day[KEY_TIME] withOffset:json[KEY_OFFSET]];
+    data = section[KEY_DATA];
+    if (data == nil || data.count == 0) { return nil; }
 
-                    currentForecast.conditionTitle = day[KEY_SUMMARY];
-                    currentForecast.conditionIcon = day[KEY_ICON];
-                    
-                    currentForecast.temperature = [TemperatureNumber numberWithNumber:day[KEY_TEMPERATURE] withUnit:UnitTemperatureCelsius];
-                    currentForecast.highTemperature = [TemperatureNumber numberWithNumber:day[KEY_TEMPERATURE_MAX] withUnit:UnitTemperatureCelsius];
-                    currentForecast.lowTemperature = [TemperatureNumber numberWithNumber:day[KEY_TEMPERATURE_MIN] withUnit:UnitTemperatureCelsius];
-                    currentForecast.windSpeed = [SpeedNumber numberWithNumber:day[KEY_WIND_SPEED] withUnit:UnitSpeedMeterSecond];
-                    currentForecast.snow = [LengthNumber numberWithNumber:day[KEY_PRECIP_ACCUMULATION] withUnit:UnitLengthCentiMeter];
-                    currentForecast.humidity = [PercentageNumber numberWithNumber:day[KEY_HUMIDITY] withUnit:UnitPercentageFactor];
-                    currentForecast.precipitationChance = [PercentageNumber numberWithNumber:day[KEY_PRECIP_PROBABILITY] withUnit:UnitPercentageFactor];
-                    
-                    [forecasts addObject:currentForecast];
-                }
-            }
+    NSUInteger numberOfDays = data.count;
+    for (int dayCounter = 0; dayCounter < numberOfDays; dayCounter++) {
+        NSDictionary *day = data[dayCounter];
+        Forecast *currentForecast = [[Forecast alloc] init];
+
+        if (day != nil && currentForecast != nil) {
+            currentForecast.date = [self mw_dateFromTime:day[KEY_TIME] withOffset:json[KEY_OFFSET]];
+
+            currentForecast.conditionTitle = day[KEY_SUMMARY];
+            currentForecast.conditionIcon = day[KEY_ICON];
+
+            currentForecast.temperature = [TemperatureNumber numberWithNumber:day[KEY_TEMPERATURE] withUnit:UnitTemperatureCelsius];
+            currentForecast.highTemperature = [TemperatureNumber numberWithNumber:day[KEY_TEMPERATURE_MAX] withUnit:UnitTemperatureCelsius];
+            currentForecast.lowTemperature = [TemperatureNumber numberWithNumber:day[KEY_TEMPERATURE_MIN] withUnit:UnitTemperatureCelsius];
+            currentForecast.windSpeed = [SpeedNumber numberWithNumber:day[KEY_WIND_SPEED] withUnit:UnitSpeedMeterSecond];
+            currentForecast.snow = [LengthNumber numberWithNumber:day[KEY_PRECIP_ACCUMULATION] withUnit:UnitLengthCentiMeter];
+            currentForecast.humidity = [PercentageNumber numberWithNumber:day[KEY_HUMIDITY] withUnit:UnitPercentageFactor];
+            currentForecast.precipitationChance = [PercentageNumber numberWithNumber:day[KEY_PRECIP_PROBABILITY] withUnit:UnitPercentageFactor];
+
+            [forecasts addObject:currentForecast];
         }
     }
-    
-    if (forecasts.count > 0) {
-        return [NSArray arrayWithArray:forecasts];
-    }
-    else {
-        return nil;
-    }
+
+    return forecasts;
 }
 
-+ (NSArray *)alerts:(NSDictionary *)json {
-    NSMutableArray *alerts = [NSMutableArray array];
++ (NSArray<Alert *> *)alerts:(NSDictionary *)json {
+    NSMutableArray<Alert *> *alerts = [NSMutableArray array];
     NSArray *data = json[KEY_ALERTS];
     
     if (data != nil) {
@@ -133,8 +127,8 @@
             Alert *currentAlert = [[Alert alloc] init];
             
             if (dataAlert != nil && currentAlert != nil) {
-                currentAlert.dateIssued = [self dateFromTime:dataAlert[KEY_TIME] withOffset:json[KEY_OFFSET]];
-                currentAlert.dateExpires = [self dateFromTime:dataAlert[KEY_EXPIRES] withOffset:json[KEY_OFFSET]];
+                currentAlert.dateIssued = [self mw_dateFromTime:dataAlert[KEY_TIME] withOffset:json[KEY_OFFSET]];
+                currentAlert.dateExpires = [self mw_dateFromTime:dataAlert[KEY_EXPIRES] withOffset:json[KEY_OFFSET]];
                 
                 currentAlert.title = dataAlert[KEY_TITLE];
                 currentAlert.text = dataAlert[KEY_DESCRIPTION];
@@ -145,14 +139,13 @@
     }
     
     if (alerts.count > 0) {
-        return [NSArray arrayWithArray:alerts];
-    }
-    else {
+        return alerts;
+    } else {
         return nil;
     }
 }
 
-+ (NSDate *)dateFromTime:(NSNumber *)number withOffset:(NSNumber *)offset {
++ (NSDate *)mw_dateFromTime:(NSNumber *)number withOffset:(NSNumber *)offset {
     NSDate *date = nil;
     if (number) {
         NSNumber *offsetseconds = nil;

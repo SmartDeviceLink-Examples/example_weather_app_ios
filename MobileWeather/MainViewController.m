@@ -5,6 +5,8 @@
 //  Copyright (c) 2013-2015 Ford Motor Company. All rights reserved.
 //
 
+@import WeatherLocationService;
+
 #import "MainViewController.h"
 
 #import "Notifications.h"
@@ -17,7 +19,6 @@
 #import "UnitConverter.h"
 #import "WeatherConditions.h"
 #import "WeatherLanguage.h"
-#import "WeatherLocation.h"
 
 
 @interface MainViewController ()

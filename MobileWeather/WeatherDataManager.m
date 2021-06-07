@@ -5,11 +5,12 @@
 //  Copyright (c) 2013-2015 Ford Motor Company. All rights reserved.
 //
 
+@import WeatherLocationService;
+
 #import "WeatherDataManager.h"
 
 #import "Notifications.h"
 #import "Settings.h"
-#import "WeatherLocation.h"
 #import "WeatherConditions.h"
 #import "WeatherLanguage.h"
 #import "Forecast.h"

@@ -31,24 +31,8 @@
     return self;
 }
 
-- (UIImage *)imageByName:(NSString *) imageName {
-    UIImage *imageReturned;
-
-    if (@available(iOS 13.0, *)) {
-        return imageReturned = [[UIImage systemImageNamed:[ImageProcessor systemImageFromAssetsImage:imageName]] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    } else {
-        return imageReturned = [[UIImage imageNamed:imageName] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    }
-}
-
 - (UIImage *)imageFromConditionImage:(NSString *)conditionImage {
-    UIImage *image;
-
-    if (@available(iOS 13.0, *)) {
-        image = [UIImage systemImageNamed:[self systemImageFromAssetsImage:conditionImage]];
-    } else {
-        image = [UIImage imageNamed:conditionImage];
-    }
+    UIImage *image = [UIImage systemImageNamed:[self mw_systemImageFromAssetsImage:conditionImage]];
 
     if (image == nil) {
         image = [UIImage imageNamed:@"unknown"];
@@ -64,47 +48,47 @@
     return data;
 }
 
-- (NSString *)systemImageFromAssetsImage:(NSString *) imageName {
+- (NSString *)mw_systemImageFromAssetsImage:(NSString *)imageName {
     NSString *newImageName = imageName;
-    if ([imageName isEqual:@"chancerain"]) {
+    if ([imageName isEqualToString:@"chancerain"]) {
         newImageName = @"cloud.drizzle";
-    } else if ([imageName isEqual:@"chancesnow"]) {
+    } else if ([imageName isEqualToString:@"chancesnow"]) {
         newImageName = @"cloud.snow";
-    } else if ([imageName isEqual:@"clear-day"]) {
+    } else if ([imageName isEqualToString:@"clear-day"]) {
         newImageName = @"sun.max";
-    } else if ([imageName isEqual:@"clear-night"]) {
+    } else if ([imageName isEqualToString:@"clear-night"]) {
         newImageName = @"moon";
-    } else if ([imageName isEqual:@"cloudy"]) {
+    } else if ([imageName isEqualToString:@"cloudy"]) {
         newImageName = @"smoke";
-    } else if ([imageName isEqual:@"flurries"]) {
+    } else if ([imageName isEqualToString:@"flurries"]) {
         newImageName = @"snow";
-    } else if ([imageName isEqual:@"fog"]) {
+    } else if ([imageName isEqualToString:@"fog"]) {
         newImageName = @"cloud.fog";
-    } else if ([imageName isEqual:@"hazy"]) {
+    } else if ([imageName isEqualToString:@"hazy"]) {
         newImageName = @"sun.haze";
-    } else if ([imageName isEqual:@"partly-cloudy-day"]) {
+    } else if ([imageName isEqualToString:@"partly-cloudy-day"]) {
         newImageName = @"cloud.sun";
-    } else if ([imageName isEqual:@"partly-cloudy-night"]) {
+    } else if ([imageName isEqualToString:@"partly-cloudy-night"]) {
         newImageName = @"cloud.moon";
-    } else if ([imageName isEqual:@"partlycloudy"]) {
+    } else if ([imageName isEqualToString:@"partlycloudy"]) {
         newImageName = @"cloud";
-    } else if ([imageName isEqual:@"partlysunny"]) {
+    } else if ([imageName isEqualToString:@"partlysunny"]) {
         newImageName = @"cloud.sun";
-    } else if ([imageName isEqual:@"rain"]) {
+    } else if ([imageName isEqualToString:@"rain"]) {
         newImageName = @"cloud.rain";
-    } else if ([imageName isEqual:@"sleet"]) {
+    } else if ([imageName isEqualToString:@"sleet"]) {
         newImageName = @"cloud.sleet";
-    } else if ([imageName isEqual:@"snow"]) {
+    } else if ([imageName isEqualToString:@"snow"]) {
         newImageName = @"cloud.snow";
-    } else if ([imageName isEqual:@"sunny"]) {
+    } else if ([imageName isEqualToString:@"sunny"]) {
         newImageName = @"sun.max";
-    } else if ([imageName isEqual:@"tstorms"]) {
+    } else if ([imageName isEqualToString:@"tstorms"]) {
         newImageName = @"cloud.bolt";
-    } else if ([imageName isEqual:@"menu-alert"]) {
+    } else if ([imageName isEqualToString:@"menu-alert"]) {
         newImageName = @"exclamationmark.triangle";
-    } else if ([imageName isEqual:@"menu-day"]) {
+    } else if ([imageName isEqualToString:@"menu-day"]) {
         newImageName = @"calendar";
-    } else if ([imageName isEqual:@"menu-time"]) {
+    } else if ([imageName isEqualToString:@"menu-time"]) {
         newImageName = @"clock";
     }
     return newImageName;

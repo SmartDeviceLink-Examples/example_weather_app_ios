@@ -11,8 +11,6 @@
 
 + (ImageProcessor *)sharedProcessor;
 
-- (UIImage *)imageByName:(NSString *) imageName;
-
 - (UIImage *)imageFromConditionImage:(NSString *)conditionImage;
 
 - (NSData *)dataFromConditionImage:(NSString *)conditionImage;

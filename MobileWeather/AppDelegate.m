@@ -5,8 +5,6 @@
 //  Copyright (c) 2013-2015 Ford Motor Company. All rights reserved.
 //
 
-@import WeatherLocationService;
-
 #import "AppDelegate.h"
 
 #import "NSUserDefaults+RegisterSettings.h"

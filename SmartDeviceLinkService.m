@@ -137,7 +137,7 @@ NS_ASSUME_NONNULL_BEGIN
     // check current HMI level of the app
     if ([SDLHMILevelFull isEqualToEnum:newLevel] && !self.hasFirstHMIFullOccurred) {
         self.firstHMIFullOccurred = YES;
-        // the app is just started by the user. Send everything needed to be done once
+        // The app is just started by the user. Send everything needed to be done once and start on the current weather screen
         [self sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES firstWindow:YES];
         [self sendDefaultGlobalProperties];
         [self preloadChangeUnitsChoices];
@@ -584,7 +584,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self setCurrentInfoTypeList:nil];
     self.currentInfoTypeListIndex = -1;
     
-    [self sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES firstWindow:NO];
+    [self sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:NO firstWindow:NO];
     [self sendDefaultGlobalProperties];
 
     self.manager.screenManager.menu = [self weatherMenuCells];

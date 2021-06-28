@@ -6,12 +6,13 @@
 //
 
 @import UIKit;
+#include "ImageSize.h"
 
 @interface ImageProcessor : NSObject
 
 + (ImageProcessor *)sharedProcessor;
 
-- (UIImage *)imageFromConditionImage:(NSString *)conditionImage;
+- (UIImage *)imageFromConditionImage:(NSString *)conditionImage imageSize:(ImageSize)imageSize;
 
 - (NSData *)dataFromConditionImage:(NSString *)conditionImage;
 

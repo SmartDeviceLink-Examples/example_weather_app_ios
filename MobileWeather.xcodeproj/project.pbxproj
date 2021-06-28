@@ -18,6 +18,7 @@
 		6E04EAC41CF4E55900115C2F /* Forecast.m in Sources */ = {isa = PBXBuildFile; fileRef = E48C4D9219FE7CAF00A90448 /* Forecast.m */; };
 		6EF1FC581CF5EF3F009BE8E9 /* SmartDeviceLinkService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EF1FC571CF5EF3F009BE8E9 /* SmartDeviceLinkService.m */; };
 		AA62726DBC705DF2AB93C537 /* Pods_MobileWeather.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5FAE7A71ACD04B5A73D580C /* Pods_MobileWeather.framework */; };
+		C9BE3596268A5B6D001D9EED /* ImageSize.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BE3595268A5B6D001D9EED /* ImageSize.m */; };
 		E4059D6219FF7D4800C9996D /* WeatherDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E4059D6119FF7D4800C9996D /* WeatherDataManager.m */; };
 		E4059D6519FF7DA900C9996D /* WeatherService.m in Sources */ = {isa = PBXBuildFile; fileRef = E4059D6419FF7DA900C9996D /* WeatherService.m */; };
 		E4059D6819FF8AF500C9996D /* DarkSkyService.m in Sources */ = {isa = PBXBuildFile; fileRef = E4059D6719FF8AF500C9996D /* DarkSkyService.m */; };
@@ -76,6 +77,8 @@
 		6EF1FC561CF5EF3F009BE8E9 /* SmartDeviceLinkService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartDeviceLinkService.h; sourceTree = "<group>"; };
 		6EF1FC571CF5EF3F009BE8E9 /* SmartDeviceLinkService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartDeviceLinkService.m; sourceTree = "<group>"; };
 		C407ED364EBBDDB306D541A8 /* Pods-MobileWeather.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWeather.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MobileWeather/Pods-MobileWeather.debug.xcconfig"; sourceTree = "<group>"; };
+		C9BE3594268A5B6D001D9EED /* ImageSize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageSize.h; sourceTree = "<group>"; };
+		C9BE3595268A5B6D001D9EED /* ImageSize.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageSize.m; sourceTree = "<group>"; };
 		E4059D6019FF7D4800C9996D /* WeatherDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherDataManager.h; sourceTree = "<group>"; };
 		E4059D6119FF7D4800C9996D /* WeatherDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherDataManager.m; sourceTree = "<group>"; };
 		E4059D6319FF7DA900C9996D /* WeatherService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherService.h; sourceTree = "<group>"; };
@@ -260,6 +263,8 @@
 				E4059D6119FF7D4800C9996D /* WeatherDataManager.m */,
 				E4C5B2DF1AEE24AC0056E934 /* WeatherLanguage.h */,
 				E4C5B2E01AEE24AC0056E934 /* WeatherLanguage.m */,
+				C9BE3594268A5B6D001D9EED /* ImageSize.h */,
+				C9BE3595268A5B6D001D9EED /* ImageSize.m */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -499,6 +504,7 @@
 				6E04EAC31CF4E52A00115C2F /* Localization.m in Sources */,
 				E4059D7A19FFC21500C9996D /* DarkSkyProcessor.m in Sources */,
 				E4059D6219FF7D4800C9996D /* WeatherDataManager.m in Sources */,
+				C9BE3596268A5B6D001D9EED /* ImageSize.m in Sources */,
 				E477F2611A8B79020028B59C /* PercentageNumber.m in Sources */,
 				E44F82451A7F86D20055AD77 /* RoadConditions.m in Sources */,
 				E48C4DA719FE840800A90448 /* ImageProcessor.m in Sources */,

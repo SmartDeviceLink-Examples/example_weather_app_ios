@@ -6,6 +6,7 @@
 //
 
 @import UIKit;
+@import SmartDeviceLink;
 #include "ImageSize.h"
 
 @interface ImageProcessor : NSObject
@@ -13,6 +14,8 @@
 + (ImageProcessor *)sharedProcessor;
 
 - (UIImage *)imageFromConditionImage:(NSString *)conditionImage imageSize:(ImageSize)imageSize;
+
+- (SDLArtwork *)artworkFromConditionImage:(NSString *)conditionImage imageSize:(ImageSize)imageSize;
 
 - (NSData *)dataFromConditionImage:(NSString *)conditionImage;
 

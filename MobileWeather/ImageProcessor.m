@@ -31,6 +31,10 @@
     return self;
 }
 
+- (SDLArtwork *)artworkFromConditionImage:(NSString *)conditionImage imageSize:(ImageSize)imageSize {
+    return [SDLArtwork artworkWithImage:[[self imageFromConditionImage:conditionImage imageSize:imageSize] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG];
+}
+
 - (UIImage *)imageFromConditionImage:(NSString *)conditionImage imageSize:(ImageSize)imageSize {
     UIImage *image = [UIImage systemImageNamed:[self mw_systemImageFromAssetsImage:conditionImage] withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:[ImageSizeHelper floatForImageSize:imageSize] weight:UIImageSymbolWeightBold]];
 

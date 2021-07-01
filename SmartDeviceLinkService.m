@@ -282,7 +282,7 @@ NS_ASSUME_NONNULL_BEGIN
         }
 
         NSString *precipitationChanceString = [NSString stringWithFormat:@"Precipitation chance: %@", [forecast.precipitationChance stringValueForUnit:UnitPercentageDefault shortened:YES localization:self.localization]];
-        SDLChoiceCell *cell = [[SDLChoiceCell alloc] initWithText:[dateFormatShow stringFromDate:forecast.date] secondaryText:precipitationChanceString tertiaryText:nil voiceCommands:[vrCommands copy] artwork:[SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon imageSize:[ImageSizeHelper floatForImageSize:ImageSizeSmall]] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil];
+        SDLChoiceCell *cell = [[SDLChoiceCell alloc] initWithText:[dateFormatShow stringFromDate:forecast.date] secondaryText:precipitationChanceString tertiaryText:nil voiceCommands:[vrCommands copy] artwork:[[ImageProcessor sharedProcessor] artworkFromConditionImage:forecast.conditionIcon imageSize:ImageSizeSmall] secondaryArtwork:nil];
         [choices addObject:cell];
     }
 
@@ -348,7 +348,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.manager.screenManager.textField3 = [conditions.precipitation stringValueForUnit:percentageType shortened:YES localization:self.localization];
     self.manager.screenManager.textField4 = [conditions.windSpeed stringValueForUnit:speedType shortened:YES localization:self.localization];
 
-    self.manager.screenManager.primaryGraphic = [SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:conditions.conditionIcon imageSize:[ImageSizeHelper floatForImageSize:ImageSizeLarge]] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] name:conditions.conditionIcon asImageFormat:SDLArtworkImageFormatPNG];
+    self.manager.screenManager.primaryGraphic = [[ImageProcessor sharedProcessor] artworkFromConditionImage:conditions.conditionIcon imageSize:ImageSizeLarge];
 
     [self.manager.screenManager endUpdatesWithCompletionHandler:nil];
 
@@ -439,7 +439,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self.manager.screenManager beginUpdates];
     self.manager.screenManager.softButtonObjects = [self buildListSoftButtons:infoType withIndex:index maxCount:forecasts.count];
 
-    self.manager.screenManager.primaryGraphic = [SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon imageSize:[ImageSizeHelper floatForImageSize:ImageSizeLarge]] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG];
+    self.manager.screenManager.primaryGraphic = [[ImageProcessor sharedProcessor] artworkFromConditionImage:forecast.conditionIcon imageSize:ImageSizeLarge];
     
     if (isHourlyForecast) {
         self.manager.screenManager.textField1 = [self.localization stringForKey:@"forecast.hourly.show.field1", dateTimeStringShow, conditionTitleShow];

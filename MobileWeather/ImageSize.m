@@ -8,5 +8,14 @@
 
 #import "ImageSize.h"
 
-ImageSize const ImageSizeLargeGraphic_256 = 256;
-ImageSize const ImageSizeSmallGraphic_64 = 64;
+@implementation ImageSizeHelper
+
++ (CGFloat)floatForImageSize:(ImageSize)imageSize {
+    if (imageSize == ImageSizeLarge) {
+        return 256;
+    } else {
+        return 64;
+    }
+}
+
+@end

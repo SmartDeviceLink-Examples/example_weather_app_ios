@@ -8,11 +8,13 @@
 
 @import UIKit;
 
-NS_ASSUME_NONNULL_BEGIN
+typedef NS_ENUM(NSUInteger, ImageSize) {
+    ImageSizeLarge,
+    ImageSizeSmall
+};
 
-typedef CGFloat ImageSize;
+@interface ImageSizeHelper : NSObject
 
-extern ImageSize const ImageSizeLargeGraphic_256;
-extern ImageSize const ImageSizeSmallGraphic_64;
++ (CGFloat)floatForImageSize:(ImageSize)imageSize;
 
-NS_ASSUME_NONNULL_END
+@end

@@ -32,7 +32,7 @@
 }
 
 - (UIImage *)imageFromConditionImage:(NSString *)conditionImage imageSize:(ImageSize)imageSize {
-    UIImage *image = [UIImage systemImageNamed:[self mw_systemImageFromAssetsImage:conditionImage] withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:imageSize weight:UIImageSymbolWeightBold]];
+    UIImage *image = [UIImage systemImageNamed:[self mw_systemImageFromAssetsImage:conditionImage] withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:[ImageSizeHelper floatForImageSize:imageSize] weight:UIImageSymbolWeightBold]];
 
     if (image == nil) {
         image = [UIImage imageNamed:@"unknown"];
@@ -42,7 +42,7 @@
 }
 
 - (NSData *)dataFromConditionImage:(NSString *)conditionImage {
-    UIImage *image = [self imageFromConditionImage:conditionImage imageSize:ImageSizeSmallGraphic_64];
+    UIImage *image = [self imageFromConditionImage:conditionImage imageSize:ImageSizeSmall];
     NSData *data = UIImagePNGRepresentation(image);
     
     return data;

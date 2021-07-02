@@ -680,7 +680,7 @@
 				INFOPLIST_FILE = MobileWeather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.5.2;
+				MARKETING_VERSION = 5.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sdl.sdlweather;
 				PRODUCT_NAME = "SDL Weather";
 				PROVISIONING_PROFILE = "";
@@ -703,7 +703,7 @@
 				INFOPLIST_FILE = MobileWeather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.5.2;
+				MARKETING_VERSION = 5.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sdl.sdlweather;
 				PRODUCT_NAME = "SDL Weather";
 				PROVISIONING_PROFILE = "";

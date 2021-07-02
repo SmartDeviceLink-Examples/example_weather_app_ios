@@ -1,9 +1,9 @@
 PODS:
-  - BiSON (1.2.2)
-  - SmartDeviceLink (7.1.1):
+  - BiSON (1.2.5)
+  - SmartDeviceLink (7.2.0):
     - BiSON (~> 1.2)
-    - SmartDeviceLink/Default (= 7.1.1)
-  - SmartDeviceLink/Default (7.1.1):
+    - SmartDeviceLink/Default (= 7.2.0)
+  - SmartDeviceLink/Default (7.2.0):
     - BiSON (~> 1.2)
 
 DEPENDENCIES:
@@ -15,8 +15,8 @@ SPEC REPOS:
     - SmartDeviceLink
 
 SPEC CHECKSUMS:
-  BiSON: efb26805ec99f4ad516b77e9a32ced05f1c0985d
-  SmartDeviceLink: 9f00196ee6b4fc2f9bd2e8321de2b47a1258109e
+  BiSON: 232dc4fdbe825301742963f27a78f10f13bca68b
+  SmartDeviceLink: 9fa89b2d7eff9f7abe7e40fe609f57b06f8b73da
 
 PODFILE CHECKSUM: 6458ae1192665bc1781ad13cb2576fa31d74fc25
 

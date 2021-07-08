@@ -15,7 +15,7 @@
 
 - (UIImage *)imageFromConditionImage:(NSString *)conditionImage imageSize:(ImageSize)imageSize;
 
-- (SDLArtwork *)artworkFromConditionImage:(NSString *)conditionImage imageSize:(ImageSize)imageSize;
+- (SDLArtwork *)artworkFromConditionImage:(NSString *)conditionImage imageSize:(ImageSize)imageSize isPersistent:(BOOL)isPersistent isTemplate:(BOOL)isTemplate;
 
 - (NSData *)dataFromConditionImage:(NSString *)conditionImage;
 

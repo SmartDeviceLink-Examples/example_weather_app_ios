@@ -254,12 +254,14 @@ NS_ASSUME_NONNULL_BEGIN
     dateFormatShow.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
     dateFormatShow.locale = self.localization.locale;
 
+    NSRelativeDateTimeFormatter *hourlyDateFormatShow = [[NSRelativeDateTimeFormatter alloc] init];
+    [hourlyDateFormatShow setUnitsStyle:NSRelativeDateTimeFormatterUnitsStyleShort];
+
     NSDateFormatter *dateFormatSpeak = [[NSDateFormatter alloc] init];
     dateFormatSpeak.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
     dateFormatSpeak.locale = self.localization.locale;
 
     if (isHourlyForecast) {
-        dateFormatShow.dateFormat = self.localization[@"forecast.hourly.choice.show"];
         dateFormatSpeak.dateFormat = self.localization[@"forecast.hourly.choice.speak"];
     } else {
         dateFormatShow.dateFormat = self.localization[@"forecast.daily.choice.show"];
@@ -282,7 +284,9 @@ NS_ASSUME_NONNULL_BEGIN
         }
 
         NSString *precipitationChanceString = [NSString stringWithFormat:@"Precipitation chance: %@", [forecast.precipitationChance stringValueForUnit:UnitPercentageDefault shortened:YES localization:self.localization]];
-        SDLChoiceCell *cell = [[SDLChoiceCell alloc] initWithText:[dateFormatShow stringFromDate:forecast.date] secondaryText:precipitationChanceString tertiaryText:nil voiceCommands:[vrCommands copy] artwork:[SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil];
+        NSString *dateString = isHourlyForecast ? [hourlyDateFormatShow localizedStringForDate:forecast.date relativeToDate:[[NSDate alloc] init]] : [dateFormatShow stringFromDate:forecast.date];
+
+        SDLChoiceCell *cell = [[SDLChoiceCell alloc] initWithText:dateString secondaryText:precipitationChanceString tertiaryText:nil voiceCommands:[vrCommands copy] artwork:[SDLArtwork artworkWithImage:[[[ImageProcessor sharedProcessor] imageFromConditionImage:forecast.conditionIcon] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] asImageFormat:SDLArtworkImageFormatPNG] secondaryArtwork:nil];
         [choices addObject:cell];
     }
 
@@ -449,8 +453,8 @@ NS_ASSUME_NONNULL_BEGIN
         self.manager.screenManager.textField2Type = SDLMetadataTypeMinimumTemperature;
 
         self.manager.screenManager.textField3 = [forecast.lowTemperature stringValueForUnit:temperatureType shortened:YES localization:self.localization];
-        self.manager.screenManager.textField3Type = SDLMetadataTypeMaximumTemperature
-        ;
+        self.manager.screenManager.textField3Type = SDLMetadataTypeMaximumTemperature;
+
         self.manager.screenManager.textField4 = [forecast.precipitationChance stringValueForUnit:percentageType shortened:YES localization:self.localization];
     }
 

@@ -78,8 +78,8 @@ NS_ASSUME_NONNULL_BEGIN
     self.localization = [Localization defaultLocalization];
     
     // Change which config you need based on if you want to connect to a TDK (default) or a wifi based emulator (debug)
-//    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration defaultConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107"];
-    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration debugConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107" ipAddress:@"192.168.45.2" port:12345];
+    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration defaultConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107"];
+//    SDLLifecycleConfiguration *lifecycleConfig = [SDLLifecycleConfiguration debugConfigurationWithAppName:@"MobileWeather" fullAppId:@"330533107" ipAddress:@"192.168.45.2" port:12345];
     lifecycleConfig.ttsName = [SDLTTSChunk textChunksFromString:NSLocalizedString(@"app.tts-name", nil)];
     lifecycleConfig.voiceRecognitionCommandNames = @[NSLocalizedString(@"app.vr-synonym", nil)];
     lifecycleConfig.appIcon = [SDLArtwork persistentArtworkWithImage:[UIImage imageNamed:@"sdl-appicon"] name:@"AppIcon" asImageFormat:SDLArtworkImageFormatPNG];
@@ -605,7 +605,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray<SDLSoftButtonObject *> *)buildDefaultSoftButtons {
     __weak typeof(self) weakSelf = self;
-    SDLSoftButtonState *currentWeatherState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.current"] artwork:[[ImageProcessor sharedProcessor] artworkFromConditionImage:@"clear-day" imageSize:ImageSizeSmall isPersistent:NO isTemplate:YES]];
+    SDLSoftButtonState *currentWeatherState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.current"] artwork:[[ImageProcessor sharedProcessor] artworkFromConditionImage:@"clear-day" imageSize:ImageSizeSmall isPersistent:YES isTemplate:YES]];
     SDLSoftButtonObject *currentWeatherObject = [[SDLSoftButtonObject alloc] initWithName:@"CurrentWeather" state:currentWeatherState handler:^(SDLOnButtonPress * _Nullable buttonPress, SDLOnButtonEvent * _Nullable buttonEvent) {
         if (!buttonPress) {
             return;
@@ -614,7 +614,7 @@ NS_ASSUME_NONNULL_BEGIN
         [weakSelf sendWeatherConditions:[WeatherDataManager sharedManager].weatherConditions withSpeak:YES firstWindow:NO];
     }];
 
-    SDLSoftButtonState *dailyForecastState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.daily"] artwork:[[ImageProcessor sharedProcessor] artworkFromConditionImage:@"menu-day" imageSize:ImageSizeSmall isPersistent:NO isTemplate:YES]];
+    SDLSoftButtonState *dailyForecastState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.daily"] artwork:[[ImageProcessor sharedProcessor] artworkFromConditionImage:@"menu-day" imageSize:ImageSizeSmall isPersistent:YES isTemplate:YES]];
     SDLSoftButtonObject *dailyForecastObject = [[SDLSoftButtonObject alloc] initWithName:@"DailyForecast" state:dailyForecastState handler:^(SDLOnButtonPress * _Nullable buttonPress, SDLOnButtonEvent * _Nullable buttonEvent) {
         if (!buttonPress) {
             return;
@@ -623,7 +623,7 @@ NS_ASSUME_NONNULL_BEGIN
         [weakSelf sendForecastList:[WeatherDataManager sharedManager].dailyForecast infoType:MWInfoTypeDailyForecast withSpeak:YES];
     }];
 
-    SDLSoftButtonState *hourlyForecastState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.hourly"] artwork:[[ImageProcessor sharedProcessor] artworkFromConditionImage:@"menu-time" imageSize:ImageSizeSmall isPersistent:NO isTemplate:YES]];
+    SDLSoftButtonState *hourlyForecastState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.hourly"] artwork:[[ImageProcessor sharedProcessor] artworkFromConditionImage:@"menu-time" imageSize:ImageSizeSmall isPersistent:YES isTemplate:YES]];
     SDLSoftButtonObject *hourlyForecastObject = [[SDLSoftButtonObject alloc] initWithName:@"HourlyForecast" state:hourlyForecastState handler:^(SDLOnButtonPress * _Nullable buttonPress, SDLOnButtonEvent * _Nullable buttonEvent) {
         if (!buttonPress) {
             return;
@@ -632,7 +632,7 @@ NS_ASSUME_NONNULL_BEGIN
         [weakSelf sendForecastList:[WeatherDataManager sharedManager].hourlyForecast infoType:MWInfoTypeHourlyForecast withSpeak:YES];
     }];
 
-    SDLSoftButtonState *alertsState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.alerts"] artwork:[[ImageProcessor sharedProcessor] artworkFromConditionImage:@"menu-alert" imageSize:ImageSizeSmall isPersistent:NO isTemplate:YES]];
+    SDLSoftButtonState *alertsState = [[SDLSoftButtonState alloc] initWithStateName:@"state" text:self.localization[@"sb.alerts"] artwork:[[ImageProcessor sharedProcessor] artworkFromConditionImage:@"menu-alert" imageSize:ImageSizeSmall isPersistent:YES isTemplate:YES]];
     SDLSoftButtonObject *alertsObject = [[SDLSoftButtonObject alloc] initWithName:@"Alerts" state:alertsState handler:^(SDLOnButtonPress * _Nullable buttonPress, SDLOnButtonEvent * _Nullable buttonEvent) {
         if (!buttonPress) {
             return;

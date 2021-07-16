@@ -105,7 +105,7 @@
 
     self.statusLabel.text = status;
     self.currentConditionsLabel.text = conditions.conditionTitle;
-    self.conditionIcon.image = [[ImageProcessor sharedProcessor] imageFromConditionImage:conditions.conditionIcon imageSize:[ImageSizeHelper floatForImageSize:ImageSizeLarge]];
+    self.conditionIcon.image = [[ImageProcessor sharedProcessor] imageFromConditionImage:conditions.conditionIcon imageSize:[ImageSizeHelper floatForImageSize:ImageSizeSmall]];
     self.precipitationChanceLabel.text = [conditions.precipitation stringValueForUnit:UnitPercentageDefault shortened:YES];
     
     if ([WeatherDataManager sharedManager].unit == UnitTypeImperial) {

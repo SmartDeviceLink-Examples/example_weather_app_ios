@@ -41,11 +41,9 @@
     return image;
 }
 
-- (SDLArtwork *)artworkFromConditionImage:(NSString *)conditionImage imageSize:(ImageSize)imageSize isPersistent:(BOOL)isPersistent isTemplate:(BOOL)isTemplate {
-    SDLArtwork *artwork;
-    artwork = [[SDLArtwork alloc] initWithImage:[[self imageFromConditionImage:conditionImage imageSize:imageSize] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:isPersistent asImageFormat:SDLArtworkImageFormatPNG];
-
-    return artwork;
+- (SDLArtwork *)artworkFromConditionImage:(NSString *)conditionImage imageSize:(ImageSize)imageSize isPersistent:(BOOL)isPersistent {
+    
+    return [[SDLArtwork alloc] initWithImage:[[self imageFromConditionImage:conditionImage imageSize:imageSize] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:isPersistent asImageFormat:SDLArtworkImageFormatPNG];
 }
 
 - (NSData *)dataFromConditionImage:(NSString *)conditionImage {

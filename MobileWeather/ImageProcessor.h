@@ -17,6 +17,4 @@
 
 - (SDLArtwork *)artworkFromConditionImage:(NSString *)conditionImage imageSize:(ImageSize)imageSize isPersistent:(BOOL)isPersistent;
 
-- (NSData *)dataFromConditionImage:(NSString *)conditionImage;
-
 @end

@@ -42,15 +42,7 @@
 }
 
 - (SDLArtwork *)artworkFromConditionImage:(NSString *)conditionImage imageSize:(ImageSize)imageSize isPersistent:(BOOL)isPersistent {
-    
     return [[SDLArtwork alloc] initWithImage:[[self imageFromConditionImage:conditionImage imageSize:imageSize] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] persistent:isPersistent asImageFormat:SDLArtworkImageFormatPNG];
-}
-
-- (NSData *)dataFromConditionImage:(NSString *)conditionImage {
-    UIImage *image = [self imageFromConditionImage:conditionImage imageSize:ImageSizeSmall];
-    NSData *data = UIImagePNGRepresentation(image);
-    
-    return data;
 }
 
 - (NSString *)mw_systemImageFromAssetsImage:(NSString *)imageName {

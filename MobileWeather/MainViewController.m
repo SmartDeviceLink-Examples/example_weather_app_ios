@@ -48,8 +48,6 @@
     
     self.versionLabel.text = [NSString stringWithFormat:@"%@ (%@)", bundleAppVersion, bundleBuildVersion];
 
-    self.conditionIcon.contentMode = UIViewContentModeScaleAspectFill;
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleLocationUpdate:) name:MobileWeatherLocationUpdateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleWeatherUpdate:) name:MobileWeatherDataUpdatedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleUnitUpdate:) name:MobileWeatherUnitChangedNotification object:nil];

@@ -36,7 +36,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4Rn-Et-Srh" userLabel="Image View - Conditions Icon">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4Rn-Et-Srh" userLabel="Image View - Conditions Icon">
                                 <rect key="frame" x="131.5" y="137.5" width="112.5" height="112.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="4Rn-Et-Srh" secondAttribute="height" multiplier="1:1" id="zf8-jn-XDS"/>

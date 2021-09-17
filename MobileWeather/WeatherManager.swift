@@ -8,10 +8,6 @@
 
 import Foundation
 
-enum UnitSettings {
-    case imperial, metric
-}
-
 extension Notification.Name {
     static let weatherDataUpdate = Notification.Name(rawValue: "MobileWeatherDataUpdatedNotification")
 }
@@ -19,9 +15,9 @@ extension Notification.Name {
 class WeatherManager {
     static let shared = WeatherManager()
 
-    var units: UnitSettings
+    var units: Preferences.Values.Units
     var currentLocation: WeatherLocation
-    var conditions: WeatherConditions
+    var conditions: WeatherCurrentConditions
     var dailyForecast: [Forecast]
     var hourlyForecast: [Forecast]
     var alerts: [WeatherAlert]
@@ -29,20 +25,30 @@ class WeatherManager {
     init() {
         NotificationCenter.default.addObserver(self, selector: #selector(locationDidUpdate(_:)), name: .weatherLocationUpdate, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(weatherDataDidUpdate(_:)), name: .weatherDataUpdate, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(userDefaultsDidChange(_:)), name: UserDefaults.didChangeNotification, object: nil)
+        // TODO: KVO units preference
+//        NotificationCenter.default.addObserver(self, selector: #selector(userDefaultsDidChange(_:)), name: UserDefaults.didChangeNotification, object: nil)
     }
 }
 
 extension WeatherManager {
     @objc private func locationDidUpdate(_ notification: Notification) {
-
+        if let location = notification.userInfo?["location"] as? WeatherLocation {
+            self.currentLocation = location
+        }
     }
 
     @objc private func weatherDataDidUpdate(_ notification: Notification) {
-
-    }
-
-    @objc private func userDefaultsDidChange(_ notification: Notification) {
-
+        if let conditions = notification.userInfo?["weatherConditions"] as? WeatherCurrentConditions {
+            self.conditions = conditions
+        }
+        if let dailyForecast = notification.userInfo?["dailyForecast"] as? [Forecast] {
+            self.dailyForecast = dailyForecast
+        }
+        if let hourlyForecast = notification.userInfo?["hourlyForecast"] as? [Forecast] {
+            self.hourlyForecast = hourlyForecast
+        }
+        if let alerts = notification.userInfo?["alerts"] as? [WeatherAlert] {
+            self.alerts = alerts
+        }
     }
 }

@@ -8,10 +8,11 @@
 
 import Foundation
 
-struct WeatherAlert: Equatable {
-    let alertType: WeatherAlertType
-    let title: String
-    let text: String
-    let dateIssued: Date
-    let dateExpires: Date
+struct WeatherAlert: Equatable, Decodable {
+    let tags: [String]
+    let senderName: String
+    let event: String
+    let description: String
+    let start: Date
+    let end: Date
 }

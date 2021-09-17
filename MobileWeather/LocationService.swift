@@ -50,7 +50,7 @@ extension LocationService: CLLocationManagerDelegate {
         case .denied: fallthrough
         case .restricted: fallthrough
         default:
-            // TODO: Something to displayed that location isn't allowed
+            // TODO: Something to display that location isn't allowed
             break;
         }
     }

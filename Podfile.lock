@@ -1,13 +1,13 @@
 PODS:
-  - BiSON (1.2.2)
-  - SmartDeviceLink (7.1.1):
+  - BiSON (1.2.5)
+  - SmartDeviceLink/Default (7.2.0):
     - BiSON (~> 1.2)
-    - SmartDeviceLink/Default (= 7.1.1)
-  - SmartDeviceLink/Default (7.1.1):
+  - SmartDeviceLink/Swift (7.2.0):
     - BiSON (~> 1.2)
+    - SmartDeviceLink/Default
 
 DEPENDENCIES:
-  - SmartDeviceLink (from `https://github.com/smartdevicelink/sdl_ios.git`, branch `bugfix/issue-1999-sdlpredefinedlayoutnonmedia-not-found-in-templatesavailable`)
+  - SmartDeviceLink/Swift (from `https://github.com/smartdevicelink/sdl_ios.git`, branch `develop`)
 
 SPEC REPOS:
   trunk:
@@ -15,18 +15,18 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   SmartDeviceLink:
-    :branch: bugfix/issue-1999-sdlpredefinedlayoutnonmedia-not-found-in-templatesavailable
+    :branch: develop
     :git: https://github.com/smartdevicelink/sdl_ios.git
 
 CHECKOUT OPTIONS:
   SmartDeviceLink:
-    :commit: c8df8bb2171c488a00b221eb36464a899726a63e
+    :commit: 55c1e7c39df81c7de1f366952cdbbb0146f188c1
     :git: https://github.com/smartdevicelink/sdl_ios.git
 
 SPEC CHECKSUMS:
-  BiSON: efb26805ec99f4ad516b77e9a32ced05f1c0985d
-  SmartDeviceLink: 9f00196ee6b4fc2f9bd2e8321de2b47a1258109e
+  BiSON: 232dc4fdbe825301742963f27a78f10f13bca68b
+  SmartDeviceLink: 9fa89b2d7eff9f7abe7e40fe609f57b06f8b73da
 
-PODFILE CHECKSUM: 47c01de33e7378e5db5fa59d7c66969b5dcbaa71
+PODFILE CHECKSUM: dea0280dd05ade1f2fcd86af74a7024bfa153811
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2

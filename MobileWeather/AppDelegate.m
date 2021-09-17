@@ -22,6 +22,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Register every setting of the settings bundle and set it to its default value if it does not have any value set.
+//    [[Preferences shared] registerDefaultValues]; // TODO
     [[NSUserDefaults standardUserDefaults] registerDefaultsFromSettingsBundle];
     
     self.mainViewController = self.window.rootViewController;

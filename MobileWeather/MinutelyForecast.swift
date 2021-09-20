@@ -1,5 +1,5 @@
 //
-//  WeatherMinutelyData.swift
+//  MinutelyForecast.swift
 //  MobileWeather
 //
 //  Created by Joel Fischer on 9/17/21.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct WeatherMinutelyData: Decodable {
+struct MinutelyForecast: Decodable {
     let date: Date
     let precipitationVolume: Measurement<UnitVolume>
 

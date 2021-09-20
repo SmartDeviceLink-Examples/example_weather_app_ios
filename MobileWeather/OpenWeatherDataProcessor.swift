@@ -9,7 +9,7 @@
 import Foundation
 
 class OpenWeatherDataProcessor {
-    static func weatherConditions(from json: [String : AnyObject]) -> WeatherCurrentConditions {
+    static func weatherConditions(from json: [String : AnyObject]) -> CurrentForecast {
         <#code#>
     }
 }

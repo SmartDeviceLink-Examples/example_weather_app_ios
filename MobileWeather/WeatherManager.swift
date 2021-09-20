@@ -16,11 +16,7 @@ class WeatherManager {
     static let shared = WeatherManager()
 
     var units: Preferences.Values.Units
-    var currentLocation: WeatherLocation
-    var conditions: WeatherCurrentConditions
-    var dailyForecast: [Forecast]
-    var hourlyForecast: [Forecast]
-    var alerts: [WeatherAlert]
+    var weatherData: [WeatherData]?
 
     init() {
         NotificationCenter.default.addObserver(self, selector: #selector(locationDidUpdate(_:)), name: .weatherLocationUpdate, object: nil)
@@ -38,7 +34,7 @@ extension WeatherManager {
     }
 
     @objc private func weatherDataDidUpdate(_ notification: Notification) {
-        if let conditions = notification.userInfo?["weatherConditions"] as? WeatherCurrentConditions {
+        if let conditions = notification.userInfo?["weatherConditions"] as? CurrentForecast {
             self.conditions = conditions
         }
         if let dailyForecast = notification.userInfo?["dailyForecast"] as? [Forecast] {

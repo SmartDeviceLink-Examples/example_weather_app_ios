@@ -24,12 +24,19 @@ class OpenWeatherService: NSObject {
 
         currentURLTask = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
             if let error = error {
-//                SDLLog.e("Error retrieving weather data: \(error)")
+                SDLLog.e("Error retrieving weather data: \(error)")
                 return
+            } else if let data = data {
+                do {
+                    let weatherData = try JSONDecoder().decode(WeatherData.self, from: data)
+                    SDLLog.d("Downloaded new weather data: \(weatherData)")
+                    NotificationCenter.default.post(name: .weatherDataUpdate, object: self, userInfo: ["data": weatherData])
+                } catch {
+                    fatalError("Unable to decode weather data: \(error)")
+                }
             }
-
-            let jsonData = 
         })
+        currentURLTask?.resume()
     }
 }
 

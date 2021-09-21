@@ -37,7 +37,7 @@ struct HourlyForecast: Decodable {
         rainAmount = Measurement(value: try rainValues.decode(Double.self, forKey: .lastHour), unit: UnitLength.millimeters)
 
         let snowValues = try values.nestedContainer(keyedBy: PrecipitationCodingKeys.self, forKey: .snowInfo)
-        rainAmount = Measurement(value: try snowValues.decode(Double.self, forKey: .lastHour), unit: UnitLength.millimeters)
+        snowAmount = Measurement(value: try snowValues.decode(Double.self, forKey: .lastHour), unit: UnitLength.millimeters)
 
         let weatherInfoValues = try values.nestedContainer(keyedBy: WeatherInfoCodingKeys.self, forKey: .weatherInfo)
         conditionDescription = try weatherInfoValues.decode(String.self, forKey: .conditionDescription)

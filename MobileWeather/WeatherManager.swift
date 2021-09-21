@@ -7,16 +7,17 @@
 //
 
 import Foundation
+import CoreLocation
 
 extension Notification.Name {
     static let weatherDataUpdate = Notification.Name(rawValue: "MobileWeatherDataUpdatedNotification")
 }
 
-class WeatherManager {
+class WeatherManager: ObservableObject {
     static let shared = WeatherManager()
 
-    var units: Preferences.Values.Units
-    var weatherData: [WeatherData]?
+    @Published var currentLocation: WeatherLocation?
+    @Published var weatherData: WeatherData?
 
     init() {
         NotificationCenter.default.addObserver(self, selector: #selector(locationDidUpdate(_:)), name: .weatherLocationUpdate, object: nil)
@@ -34,17 +35,8 @@ extension WeatherManager {
     }
 
     @objc private func weatherDataDidUpdate(_ notification: Notification) {
-        if let conditions = notification.userInfo?["weatherConditions"] as? CurrentForecast {
-            self.conditions = conditions
-        }
-        if let dailyForecast = notification.userInfo?["dailyForecast"] as? [Forecast] {
-            self.dailyForecast = dailyForecast
-        }
-        if let hourlyForecast = notification.userInfo?["hourlyForecast"] as? [Forecast] {
-            self.hourlyForecast = hourlyForecast
-        }
-        if let alerts = notification.userInfo?["alerts"] as? [WeatherAlert] {
-            self.alerts = alerts
+        if let data = notification.userInfo?["data"] as? WeatherData {
+            self.weatherData = data
         }
     }
 }

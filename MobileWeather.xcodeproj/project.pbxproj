@@ -52,8 +52,6 @@
 		1E555E3118466B6500B143B4 /* SDL Weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SDL Weather.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E555E3418466B6500B143B4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1E555E3818466B6500B143B4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		1E555E4918466B6500B143B4 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
-		1E555E4A18466B6500B143B4 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		4A491113266E4F8800A2E06D /* WeatherLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherLocation.swift; sourceTree = "<group>"; };
 		4A491115266E4FE700A2E06D /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		4A49112D266E68D300A2E06D /* CurrentForecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentForecast.swift; sourceTree = "<group>"; };
@@ -74,6 +72,7 @@
 		4A8DF85D26FA457500B46E2A /* WeatherAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAlertView.swift; sourceTree = "<group>"; };
 		4A8DF85F26FA487400B46E2A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4A8DF86126FA58A500B46E2A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		4ADBD20026FD13AF00ABB045 /* weather-api-response.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = "weather-api-response.json"; path = "Development Assets/weather-api-response.json"; sourceTree = "<group>"; };
 		56FBAA80C3ED8E16429896CD /* Pods-MobileWeather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWeather.release.xcconfig"; path = "Pods/Target Support Files/Pods-MobileWeather/Pods-MobileWeather.release.xcconfig"; sourceTree = "<group>"; };
 		5DB7EDC81D89CC2C00B62BB7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = MobileWeather/Settings.bundle; sourceTree = SOURCE_ROOT; };
 		5DB7EDCA1D89CC3800B62BB7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MobileWeather/Images.xcassets; sourceTree = SOURCE_ROOT; };
@@ -207,6 +206,14 @@
 			name = "Sub-Data";
 			sourceTree = "<group>";
 		};
+		4ADBD1FF26FD138F00ABB045 /* Development Assets */ = {
+			isa = PBXGroup;
+			children = (
+				4ADBD20026FD13AF00ABB045 /* weather-api-response.json */,
+			);
+			name = "Development Assets";
+			sourceTree = "<group>";
+		};
 		5DB7EDC71D89CC0C00B62BB7 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -218,6 +225,7 @@
 		5DC0B72B2182466A00E1B317 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4ADBD1FF26FD138F00ABB045 /* Development Assets */,
 				5DB7EDCA1D89CC3800B62BB7 /* Images.xcassets */,
 				5DB7EDC81D89CC2C00B62BB7 /* Settings.bundle */,
 				E427582E1A0B75C000AA42B1 /* Info.plist */,
@@ -266,8 +274,6 @@
 		E491A70219F7C60500F82A4D /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				1E555E4918466B6500B143B4 /* MainViewController.h */,
-				1E555E4A18466B6500B143B4 /* MainViewController.m */,
 				4A8DF85526FA377C00B46E2A /* WeatherView.swift */,
 				4A8DF86326FA593200B46E2A /* Weather SubViews */,
 				4A8DF85F26FA487400B46E2A /* SettingsView.swift */,
@@ -536,6 +542,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "MobileWeather/Development\\ Assets/weather-api-response.json";
 				DEVELOPMENT_TEAM = NCVC2MHU7M;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = MobileWeather/Info.plist;
@@ -562,6 +569,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "MobileWeather/Development\\ Assets/weather-api-response.json";
 				DEVELOPMENT_TEAM = NCVC2MHU7M;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = MobileWeather/Info.plist;

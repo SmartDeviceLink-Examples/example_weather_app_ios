@@ -9,14 +9,14 @@
 import SwiftUI
 
 struct WeatherView: View {
-    @EnvironmentObject var weatherData: WeatherManager
+    @EnvironmentObject var weatherManager: WeatherManager
 
     var body: some View {
         ScrollView {
             VStack(alignment: .center, spacing: 12) {
-                CurrentConditionsView()
-                HourlyConditionsView()
-                DailyConditionsView()
+                CurrentConditionsView(currentForecast: weatherManager.weatherData?.current)
+                HourlyConditionsView(hourlyForecast: weatherManager.weatherData?.hourly)
+                DailyConditionsView(dailyForecast: weatherManager.weatherData?.daily)
             }
         }
     }

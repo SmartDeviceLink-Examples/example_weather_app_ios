@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct CurrentConditionsView: View {
+    @State var currentForecast: CurrentForecast?
+
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
@@ -16,6 +18,10 @@ struct CurrentConditionsView: View {
 
 struct CurrentConditionsView_Previews: PreviewProvider {
     static var previews: some View {
-        CurrentConditionsView()
+        let json = Bundle.main.url(forResource: "weather-api-response", withExtension: "json")!
+        let jsonData = try! Data(contentsOf: json)
+        let data = try! JSONDecoder().decode(WeatherData.self, from: jsonData)
+
+        CurrentConditionsView(currentForecast: data.current)
     }
 }

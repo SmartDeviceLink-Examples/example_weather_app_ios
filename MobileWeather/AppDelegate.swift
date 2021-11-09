@@ -17,6 +17,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         Preferences.shared.registerDefaults()
 
+        let json = Bundle.main.url(forResource: "weather-api-response", withExtension: "json")!
+        let jsonData = try! Data(contentsOf: json)
+        let data = try! JSONDecoder().decode(WeatherData.self, from: jsonData)
+
         return true
     }
 }

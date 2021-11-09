@@ -17,9 +17,9 @@ struct CurrentForecast: Decodable {
     let uvIndex: Double
     let visibility: Measurement<UnitLength>
     let windSpeed: Measurement<UnitSpeed>
-    let windGust: Measurement<UnitSpeed>
-    let conditionDescription: String
-    let conditionIconName: String
+    let windGust: Measurement<UnitSpeed>?
+    let conditionDescriptions: [String]
+    let conditionIconNames: [String]
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -31,11 +31,23 @@ struct CurrentForecast: Decodable {
         uvIndex = try values.decode(Double.self, forKey: .uvIndex)
         visibility = Measurement(value: try values.decode(Double.self, forKey: .visibility), unit: UnitLength.meters)
         windSpeed = Measurement(value: try values.decode(Double.self, forKey: .windSpeed), unit: UnitSpeed.metersPerSecond)
-        windGust = Measurement(value: try values.decode(Double.self, forKey: .windGust), unit: UnitSpeed.metersPerSecond)
 
-        let weatherInfoValues = try values.nestedContainer(keyedBy: WeatherInfoCodingKeys.self, forKey: .weatherInfo)
-        conditionDescription = try weatherInfoValues.decode(String.self, forKey: .conditionDescription)
-        conditionIconName = try weatherInfoValues.decode(String.self, forKey: .icon)
+        if let gustRawValue = try values.decodeIfPresent(Double.self, forKey: .windGust) {
+            windGust = Measurement(value: gustRawValue, unit: UnitSpeed.metersPerSecond)
+        } else {
+            windGust = nil
+        }
+
+        var weatherValues = try values.nestedUnkeyedContainer(forKey: .weatherInfo)
+        var tempDescriptions = [String]()
+        var tempIconNames = [String]()
+        while !weatherValues.isAtEnd {
+            let weatherInfoValues = try weatherValues.nestedContainer(keyedBy: WeatherInfoCodingKeys.self)
+            tempDescriptions.append(try weatherInfoValues.decode(String.self, forKey: .conditionDescription))
+            tempIconNames.append(try weatherInfoValues.decode(String.self, forKey: .icon))
+        }
+        conditionDescriptions = tempDescriptions
+        conditionIconNames = tempIconNames
     }
 
     private enum CodingKeys: String, CodingKey {

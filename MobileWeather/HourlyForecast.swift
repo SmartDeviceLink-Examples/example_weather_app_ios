@@ -19,8 +19,8 @@ struct HourlyForecast: Decodable {
     let precipitationChance: Double
     let rainAmount: Measurement<UnitLength>
     let snowAmount: Measurement<UnitLength>
-    let conditionDescription: String
-    let conditionIconName: String
+    let conditionDescriptions: [String]
+    let conditionIconNames: [String]
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -30,18 +30,38 @@ struct HourlyForecast: Decodable {
         uvIndex = try values.decode(Double.self, forKey: .uvIndex)
         visibility = Measurement(value: try values.decode(Double.self, forKey: .visibility), unit: UnitLength.meters)
         windSpeed = Measurement(value: try values.decode(Double.self, forKey: .windSpeed), unit: UnitSpeed.metersPerSecond)
-        windGust = Measurement(value: try values.decode(Double.self, forKey: .windGust), unit: UnitSpeed.metersPerSecond)
+
+        if let gustRawValue = try values.decodeIfPresent(Double.self, forKey: .windGust) {
+            windGust = Measurement(value: gustRawValue, unit: UnitSpeed.metersPerSecond)
+        } else {
+            windGust = nil
+        }
         precipitationChance = try values.decode(Double.self, forKey: .precipitationChance)
 
-        let rainValues = try values.nestedContainer(keyedBy: PrecipitationCodingKeys.self, forKey: .rainInfo)
-        rainAmount = Measurement(value: try rainValues.decode(Double.self, forKey: .lastHour), unit: UnitLength.millimeters)
+        if values.contains(.rainInfo) {
+            let rainValues = try values.nestedContainer(keyedBy: PrecipitationCodingKeys.self, forKey: .rainInfo)
+            rainAmount = Measurement(value: try rainValues.decode(Double.self, forKey: .lastHour), unit: UnitLength.millimeters)
+        } else {
+            rainAmount = Measurement(value: 0.0, unit: UnitLength.millimeters)
+        }
 
-        let snowValues = try values.nestedContainer(keyedBy: PrecipitationCodingKeys.self, forKey: .snowInfo)
-        snowAmount = Measurement(value: try snowValues.decode(Double.self, forKey: .lastHour), unit: UnitLength.millimeters)
+        if values.contains(.snowInfo) {
+            let snowValues = try values.nestedContainer(keyedBy: PrecipitationCodingKeys.self, forKey: .snowInfo)
+            snowAmount = Measurement(value: try snowValues.decode(Double.self, forKey: .lastHour), unit: UnitLength.millimeters)
+        } else {
+            snowAmount = Measurement(value: 0.0, unit: UnitLength.millimeters)
+        }
 
-        let weatherInfoValues = try values.nestedContainer(keyedBy: WeatherInfoCodingKeys.self, forKey: .weatherInfo)
-        conditionDescription = try weatherInfoValues.decode(String.self, forKey: .conditionDescription)
-        conditionIconName = try weatherInfoValues.decode(String.self, forKey: .icon)
+        var weatherValues = try values.nestedUnkeyedContainer(forKey: .weatherInfo)
+        var tempDescriptions = [String]()
+        var tempIconNames = [String]()
+        while !weatherValues.isAtEnd {
+            let weatherInfoValues = try weatherValues.nestedContainer(keyedBy: WeatherInfoCodingKeys.self)
+            tempDescriptions.append(try weatherInfoValues.decode(String.self, forKey: .conditionDescription))
+            tempIconNames.append(try weatherInfoValues.decode(String.self, forKey: .icon))
+        }
+        conditionDescriptions = tempDescriptions
+        conditionIconNames = tempIconNames
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -69,8 +89,8 @@ struct DailyForecast: Decodable {
     let snowAmount: Measurement<UnitLength>
     let precipitationChance: Double
 
-    let conditionDescription: String
-    let conditionIconName: String
+    let conditionDescriptions: [String]
+    let conditionIconNames: [String]
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -88,9 +108,16 @@ struct DailyForecast: Decodable {
         rainAmount = Measurement(value: try values.decode(Double.self, forKey: .rainAmount), unit: UnitLength.millimeters)
         snowAmount = Measurement(value: try values.decode(Double.self, forKey: .snowAmount), unit: UnitLength.millimeters)
 
-        let weatherInfoValues = try values.nestedContainer(keyedBy: WeatherInfoCodingKeys.self, forKey: .weatherInfo)
-        conditionDescription = try weatherInfoValues.decode(String.self, forKey: .conditionDescription)
-        conditionIconName = try weatherInfoValues.decode(String.self, forKey: .icon)
+        var weatherValues = try values.nestedUnkeyedContainer(forKey: .weatherInfo)
+        var tempDescriptions = [String]()
+        var tempIconNames = [String]()
+        while !weatherValues.isAtEnd {
+            let weatherInfoValues = try weatherValues.nestedContainer(keyedBy: WeatherInfoCodingKeys.self)
+            tempDescriptions.append(try weatherInfoValues.decode(String.self, forKey: .conditionDescription))
+            tempIconNames.append(try weatherInfoValues.decode(String.self, forKey: .icon))
+        }
+        conditionDescriptions = tempDescriptions
+        conditionIconNames = tempIconNames
     }
 
     private enum CodingKeys: String, CodingKey {

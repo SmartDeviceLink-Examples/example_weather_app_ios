@@ -12,7 +12,7 @@ struct CurrentConditionsView: View {
     @State var currentForecast: CurrentForecast?
 
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text(currentForecast?.conditionDescriptions.first ?? "Unknown")
     }
 }
 

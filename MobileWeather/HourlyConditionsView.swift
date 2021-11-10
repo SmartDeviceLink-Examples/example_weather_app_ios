@@ -22,6 +22,6 @@ struct HourlyConditionsView_Previews: PreviewProvider {
         let jsonData = try! Data(contentsOf: json)
         let data = try! JSONDecoder().decode(WeatherData.self, from: jsonData)
 
-        HourlyConditionsView(hourlyForecast: [])
+        HourlyConditionsView(hourlyForecast: data.hourly)
     }
 }

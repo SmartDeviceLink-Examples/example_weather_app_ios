@@ -22,6 +22,6 @@ struct DailyConditionsView_Previews: PreviewProvider {
         let jsonData = try! Data(contentsOf: json)
         let data = try! JSONDecoder().decode(WeatherData.self, from: jsonData)
 
-        DailyConditionsView(dailyForecast: [])
+        DailyConditionsView(dailyForecast: data.daily)
     }
 }

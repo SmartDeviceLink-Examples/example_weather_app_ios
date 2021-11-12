@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct WeatherAlert: Equatable, Decodable {
+struct WeatherAlert: Equatable, Hashable, Decodable {
     let senderName: String
     let event: String
     let description: String

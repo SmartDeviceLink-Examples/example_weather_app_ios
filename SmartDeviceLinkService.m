@@ -35,12 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property SDLManager *manager;
 
-@property (nonatomic, assign) BOOL graphicsAvailable;
-@property (nonatomic, assign) NSUInteger textFieldsAvailable;
-@property (nonatomic, assign) NSUInteger softButtonsAvailable;
 @property (nonatomic, strong, nullable) NSArray *templatesAvailable;
 @property (nonatomic, strong, nullable) SDLLanguage language;
-@property (nonatomic, strong, nullable) Localization *localization;
 @property (nonatomic, assign, getter=hasFirstHMIFullOccurred) BOOL firstHMIFullOccurred;
 
 @property (nonatomic, strong, nullable) MWInfoType currentInfoType;
@@ -298,23 +294,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 #pragma mark - Template updates
-
-- (void)sendWelcomeMessageWithSpeak:(BOOL)withSpeak {
-    self.currentInfoType = MWInfoTypeNone;
-    [self.manager.screenManager beginUpdates];
-    self.manager.screenManager.textField1 = self.localization[@"show.welcome.field1"];
-    self.manager.screenManager.textField2 = self.localization[@"show.welcome.field2"];
-    self.manager.screenManager.textField3 = self.localization[@"show.welcome.field3"];
-    self.manager.screenManager.textField4 = self.localization[@"show.welcome.field4"];
-    self.manager.screenManager.textAlignment = SDLTextAlignmentCenter;
-    self.manager.screenManager.softButtonObjects = [self buildDefaultSoftButtons];
-    [self.manager.screenManager endUpdatesWithCompletionHandler:nil];
-    
-    if (withSpeak) {
-        SDLSpeak *speak = [[SDLSpeak alloc] initWithTTS:self.localization[@"speak.welcome"]];
-        [self.manager sendRequest:speak];
-    }
-}
 
 - (void)sendWeatherConditions:(WeatherConditions *)conditions withSpeak:(BOOL)withSpeak {
     if (conditions == nil) {

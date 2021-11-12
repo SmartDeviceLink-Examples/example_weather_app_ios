@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MinutelyForecast: Decodable {
+struct MinutelyForecast: Equatable, Hashable, Decodable {
     let date: Date
     let precipitationVolume: Measurement<UnitVolume>
 

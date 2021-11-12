@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct DailyForecast: Decodable {
+struct DailyForecast: Equatable, Hashable, Decodable {
     let date: Date
     let sunriseDate: Date
     let sunsetDate: Date

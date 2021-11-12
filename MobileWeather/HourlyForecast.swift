@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct HourlyForecast: Decodable {
+struct HourlyForecast: Equatable, Hashable, Decodable {
     let date: Date
     let temperature: Measurement<UnitTemperature>
     let feelsLikeTemperature: Measurement<UnitTemperature>

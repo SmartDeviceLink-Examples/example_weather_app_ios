@@ -8,21 +8,20 @@
 
 import Foundation
 import SmartDeviceLink
+import UIKit
 
 class WeatherSDLManager: NSObject {
     static let shared = WeatherSDLManager()
 
     private var sdlManager: SDLManager!
     private var screenManager: SDLScreenManager { sdlManager.screenManager }
-    private var menuManager: WeatherSDLMenuManager!
     private var hasFirstHMIFullOccurred = false
 
-    private var currentDisplayInfo: CurrentInfoType = .current
+    private var currentDisplayType: CurrentInfoType = .current
     private var knownWeatherAlerts = Set<WeatherAlert>()
 
     override init() {
         super.init()
-        menuManager = WeatherSDLMenuManager(weatherSDLManager: self)
         NotificationCenter.default.addObserver(self, selector: #selector(weatherDataDidUpdate(_:)), name: .weatherDataUpdate, object: nil)
     }
 
@@ -71,15 +70,14 @@ extension WeatherSDLManager: SDLManagerDelegate {
     }
 
     func hmiLevel(_ oldLevel: SDLHMILevel, didChangeToLevel newLevel: SDLHMILevel) {
+        // Setup when we hit HMI Full for the first time
         if newLevel == .full && !hasFirstHMIFullOccurred {
             hasFirstHMIFullOccurred = true
             showCurrentConditions(speak: false)
             sendDefaultGlobalProperties()
-
             screenManager.menuConfiguration = SDLMenuConfiguration(mainMenuLayout: .tiles, defaultSubmenuLayout: .tiles)
-            screenManager.menu = menuManager.menuCells
-
-            let currentConditionsSB = SDLSoftButtonObject(name: "Current Conditions", text: "Current", artwork: SDLArtwork, handler: <#T##SDLRPCButtonNotificationHandler?##SDLRPCButtonNotificationHandler?##(SDLOnButtonPress?, SDLOnButtonEvent?) -> Void#>)
+            screenManager.menu = menuCells
+            screenManager.softButtonObjects = softButtons
         }
     }
 }
@@ -102,7 +100,7 @@ extension WeatherSDLManager {
         }
 
         // Update the current info display
-        switch currentDisplayInfo {
+        switch currentDisplayType {
         case .current:
             showCurrentConditions(speak: false)
         case .hourly:
@@ -118,26 +116,49 @@ extension WeatherSDLManager {
 // MARK: - SDL Startup Methods
 extension WeatherSDLManager {
     private func sendDefaultGlobalProperties() {
+        let currentConditionsPrompt = "Current Conditions"
+        let currentConditionsHelpItem = SDLVRHelpItem(text: currentConditionsPrompt, image: nil, position: 1)
 
+        let dailyForecastPrompt = "Daily Forecast"
+        let dailyForecastHelpItem = SDLVRHelpItem(text: dailyForecastPrompt, image: nil, position: 2)
+
+        let hourlyForecastPrompt = "Hourly Forecast"
+        let hourlyForecastHelpItem = SDLVRHelpItem(text: hourlyForecastPrompt, image: nil, position: 3)
+
+        let alertsPrompt = "Alerts"
+        let alertsHelpItem = SDLVRHelpItem(text: alertsPrompt, image: nil, position: 4)
+
+        let prompts = [currentConditionsPrompt, dailyForecastPrompt, hourlyForecastPrompt, alertsPrompt].joined(separator: ",")
+        let helpItems = [currentConditionsHelpItem, dailyForecastHelpItem, hourlyForecastHelpItem, alertsHelpItem]
+
+        let setGlobalProps = SDLSetGlobalProperties(userLocation: nil, helpPrompt: SDLTTSChunk.textChunks(from: prompts), timeoutPrompt: SDLTTSChunk.textChunks(from: prompts), vrHelpTitle: "SDL Weather", vrHelp: helpItems, menuTitle: nil, menuIcon: nil, keyboardProperties: nil, menuLayout: nil)
+
+        sdlManager.send(request: setGlobalProps) { request, response, error in
+            if let error = error {
+                SDLLog.e("Default global properties failed: \(error)")
+            } else {
+                SDLLog.d("Default global properties updated successfully")
+            }
+        }
     }
 }
 
 // MARK: - Weather Updates
 extension WeatherSDLManager {
     func showCurrentConditions(speak: Bool) {
-
+        guard currentDisplayType != .current else { return }
     }
 
     func showDailyForecast(speak: Bool) {
-
+        guard currentDisplayType != .daily else { return }
     }
 
     func showHourlyForecast(speak: Bool) {
-
+        guard currentDisplayType != .hourly else { return }
     }
 
     func showWeatherAlerts(speak: Bool) {
-
+        guard currentDisplayType != .alert else { return }
     }
 }
 
@@ -152,7 +173,13 @@ extension WeatherSDLManager {
     }
 
     private func presentAlertsPopup() {
+        guard let weatherData = WeatherManager.shared.weatherData else {
+            // TODO: Show alert
+            return
+        }
 
+        // TODO: if no weather alerts, show popup? Show how many alerts there are in SB and don't show SB if no alerts?
+        let alertPopupManager = WeatherAlertsSDLList(screenManager: sdlManager.screenManager, weatherData: weatherData)
     }
 }
 

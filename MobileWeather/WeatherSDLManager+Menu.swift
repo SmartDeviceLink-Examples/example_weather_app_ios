@@ -10,7 +10,7 @@ import Foundation
 import SmartDeviceLink
 
 extension WeatherSDLManager {
-    private var menuCells: [SDLMenuCell] {
+    var menuCells: [SDLMenuCell] {
         let showWeatherConditions = SDLMenuCell(
             title: "Current Conditions", secondaryText: nil, tertiaryText: nil,
             icon: SDLArtwork(image: UIImage(named: "clear-day")!.withRenderingMode(.alwaysTemplate), persistent: true, as: .PNG), secondaryArtwork: nil,

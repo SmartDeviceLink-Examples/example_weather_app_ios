@@ -15,6 +15,11 @@
 		4A49114A266EAE4600A2E06D /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A491149266EAE4600A2E06D /* WeatherManager.swift */; };
 		4A49114B266EAEC000A2E06D /* WeatherLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A491113266E4F8800A2E06D /* WeatherLocation.swift */; };
 		4A49114C266EB02D00A2E06D /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A491115266E4FE700A2E06D /* LocationService.swift */; };
+		4A4EBD1827429FC200F1F325 /* WeatherSDLManager+SoftButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4EBD1727429FC200F1F325 /* WeatherSDLManager+SoftButtons.swift */; };
+		4A4EBD1D2742CAD300F1F325 /* WeatherSDLListType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4EBD1C2742CAD300F1F325 /* WeatherSDLListType.swift */; };
+		4A4EBD1F2742D62100F1F325 /* DailyForecastSDLList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4EBD1E2742D62100F1F325 /* DailyForecastSDLList.swift */; };
+		4A4EBD212742EC4D00F1F325 /* HourlyForecastSDLList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4EBD202742EC4D00F1F325 /* HourlyForecastSDLList.swift */; };
+		4A4EBD232742FFAB00F1F325 /* WeatherAlertsSDLList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4EBD222742FFAB00F1F325 /* WeatherAlertsSDLList.swift */; };
 		4A50123C26F4DC770012B7DD /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A50123B26F4DC770012B7DD /* Preferences.swift */; };
 		4A50124126F4F2FA0012B7DD /* OpenWeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A50124026F4F2FA0012B7DD /* OpenWeatherService.swift */; };
 		4A50124326F50ABF0012B7DD /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A50124226F50ABF0012B7DD /* WeatherData.swift */; };
@@ -63,6 +68,11 @@
 		4A491144266E9F9B00A2E06D /* WeatherAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAlert.swift; sourceTree = "<group>"; };
 		4A491146266EAA8800A2E06D /* HourlyForecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyForecast.swift; sourceTree = "<group>"; };
 		4A491149266EAE4600A2E06D /* WeatherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherManager.swift; sourceTree = "<group>"; };
+		4A4EBD1727429FC200F1F325 /* WeatherSDLManager+SoftButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WeatherSDLManager+SoftButtons.swift"; sourceTree = "<group>"; };
+		4A4EBD1C2742CAD300F1F325 /* WeatherSDLListType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherSDLListType.swift; sourceTree = "<group>"; };
+		4A4EBD1E2742D62100F1F325 /* DailyForecastSDLList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyForecastSDLList.swift; sourceTree = "<group>"; };
+		4A4EBD202742EC4D00F1F325 /* HourlyForecastSDLList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyForecastSDLList.swift; sourceTree = "<group>"; };
+		4A4EBD222742FFAB00F1F325 /* WeatherAlertsSDLList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAlertsSDLList.swift; sourceTree = "<group>"; };
 		4A50123B26F4DC770012B7DD /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		4A50124026F4F2FA0012B7DD /* OpenWeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeatherService.swift; sourceTree = "<group>"; };
 		4A50124226F50ABF0012B7DD /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
@@ -162,10 +172,12 @@
 		4A491136266E75D000A2E06D /* SDL */ = {
 			isa = PBXGroup;
 			children = (
+				4A4EBD1B2742CAC400F1F325 /* Choice Sets */,
 				6EF1FC561CF5EF3F009BE8E9 /* SmartDeviceLinkService.h */,
 				6EF1FC571CF5EF3F009BE8E9 /* SmartDeviceLinkService.m */,
 				4ABBCB47273EAC870020D974 /* WeatherSDLManager.swift */,
 				4ABBCB49273ECFE80020D974 /* WeatherSDLManager+Menu.swift */,
+				4A4EBD1727429FC200F1F325 /* WeatherSDLManager+SoftButtons.swift */,
 			);
 			name = SDL;
 			sourceTree = "<group>";
@@ -177,6 +189,17 @@
 				4ADBAC9726F91A3F0038242B /* Sub-Data */,
 			);
 			name = Structs;
+			sourceTree = "<group>";
+		};
+		4A4EBD1B2742CAC400F1F325 /* Choice Sets */ = {
+			isa = PBXGroup;
+			children = (
+				4A4EBD1C2742CAD300F1F325 /* WeatherSDLListType.swift */,
+				4A4EBD1E2742D62100F1F325 /* DailyForecastSDLList.swift */,
+				4A4EBD202742EC4D00F1F325 /* HourlyForecastSDLList.swift */,
+				4A4EBD222742FFAB00F1F325 /* WeatherAlertsSDLList.swift */,
+			);
+			name = "Choice Sets";
 			sourceTree = "<group>";
 		};
 		4A50123F26F4E8BA0012B7DD /* Structs */ = {
@@ -417,14 +440,18 @@
 			files = (
 				4ABBCB48273EAC870020D974 /* WeatherSDLManager.swift in Sources */,
 				4A8DF85826FA452900B46E2A /* CurrentConditionsView.swift in Sources */,
+				4A4EBD1F2742D62100F1F325 /* DailyForecastSDLList.swift in Sources */,
 				4A491134266E755E00A2E06D /* CurrentForecast.swift in Sources */,
 				4A49114A266EAE4600A2E06D /* WeatherManager.swift in Sources */,
 				4A8DF86026FA487400B46E2A /* SettingsView.swift in Sources */,
 				4ABBCB4A273ECFE80020D974 /* WeatherSDLManager+Menu.swift in Sources */,
 				4ABBCB43273C1FE40020D974 /* DailyForecast.swift in Sources */,
+				4A4EBD212742EC4D00F1F325 /* HourlyForecastSDLList.swift in Sources */,
+				4A4EBD1D2742CAD300F1F325 /* WeatherSDLListType.swift in Sources */,
 				4A8DF85226FA30C600B46E2A /* AppDelegate.swift in Sources */,
 				4A8DF85E26FA457500B46E2A /* WeatherAlertView.swift in Sources */,
 				4A8DF85A26FA454600B46E2A /* HourlyConditionsView.swift in Sources */,
+				4A4EBD1827429FC200F1F325 /* WeatherSDLManager+SoftButtons.swift in Sources */,
 				4A8DF85426FA368700B46E2A /* APIKey.swift in Sources */,
 				4A491147266EAA8800A2E06D /* HourlyForecast.swift in Sources */,
 				4A49114C266EB02D00A2E06D /* LocationService.swift in Sources */,
@@ -434,6 +461,7 @@
 				4A50124126F4F2FA0012B7DD /* OpenWeatherService.swift in Sources */,
 				4A50123C26F4DC770012B7DD /* Preferences.swift in Sources */,
 				4A8DF85C26FA455100B46E2A /* DailyConditionsView.swift in Sources */,
+				4A4EBD232742FFAB00F1F325 /* WeatherAlertsSDLList.swift in Sources */,
 				4A491145266E9F9B00A2E06D /* WeatherAlert.swift in Sources */,
 				4A8DF86226FA58A500B46E2A /* SceneDelegate.swift in Sources */,
 				4A50124326F50ABF0012B7DD /* WeatherData.swift in Sources */,
@@ -556,7 +584,7 @@
 				DEVELOPMENT_TEAM = NCVC2MHU7M;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = MobileWeather/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 5.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sdl.sdlweather;
@@ -583,7 +611,7 @@
 				DEVELOPMENT_TEAM = NCVC2MHU7M;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = MobileWeather/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 5.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sdl.sdlweather;

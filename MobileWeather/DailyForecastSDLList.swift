@@ -12,7 +12,7 @@ class DailyForecastSDLList: NSObject, WeatherSDLListType {
     var screenManager: SDLScreenManager
     var cells: [SDLChoiceCell]!
 
-    private static let dayFormatter: DateFormatter = {
+    static let dayFormatter: DateFormatter = {
         let f = DateFormatter()
         f.timeStyle = .none
         f.doesRelativeDateFormatting = true
@@ -25,7 +25,7 @@ class DailyForecastSDLList: NSObject, WeatherSDLListType {
         self.screenManager = screenManager
 
         super.init()
-        self.cells = self.createChoiceCells(from: weatherData)
+        self.cells = self._createChoiceCells(from: weatherData)
     }
 
     func present() {
@@ -33,7 +33,7 @@ class DailyForecastSDLList: NSObject, WeatherSDLListType {
         screenManager.present(choiceSet, mode: .manualOnly)
     }
 
-    func createChoiceCells(from weatherData: WeatherData) -> [SDLChoiceCell] {
+    func _createChoiceCells(from weatherData: WeatherData) -> [SDLChoiceCell] {
         let dailyForecastData = weatherData.daily
         var dailyForecastCells = [SDLChoiceCell]()
 

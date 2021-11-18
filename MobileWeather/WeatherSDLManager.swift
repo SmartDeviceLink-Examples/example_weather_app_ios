@@ -20,6 +20,10 @@ class WeatherSDLManager: NSObject {
     private var currentDisplayType: CurrentInfoType = .current
     private var knownWeatherAlerts = Set<WeatherAlert>()
 
+    private var alertsListInteraction: WeatherAlertsSDLList?
+    private var hourlyListInteraction: HourlyForecastSDLList?
+    private var dailyListInteraction: DailyForecastSDLList?
+
     override init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(weatherDataDidUpdate(_:)), name: .weatherDataUpdate, object: nil)
@@ -27,7 +31,7 @@ class WeatherSDLManager: NSObject {
 
     func start() {
 //        private let lifecycleConfig = SDLLifecycleConfiguration(appName: "SDL Weather", fullAppId: "330533107")
-        let lifecycleConfig = SDLLifecycleConfiguration(appName: "SDL Weather", fullAppId: "330533107", ipAddress: "m.sdl.tools", port: 12345)
+        let lifecycleConfig = SDLLifecycleConfiguration(appName: "SDL Weather", fullAppId: "330533107", ipAddress: "m.sdl.tools", port: 17140)
         lifecycleConfig.ttsName = SDLTTSChunk.textChunks(from: "S D L Weather")
         lifecycleConfig.appIcon = SDLArtwork(image: UIImage(named: "sdl-appicon")!, name: "AppIcon", persistent: true, as: .PNG)
         lifecycleConfig.language = .enUs
@@ -73,11 +77,12 @@ extension WeatherSDLManager: SDLManagerDelegate {
         // Setup when we hit HMI Full for the first time
         if newLevel == .full && !hasFirstHMIFullOccurred {
             hasFirstHMIFullOccurred = true
-            showCurrentConditions(speak: false)
             sendDefaultGlobalProperties()
             screenManager.menuConfiguration = SDLMenuConfiguration(mainMenuLayout: .tiles, defaultSubmenuLayout: .tiles)
             screenManager.menu = menuCells
             screenManager.softButtonObjects = softButtons
+
+            showCurrentConditions(speak: false)
         }
     }
 }
@@ -85,7 +90,8 @@ extension WeatherSDLManager: SDLManagerDelegate {
 // MARK: - Notification Observers
 extension WeatherSDLManager {
     @objc private func weatherDataDidUpdate(_ notification: Notification) {
-        guard sdlManager.hmiLevel != .some(.none) else { return }
+        guard let weatherData = WeatherManager.shared.weatherData,
+              sdlManager.hmiLevel != .some(.none) else { return }
 
         // Find any unknown alerts
         if let currentAlerts = WeatherManager.shared.weatherData?.alerts {
@@ -104,11 +110,11 @@ extension WeatherSDLManager {
         case .current:
             showCurrentConditions(speak: false)
         case .hourly:
-            showCurrentConditions(speak: false)
+            showHourlyForecast(weatherData.hourly.first!, speak: false)
         case .daily:
-            showDailyForecast(speak: false)
+            showDailyForecast(weatherData.daily.first!, speak: false)
         case .alert:
-            showWeatherAlerts(speak: false)
+            showWeatherAlert(weatherData.alerts.first!, speak: false)
         }
     }
 }
@@ -145,41 +151,144 @@ extension WeatherSDLManager {
 
 // MARK: - Weather Updates
 extension WeatherSDLManager {
+    private func showNoData(speak: Bool) {
+        screenManager.beginUpdates()
+        screenManager.textField1 = "Loading Weather Data..."
+        screenManager.textField2 = nil
+        screenManager.textField3 = nil
+        screenManager.textField4 = nil
+        screenManager.primaryGraphic = SDLArtwork(image: UIImage(systemName: "arrow.triangle.2.circlepath")!, persistent: true, as: .PNG)
+        screenManager.endUpdates()
+    }
+
+    func presentNoDataAlert() {
+        let alert = SDLAlertView(text: "No Data Available", secondaryText: "Cannot display because weather data is still loading", tertiaryText: nil, timeout: NSNumber(5), showWaitIndicator: NSNumber(true), audioIndication: nil, buttons: [SDLSoftButtonObject(name: "Okay", text: "Ok", artwork: nil, handler: nil)], icon: SDLArtwork(image: UIImage(systemName: "arrow.triangle.2.circlepath")!, persistent: true, as: .PNG))
+        screenManager.presentAlert(alert, withCompletionHandler: nil)
+    }
+
     func showCurrentConditions(speak: Bool) {
-        guard currentDisplayType != .current else { return }
+        currentDisplayType = .current
+
+        guard let forecast = WeatherManager.shared.weatherData?.current else {
+            return showNoData(speak: speak)
+        }
+
+        let viewModel = CurrentWeatherSDLViewModel(currentWeather: forecast)
+        screenManager.beginUpdates()
+        screenManager.textField1 = viewModel.text1
+        screenManager.textField2 = viewModel.text2
+        screenManager.textField3 = viewModel.text3
+        screenManager.textField4 = viewModel.text4
+        screenManager.primaryGraphic = viewModel.artwork1
+        screenManager.endUpdates()
+
+        let speak = SDLSpeak(tts: "\(viewModel.text1) \(viewModel.text2) \(viewModel.text3) + \(viewModel.text4)")
+        sdlManager.send(request: speak) { request, response, error in
+            if let error = error {
+                SDLLog.e("Error sending speak with string: \(speak.ttsChunks.first!.text), error: \(error)")
+            } else {
+                SDLLog.d("Spoke current conditions")
+            }
+        }
     }
 
-    func showDailyForecast(speak: Bool) {
-        guard currentDisplayType != .daily else { return }
+    func showDailyForecast(_ forecast: DailyForecast, speak: Bool) {
+        currentDisplayType = .daily
+
+        let viewModel = DailyWeatherSDLViewModel(forecast: forecast)
+        screenManager.beginUpdates()
+        screenManager.textField1 = viewModel.text1
+        screenManager.textField2 = viewModel.text2
+        screenManager.textField3 = viewModel.text3
+        screenManager.textField4 = viewModel.text4
+        screenManager.primaryGraphic = viewModel.artwork1
+        screenManager.endUpdates()
+
+        let speak = SDLSpeak(tts: "\(viewModel.text1) \(viewModel.text2) \(viewModel.text3) + \(viewModel.text4)")
+        sdlManager.send(request: speak) { request, response, error in
+            if let error = error {
+                SDLLog.e("Error sending speak with string: \(speak.ttsChunks.first!.text), error: \(error)")
+            } else {
+                SDLLog.d("Spoke current conditions")
+            }
+        }
     }
 
-    func showHourlyForecast(speak: Bool) {
-        guard currentDisplayType != .hourly else { return }
+    func showHourlyForecast(_ forecast: HourlyForecast, speak: Bool) {
+        currentDisplayType = .hourly
+
+        let viewModel = HourlyWeatherSDLViewModel(forecast: forecast)
+        screenManager.beginUpdates()
+        screenManager.textField1 = viewModel.text1
+        screenManager.textField2 = viewModel.text2
+        screenManager.textField3 = viewModel.text3
+        screenManager.textField4 = viewModel.text4
+        screenManager.primaryGraphic = viewModel.artwork1
+        screenManager.endUpdates()
+
+        let speak = SDLSpeak(tts: "\(viewModel.text1) \(viewModel.text2) \(viewModel.text3) + \(viewModel.text4)")
+        sdlManager.send(request: speak) { request, response, error in
+            if let error = error {
+                SDLLog.e("Error sending speak with string: \(speak.ttsChunks.first!.text), error: \(error)")
+            } else {
+                SDLLog.d("Spoke current conditions")
+            }
+        }
     }
 
-    func showWeatherAlerts(speak: Bool) {
-        guard currentDisplayType != .alert else { return }
+    func showWeatherAlert(_ alert: WeatherAlert, speak: Bool) {
+        currentDisplayType = .alert
+
+        let viewModel = WeatherAlertSDLViewModel(alert: alert)
+        screenManager.beginUpdates()
+        screenManager.textField1 = viewModel.text1
+        screenManager.textField2 = viewModel.text2
+        screenManager.textField3 = viewModel.text3
+        screenManager.textField4 = viewModel.text4
+        screenManager.primaryGraphic = viewModel.artwork1
+        screenManager.endUpdates()
+
+        let speak = SDLSpeak(tts: "\(viewModel.text1) \(viewModel.text2) \(viewModel.text3) + \(viewModel.text4)")
+        sdlManager.send(request: speak) { request, response, error in
+            if let error = error {
+                SDLLog.e("Error sending speak with string: \(speak.ttsChunks.first!.text), error: \(error)")
+            } else {
+                SDLLog.d("Spoke current conditions")
+            }
+        }
     }
 }
 
 // MARK: - Popup Menus
 extension WeatherSDLManager {
-    private func presentHourlyForecastPopup() {
-
-    }
-
-    private func presentDailyForecastPopup() {
-
-    }
-
-    private func presentAlertsPopup() {
+    func presentHourlyForecastPopup() {
         guard let weatherData = WeatherManager.shared.weatherData else {
-            // TODO: Show alert
-            return
+            return presentNoDataAlert()
         }
 
-        // TODO: if no weather alerts, show popup? Show how many alerts there are in SB and don't show SB if no alerts?
-        let alertPopupManager = WeatherAlertsSDLList(screenManager: sdlManager.screenManager, weatherData: weatherData)
+        hourlyListInteraction = HourlyForecastSDLList(screenManager: screenManager, weatherData: weatherData)
+        hourlyListInteraction!.present()
+    }
+
+    func presentDailyForecastPopup() {
+        guard let weatherData = WeatherManager.shared.weatherData else {
+            return presentNoDataAlert()
+        }
+
+        dailyListInteraction = DailyForecastSDLList(screenManager: screenManager, weatherData: weatherData)
+        dailyListInteraction!.present()
+    }
+
+    func presentAlertsPopup() {
+        guard let weatherData = WeatherManager.shared.weatherData else {
+            return presentNoDataAlert()
+        }
+
+        guard !weatherData.alerts.isEmpty else {
+            return presentNoDataAlert()
+        }
+        alertsListInteraction = WeatherAlertsSDLList(screenManager: screenManager, weatherData: weatherData)
+        alertsListInteraction!.present()
     }
 }
 

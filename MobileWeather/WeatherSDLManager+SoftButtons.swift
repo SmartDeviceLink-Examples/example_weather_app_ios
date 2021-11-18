@@ -19,19 +19,19 @@ extension WeatherSDLManager {
         let hourlyForecastSB = SDLSoftButtonObject(name: "Hourly Forecast", text: "Hourly", artwork: SDLArtwork(image: UIImage(named: "menu-day")!.withRenderingMode(.alwaysTemplate), persistent: true, as: .PNG)) { press, event in
             guard press != nil else { return }
 
-            self.showHourlyForecast(speak: false)
+            self.presentHourlyForecastPopup()
         }
 
         let dailyForecastSB = SDLSoftButtonObject(name: "Daily Forecast", text: "Daily", artwork: SDLArtwork(image: UIImage(named: "menu-day")!.withRenderingMode(.alwaysTemplate), persistent: true, as: .PNG)) { press, event in
             guard press != nil else { return }
 
-            self.showDailyForecast(speak: false)
+            self.presentDailyForecastPopup()
         }
 
         let alertsSB = SDLSoftButtonObject(name: "Alerts", text: "Alerts", artwork: SDLArtwork(image: UIImage(named: "menu-alert")!.withRenderingMode(.alwaysTemplate), persistent: true, as: .PNG)) { press, event in
             guard press != nil else { return }
 
-            self.showWeatherAlerts(speak: false)
+            self.presentAlertsPopup()
         }
 
         return [currentConditionsSB, hourlyForecastSB, dailyForecastSB, alertsSB]

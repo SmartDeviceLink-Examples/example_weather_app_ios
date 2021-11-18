@@ -14,5 +14,5 @@ protocol WeatherSDLListType: SDLChoiceSetDelegate {
 
     init(screenManager: SDLScreenManager, weatherData: WeatherData)
     func present()
-    func createChoiceCells(from weatherData: WeatherData) -> [SDLChoiceCell]
+    func _createChoiceCells(from weatherData: WeatherData) -> [SDLChoiceCell]
 }

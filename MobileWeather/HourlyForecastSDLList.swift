@@ -25,7 +25,7 @@ class HourlyForecastSDLList: NSObject, WeatherSDLListType {
         self.screenManager = screenManager
 
         super.init()
-        self.cells = self.createChoiceCells(from: weatherData)
+        self.cells = self._createChoiceCells(from: weatherData)
     }
 
     func present() {
@@ -33,7 +33,7 @@ class HourlyForecastSDLList: NSObject, WeatherSDLListType {
         screenManager.present(choiceSet, mode: .manualOnly)
     }
 
-    func createChoiceCells(from weatherData: WeatherData) -> [SDLChoiceCell] {
+    func _createChoiceCells(from weatherData: WeatherData) -> [SDLChoiceCell] {
         let hourlyForecastData = weatherData.hourly
         var hourlyForecastCells = [SDLChoiceCell]()
 

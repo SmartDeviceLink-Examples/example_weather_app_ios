@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		1E555E3518466B6500B143B4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E555E3418466B6500B143B4 /* Foundation.framework */; };
 		1E555E3918466B6500B143B4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E555E3818466B6500B143B4 /* UIKit.framework */; };
+		4A0211082746D30800C9FA80 /* CurrentWeatherSDLViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0211072746D30800C9FA80 /* CurrentWeatherSDLViewModel.swift */; };
+		4A02110A2746D61B00C9FA80 /* WeatherSDLViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0211092746D61B00C9FA80 /* WeatherSDLViewModelType.swift */; };
+		4A02110C2746D63D00C9FA80 /* DailyWeatherSDLViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A02110B2746D63D00C9FA80 /* DailyWeatherSDLViewModel.swift */; };
+		4A02110E2746D7C200C9FA80 /* HourlyWeatherSDLViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A02110D2746D7C200C9FA80 /* HourlyWeatherSDLViewModel.swift */; };
+		4A0211102746DB0500C9FA80 /* WeatherAlertSDLViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A02110F2746DB0500C9FA80 /* WeatherAlertSDLViewModel.swift */; };
 		4A491134266E755E00A2E06D /* CurrentForecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A49112D266E68D300A2E06D /* CurrentForecast.swift */; };
 		4A491145266E9F9B00A2E06D /* WeatherAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A491144266E9F9B00A2E06D /* WeatherAlert.swift */; };
 		4A491147266EAA8800A2E06D /* HourlyForecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A491146266EAA8800A2E06D /* HourlyForecast.swift */; };
@@ -62,6 +67,11 @@
 		1E555E3118466B6500B143B4 /* SDL Weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SDL Weather.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E555E3418466B6500B143B4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1E555E3818466B6500B143B4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		4A0211072746D30800C9FA80 /* CurrentWeatherSDLViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeatherSDLViewModel.swift; sourceTree = "<group>"; };
+		4A0211092746D61B00C9FA80 /* WeatherSDLViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherSDLViewModelType.swift; sourceTree = "<group>"; };
+		4A02110B2746D63D00C9FA80 /* DailyWeatherSDLViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWeatherSDLViewModel.swift; sourceTree = "<group>"; };
+		4A02110D2746D7C200C9FA80 /* HourlyWeatherSDLViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyWeatherSDLViewModel.swift; sourceTree = "<group>"; };
+		4A02110F2746DB0500C9FA80 /* WeatherAlertSDLViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAlertSDLViewModel.swift; sourceTree = "<group>"; };
 		4A491113266E4F8800A2E06D /* WeatherLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherLocation.swift; sourceTree = "<group>"; };
 		4A491115266E4FE700A2E06D /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		4A49112D266E68D300A2E06D /* CurrentForecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentForecast.swift; sourceTree = "<group>"; };
@@ -160,6 +170,18 @@
 			path = MobileWeather;
 			sourceTree = "<group>";
 		};
+		4A0211062746D2EC00C9FA80 /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+				4A0211072746D30800C9FA80 /* CurrentWeatherSDLViewModel.swift */,
+				4A02110B2746D63D00C9FA80 /* DailyWeatherSDLViewModel.swift */,
+				4A02110D2746D7C200C9FA80 /* HourlyWeatherSDLViewModel.swift */,
+				4A0211092746D61B00C9FA80 /* WeatherSDLViewModelType.swift */,
+				4A02110F2746DB0500C9FA80 /* WeatherAlertSDLViewModel.swift */,
+			);
+			name = "View Models";
+			sourceTree = "<group>";
+		};
 		4A491135266E75BE00A2E06D /* Location */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,6 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				4A4EBD1B2742CAC400F1F325 /* Choice Sets */,
+				4A0211062746D2EC00C9FA80 /* View Models */,
 				6EF1FC561CF5EF3F009BE8E9 /* SmartDeviceLinkService.h */,
 				6EF1FC571CF5EF3F009BE8E9 /* SmartDeviceLinkService.m */,
 				4ABBCB47273EAC870020D974 /* WeatherSDLManager.swift */,
@@ -447,7 +470,9 @@
 				4ABBCB4A273ECFE80020D974 /* WeatherSDLManager+Menu.swift in Sources */,
 				4ABBCB43273C1FE40020D974 /* DailyForecast.swift in Sources */,
 				4A4EBD212742EC4D00F1F325 /* HourlyForecastSDLList.swift in Sources */,
+				4A0211082746D30800C9FA80 /* CurrentWeatherSDLViewModel.swift in Sources */,
 				4A4EBD1D2742CAD300F1F325 /* WeatherSDLListType.swift in Sources */,
+				4A02110A2746D61B00C9FA80 /* WeatherSDLViewModelType.swift in Sources */,
 				4A8DF85226FA30C600B46E2A /* AppDelegate.swift in Sources */,
 				4A8DF85E26FA457500B46E2A /* WeatherAlertView.swift in Sources */,
 				4A8DF85A26FA454600B46E2A /* HourlyConditionsView.swift in Sources */,
@@ -457,12 +482,15 @@
 				4A49114C266EB02D00A2E06D /* LocationService.swift in Sources */,
 				4ABBCB45273C64B40020D974 /* WeatherImage.swift in Sources */,
 				4A8DF85626FA377C00B46E2A /* WeatherView.swift in Sources */,
+				4A0211102746DB0500C9FA80 /* WeatherAlertSDLViewModel.swift in Sources */,
 				4A49114B266EAEC000A2E06D /* WeatherLocation.swift in Sources */,
 				4A50124126F4F2FA0012B7DD /* OpenWeatherService.swift in Sources */,
+				4A02110C2746D63D00C9FA80 /* DailyWeatherSDLViewModel.swift in Sources */,
 				4A50123C26F4DC770012B7DD /* Preferences.swift in Sources */,
 				4A8DF85C26FA455100B46E2A /* DailyConditionsView.swift in Sources */,
 				4A4EBD232742FFAB00F1F325 /* WeatherAlertsSDLList.swift in Sources */,
 				4A491145266E9F9B00A2E06D /* WeatherAlert.swift in Sources */,
+				4A02110E2746D7C200C9FA80 /* HourlyWeatherSDLViewModel.swift in Sources */,
 				4A8DF86226FA58A500B46E2A /* SceneDelegate.swift in Sources */,
 				4A50124326F50ABF0012B7DD /* WeatherData.swift in Sources */,
 				4A50124526F50B140012B7DD /* MinutelyForecast.swift in Sources */,

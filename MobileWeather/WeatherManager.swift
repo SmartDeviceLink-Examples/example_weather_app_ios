@@ -16,6 +16,8 @@ extension Notification.Name {
 class WeatherManager: ObservableObject {
     static let shared = WeatherManager()
 
+    private var lastUpdateTime: Date?
+
     @Published var currentLocation: WeatherLocation?
     @Published var weatherData: WeatherData?
 
@@ -24,6 +26,8 @@ class WeatherManager: ObservableObject {
         NotificationCenter.default.addObserver(self, selector: #selector(weatherDataDidUpdate(_:)), name: .weatherDataUpdate, object: nil)
         // TODO: KVO units preference
 //        NotificationCenter.default.addObserver(self, selector: #selector(userDefaultsDidChange(_:)), name: UserDefaults.didChangeNotification, object: nil)
+
+        LocationService.shared.start()
     }
 }
 

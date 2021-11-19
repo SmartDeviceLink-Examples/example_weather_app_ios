@@ -161,7 +161,7 @@ extension WeatherSDLManager {
         screenManager.textField2 = nil
         screenManager.textField3 = nil
         screenManager.textField4 = nil
-        screenManager.primaryGraphic = SDLArtwork(image: UIImage(systemName: "arrow.triangle.2.circlepath", withConfiguration: UIImage.SymbolConfiguration(pointSize: 256))!.withRenderingMode(.alwaysTemplate), persistent: true, as: .PNG)
+        screenManager.primaryGraphic = SDLArtwork(image: UIImage(systemName: "arrow.triangle.2.circlepath", withConfiguration: UIImage.SymbolConfiguration(pointSize: 256))!.withRenderingMode(.alwaysTemplate).withTintColor(.systemGray), persistent: true, as: .PNG)
         screenManager.endUpdates()
     }
 

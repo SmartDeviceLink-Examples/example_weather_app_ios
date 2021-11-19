@@ -32,7 +32,7 @@ enum WeatherImage {
         let systemName = systemImage(from: openWeatherName)
 
         // TODO: Palatte / Heirarchical colors w/ not template images for some things / on systems we can control the background?
-        return UIImage(systemName: systemName, withConfiguration: UIImage.SymbolConfiguration(pointSize: size.pointSize))!.withRenderingMode(.alwaysTemplate)
+        return UIImage(systemName: systemName, withConfiguration: UIImage.SymbolConfiguration(pointSize: size.pointSize))!.withRenderingMode(.alwaysTemplate).withTintColor(.systemGray)
     }
 
     static private func systemImage(from openWeatherName: OpenWeatherIcon) -> String {

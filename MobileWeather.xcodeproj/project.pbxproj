@@ -213,10 +213,10 @@
 		4A4EBD1B2742CAC400F1F325 /* Choice Sets */ = {
 			isa = PBXGroup;
 			children = (
-				4A4EBD1C2742CAD300F1F325 /* WeatherSDLListType.swift */,
 				4A4EBD1E2742D62100F1F325 /* DailyForecastSDLList.swift */,
 				4A4EBD202742EC4D00F1F325 /* HourlyForecastSDLList.swift */,
 				4A4EBD222742FFAB00F1F325 /* WeatherAlertsSDLList.swift */,
+				4A4EBD1C2742CAD300F1F325 /* WeatherSDLListType.swift */,
 			);
 			name = "Choice Sets";
 			sourceTree = "<group>";

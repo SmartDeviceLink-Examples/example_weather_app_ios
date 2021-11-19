@@ -30,7 +30,7 @@ class WeatherSDLManager: NSObject {
     }
 
     func start() {
-        let lifecycleConfig = SDLLifecycleConfiguration(appName: "SDL Weather", fullAppId: "330533107")
+        let lifecycleConfig = SDLLifecycleConfiguration(appName: "MobileWeather", fullAppId: "330533107")
 //        let lifecycleConfig = SDLLifecycleConfiguration(appName: "SDL Weather", fullAppId: "330533107", ipAddress: "m.sdl.tools", port: 17859)
         lifecycleConfig.ttsName = SDLTTSChunk.textChunks(from: "S D L Weather")
         lifecycleConfig.appIcon = SDLArtwork(image: UIImage(named: "sdl-appicon")!, name: "AppIcon", persistent: true, as: .PNG)
@@ -267,18 +267,14 @@ extension WeatherSDLManager {
 // MARK: - Popup Menus
 extension WeatherSDLManager {
     func presentHourlyForecastPopup() {
-        guard let weatherData = WeatherService.shared.weatherData else {
-            return presentNoDataAlert()
-        }
+        guard let weatherData = WeatherService.shared.weatherData else { return presentNoDataAlert() }
 
         hourlyListInteraction = HourlyForecastSDLList(screenManager: screenManager, weatherData: weatherData)
         hourlyListInteraction!.present()
     }
 
     func presentDailyForecastPopup() {
-        guard let weatherData = WeatherService.shared.weatherData else {
-            return presentNoDataAlert()
-        }
+        guard let weatherData = WeatherService.shared.weatherData else { return presentNoDataAlert() }
 
         dailyListInteraction = DailyForecastSDLList(screenManager: screenManager, weatherData: weatherData)
         dailyListInteraction!.present()
@@ -286,7 +282,7 @@ extension WeatherSDLManager {
 
     func presentAlertsPopup() {
         guard let weatherData = WeatherService.shared.weatherData else { return presentNoDataAlert() }
-        guard let alerts = weatherData.alerts, !alerts.isEmpty else { return presentNoDataAlert() } // TODO: Different popup just for no alerts
+        guard let alerts = weatherData.alerts, !alerts.isEmpty else { return presentNoWeatherAlertsAlert() }
 
         alertsListInteraction = WeatherAlertsSDLList(screenManager: screenManager, weatherData: weatherData)
         alertsListInteraction!.present()

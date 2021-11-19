@@ -25,10 +25,10 @@ struct CurrentWeatherSDLViewModel: WeatherSDLViewModelType {
     }()
 
     init(currentWeather: CurrentForecast) {
-        var temperatureString = "\(currentWeather.temperature.formatted())°"
+        var temperatureString = "\(currentWeather.temperature.formatted())"
         if abs(currentWeather.feelsLikeTemperature.value - currentWeather.temperature.value) >= 5.0 {
             // The feels like is >5 degrees different than the normal temp, so we want to display that feels like
-            temperatureString.append(" | Feels like \(currentWeather.feelsLikeTemperature.formatted())°")
+            temperatureString.append(" | Feels like \(currentWeather.feelsLikeTemperature.formatted())")
         }
 
         let textField4String: String

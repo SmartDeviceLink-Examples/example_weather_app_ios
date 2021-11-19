@@ -10,6 +10,7 @@ import SmartDeviceLink
 
 protocol WeatherSDLListType: SDLChoiceSetDelegate {
     var screenManager: SDLScreenManager { get }
+    var weatherData: WeatherData { get }
     var cells: [SDLChoiceCell]! { get }
 
     init(screenManager: SDLScreenManager, weatherData: WeatherData)

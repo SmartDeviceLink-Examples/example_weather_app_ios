@@ -10,35 +10,24 @@ import Foundation
 import SmartDeviceLink
 
 class OpenWeatherService: NSObject {
-    static private let baseURLFormat = "https://api.openweathermap.org/data/2.5/onecall?lat=%@&lon=%@&appid=%@"
+//    static private let baseURLFormat = "https://api.openweathermap.org/data/2.5/onecall?lat=%@&lon=%@&appid=%@"
 
-    private var apiKey: String?
-    private var currentURLTask: URLSessionTask?
+    func updateWeatherData(location: WeatherLocation) async -> WeatherData? {
+        guard !APIKey.apiKey.isEmpty else { fatalError("The API Key is empty. Please retrieve an API key from https://home.openweathermap.org/api_keys") }
 
-    func updateWeatherData(location: WeatherLocation) async {
-        guard let apiKey = apiKey else { fatalError("API Key must exist") }
-
-        let urlString = String(format: OpenWeatherService.baseURLFormat, arguments: [location.gpsLocation.coordinate.latitude, location.gpsLocation.coordinate.longitude, apiKey])
+        let urlString = "https://api.openweathermap.org/data/2.5/onecall?lat=\(location.gpsLocation.coordinate.latitude)&lon=\(location.gpsLocation.coordinate.longitude)&appid=\(APIKey.apiKey)"
         let url = URL(string: urlString)!
 
-        currentURLTask = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
-            if let error = error {
-                SDLLog.e("Error retrieving weather data: \(error)")
-                return
-            } else if let data = data {
-                do {
-                    let weatherData = try JSONDecoder().decode(WeatherData.self, from: data)
-                    SDLLog.d("Downloaded new weather data: \(weatherData)")
-                    NotificationCenter.default.post(name: .weatherDataUpdate, object: self, userInfo: ["data": weatherData])
-                } catch {
-                    fatalError("Unable to decode weather data: \(error)")
-                }
-            }
-        })
-        currentURLTask?.resume()
+        do {
+            let response = try await URLSession.shared.data(from: url)
+
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .secondsSince1970
+
+            return try decoder.decode(WeatherData.self, from: response.0)
+        } catch let error {
+            print("Failed to retrieve data or convert to weather data: \(error)")
+            return nil
+        }
     }
-}
-
-extension OpenWeatherService: URLSessionTaskDelegate {
-
 }

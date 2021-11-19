@@ -8,38 +8,48 @@
 
 import Foundation
 import UIKit
+import SmartDeviceLink
+
+enum WeatherImageSize {
+    case large, small
+
+    var pointSize: CGFloat {
+        switch self {
+        case .large: return 256
+        case .small: return 64
+        }
+    }
+}
 
 enum WeatherImage {
-    static func fromOpenWeatherName(_ openWeatherName: OpenWeatherIcon) -> UIImage {
-        let symbolName: String
-        switch openWeatherName {
-        case .clearDay:
-            symbolName = "sun.max.fill"
-        case .clearNight:
-            symbolName = "moon.stars.fill"
-        case .partlyCloudyDay, .mostlyCloudyDay:
-            symbolName = "cloud.sun.fill"
-        case .partlyCloudyNight, .mostlyCloudyNight:
-            symbolName = "cloud.moon.fill"
-        case .cloudyDay, .cloudyNight:
-            symbolName = "cloud.fill"
-        case .lightRainDay:
-            symbolName = "cloud.sun.rain.fill"
-        case .lightRainNight:
-            symbolName = "cloud.moon.rain.fill"
-        case .rainDay, .rainNight:
-            symbolName = "cloud.rain.fill"
-        case .thunderstormDay, .thunderstormNight:
-            symbolName = "cloud.bolt.rain.fill"
-        case .snowDay, .snowNight:
-            symbolName = "cloud.snow.fill"
-        case .fogDay:
-            symbolName = "sun.haze.fill"
-        case .fogNight:
-            symbolName = "cloud.fog.fill"
-        }
+    static func toSDLArtwork(from openWeatherName: OpenWeatherIcon, size: WeatherImageSize) -> SDLArtwork {
+        let image = toUIImage(from: openWeatherName, size: size)
 
-        return UIImage(systemName: symbolName)!
+        return SDLArtwork(image: image, name: openWeatherName.rawValue, persistent: true, as: .PNG)
+    }
+
+    static func toUIImage(from openWeatherName: OpenWeatherIcon, size: WeatherImageSize) -> UIImage {
+        let systemName = systemImage(from: openWeatherName)
+
+        // TODO: Palatte / Heirarchical colors w/ not template images for some things / on systems we can control the background?
+        return UIImage(systemName: systemName, withConfiguration: UIImage.SymbolConfiguration(pointSize: size.pointSize))!.withRenderingMode(.alwaysTemplate)
+    }
+
+    static private func systemImage(from openWeatherName: OpenWeatherIcon) -> String {
+        switch openWeatherName {
+        case .clearDay: return "sun.max.fill"
+        case .clearNight: return "moon.stars.fill"
+        case .partlyCloudyDay, .mostlyCloudyDay: return "cloud.sun.fill"
+        case .partlyCloudyNight, .mostlyCloudyNight: return "cloud.moon.fill"
+        case .cloudyDay, .cloudyNight: return "cloud.fill"
+        case .lightRainDay: return "cloud.sun.rain.fill"
+        case .lightRainNight: return "cloud.moon.rain.fill"
+        case .rainDay, .rainNight: return "cloud.rain.fill"
+        case .thunderstormDay, .thunderstormNight: return "cloud.bolt.rain.fill"
+        case .snowDay, .snowNight: return "cloud.snow.fill"
+        case .fogDay: return "sun.haze.fill"
+        case .fogNight: return "cloud.fog.fill"
+        }
     }
 }
 

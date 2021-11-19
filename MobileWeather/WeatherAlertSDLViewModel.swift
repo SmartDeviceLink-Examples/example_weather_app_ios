@@ -10,10 +10,10 @@ import Foundation
 import SmartDeviceLink
 
 struct WeatherAlertSDLViewModel: WeatherSDLViewModelType {
-    var text1: String
-    var text2: String
-    var text3: String
-    var text4: String
+    var dateText: String
+    var temperatureText: String
+    var conditionText: String
+    var additionalText: String
     var artwork1: SDLArtwork
 
     private static let alertDateFormatter: DateFormatter = {
@@ -26,10 +26,10 @@ struct WeatherAlertSDLViewModel: WeatherSDLViewModelType {
     }()
 
     init(alert: WeatherAlert) {
-        text1 = alert.event
-        text2 = "Starts: \(WeatherAlertSDLViewModel.alertDateFormatter.string(from: alert.startDate))"
-        text3 = "Ends: \(WeatherAlertSDLViewModel.alertDateFormatter.string(from: alert.endDate))"
-        text4 = alert.description
+        dateText = alert.event
+        temperatureText = "Starts: \(WeatherAlertSDLViewModel.alertDateFormatter.string(from: alert.startDate))"
+        conditionText = "Ends: \(WeatherAlertSDLViewModel.alertDateFormatter.string(from: alert.endDate))"
+        additionalText = alert.description
         artwork1 = SDLArtwork(image: UIImage(systemName: "exclamationmark.triangle")!, persistent: true, as: .PNG)
     }
 }

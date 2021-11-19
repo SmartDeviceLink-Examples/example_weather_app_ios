@@ -9,26 +9,28 @@
 import SmartDeviceLink
 
 extension WeatherSDLManager {
+    static private let artSize: CGFloat = 64.0
+
     var softButtons: [SDLSoftButtonObject] {
-        let currentConditionsSB = SDLSoftButtonObject(name: "Current Conditions", text: "Current", artwork: SDLArtwork(image: UIImage(named: "clear-day")!.withRenderingMode(.alwaysTemplate), persistent: true, as: .PNG)) { press, event in
+        let currentConditionsSB = SDLSoftButtonObject(name: "Current Conditions", text: "Current", artwork: SDLArtwork(image: UIImage(systemName: "sun.max.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: WeatherSDLManager.artSize))!.withRenderingMode(.alwaysTemplate), persistent: true, as: .PNG)) { press, event in
             guard press != nil else { return }
 
             self.showCurrentConditions(speak: false)
         }
 
-        let hourlyForecastSB = SDLSoftButtonObject(name: "Hourly Forecast", text: "Hourly", artwork: SDLArtwork(image: UIImage(named: "menu-day")!.withRenderingMode(.alwaysTemplate), persistent: true, as: .PNG)) { press, event in
+        let hourlyForecastSB = SDLSoftButtonObject(name: "Hourly Forecast", text: "Hourly", artwork: SDLArtwork(image: UIImage(systemName: "clock", withConfiguration: UIImage.SymbolConfiguration(pointSize: WeatherSDLManager.artSize))!.withRenderingMode(.alwaysTemplate), persistent: true, as: .PNG)) { press, event in
             guard press != nil else { return }
 
             self.presentHourlyForecastPopup()
         }
 
-        let dailyForecastSB = SDLSoftButtonObject(name: "Daily Forecast", text: "Daily", artwork: SDLArtwork(image: UIImage(named: "menu-day")!.withRenderingMode(.alwaysTemplate), persistent: true, as: .PNG)) { press, event in
+        let dailyForecastSB = SDLSoftButtonObject(name: "Daily Forecast", text: "Daily", artwork: SDLArtwork(image: UIImage(systemName: "calendar", withConfiguration: UIImage.SymbolConfiguration(pointSize: WeatherSDLManager.artSize))!.withRenderingMode(.alwaysTemplate), persistent: true, as: .PNG)) { press, event in
             guard press != nil else { return }
 
             self.presentDailyForecastPopup()
         }
 
-        let alertsSB = SDLSoftButtonObject(name: "Alerts", text: "Alerts", artwork: SDLArtwork(image: UIImage(named: "menu-alert")!.withRenderingMode(.alwaysTemplate), persistent: true, as: .PNG)) { press, event in
+        let alertsSB = SDLSoftButtonObject(name: "Alerts", text: "Alerts", artwork: SDLArtwork(image: UIImage(systemName: "exclamationmark.triangle", withConfiguration: UIImage.SymbolConfiguration(pointSize: WeatherSDLManager.artSize))!.withRenderingMode(.alwaysTemplate), persistent: true, as: .PNG)) { press, event in
             guard press != nil else { return }
 
             self.presentAlertsPopup()

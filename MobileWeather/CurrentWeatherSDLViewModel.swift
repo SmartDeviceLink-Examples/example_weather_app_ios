@@ -10,15 +10,15 @@ import Foundation
 import SmartDeviceLink
 
 struct CurrentWeatherSDLViewModel: WeatherSDLViewModelType {
-    var text1: String
-    var text2: String
-    var text3: String
-    var text4: String
+    var dateText: String
+    var temperatureText: String
+    var conditionText: String
+    var additionalText: String
     var artwork1: SDLArtwork
 
     private static var sunriseSunsetFormatter: DateFormatter = {
         let f = DateFormatter()
-        f.dateStyle = .none
+        f.timeZone = .current
         f.timeStyle = .short
 
         return f
@@ -44,19 +44,17 @@ struct CurrentWeatherSDLViewModel: WeatherSDLViewModelType {
         } else {
             if currentWeather.sunriseDate.timeIntervalSinceNow < 0 {
                 // Sunrise passed, use sunset
-                textField4String = "Sunset at " + CurrentWeatherSDLViewModel.sunriseSunsetFormatter.string(from: currentWeather.sunriseDate)
+                textField4String = "Sunset at " + CurrentWeatherSDLViewModel.sunriseSunsetFormatter.string(from: currentWeather.sunsetDate)
             } else {
                 // Sunrise hasn't passed, use sunrise
-                textField4String = "Sunrise at " + CurrentWeatherSDLViewModel.sunriseSunsetFormatter.string(from: currentWeather.sunsetDate)
+                textField4String = "Sunrise at " + CurrentWeatherSDLViewModel.sunriseSunsetFormatter.string(from: currentWeather.sunriseDate)
             }
         }
 
-        let conditionImage = WeatherImage.fromOpenWeatherName(OpenWeatherIcon(rawValue: currentWeather.conditionIconNames.first!)!)
-
-        text1 = "Right Now"
-        text2 = temperatureString
-        text3 = currentWeather.conditionDescriptions.first!
-        text4 = textField4String
-        artwork1 = SDLArtwork(image: conditionImage, persistent: true, as: .PNG)
+        dateText = "Right Now"
+        temperatureText = temperatureString
+        conditionText = currentWeather.conditionDescriptions.first!.capitalized(with: .current)
+        additionalText = textField4String
+        artwork1 = WeatherImage.toSDLArtwork(from: OpenWeatherIcon(rawValue: currentWeather.conditionIconNames.first!)!, size: .large)
     }
 }

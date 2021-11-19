@@ -10,10 +10,10 @@ import Foundation
 import SmartDeviceLink
 
 struct HourlyWeatherSDLViewModel: WeatherSDLViewModelType {
-    var text1: String
-    var text2: String
-    var text3: String
-    var text4: String
+    var dateText: String
+    var temperatureText: String
+    var conditionText: String
+    var additionalText: String
     var artwork1: SDLArtwork
 
     private static let hourlyFormatter: DateFormatter = {
@@ -26,10 +26,10 @@ struct HourlyWeatherSDLViewModel: WeatherSDLViewModelType {
     }()
 
     init(forecast: HourlyForecast) {
-        var temperatureString = "\(forecast.temperature.formatted())°"
+        var temperatureString = "\(forecast.temperature.formatted())"
         if abs(forecast.feelsLikeTemperature.value - forecast.temperature.value) >= 5.0 {
             // The feels like is >5 degrees different than the normal temp, so we want to display that feels like
-            temperatureString.append(" | Feels like \(forecast.feelsLikeTemperature.formatted())°")
+            temperatureString.append(" | Feels like \(forecast.feelsLikeTemperature.formatted())")
         }
 
         var textField4String = ""
@@ -52,12 +52,10 @@ struct HourlyWeatherSDLViewModel: WeatherSDLViewModelType {
             textField4String = "UV Index: \(Int(forecast.uvIndex.rounded()).formatted())"
         }
 
-        let conditionImage = WeatherImage.fromOpenWeatherName(OpenWeatherIcon(rawValue: forecast.conditionIconNames.first!)!)
-
-        text1 = HourlyWeatherSDLViewModel.hourlyFormatter.string(from: forecast.date)
-        text2 = temperatureString
-        text3 = forecast.conditionDescriptions.first!
-        text4 = textField4String
-        artwork1 = SDLArtwork(image: conditionImage, persistent: true, as: .PNG)
+        dateText = HourlyWeatherSDLViewModel.hourlyFormatter.string(from: forecast.date)
+        temperatureText = temperatureString
+        conditionText = forecast.conditionDescriptions.first!.capitalized(with: .current)
+        additionalText = textField4String
+        artwork1 = WeatherImage.toSDLArtwork(from: OpenWeatherIcon(rawValue: forecast.conditionIconNames.first!)!, size: .large)
     }
 }

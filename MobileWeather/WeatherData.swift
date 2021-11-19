@@ -15,7 +15,7 @@ struct WeatherData: Decodable {
     let minutely: [MinutelyForecast]
     let hourly: [HourlyForecast]
     let daily: [DailyForecast]
-    let alerts: [WeatherAlert]
+    let alerts: [WeatherAlert]?
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -25,7 +25,7 @@ struct WeatherData: Decodable {
         minutely = try values.decode([MinutelyForecast].self, forKey: .minutely)
         hourly = try values.decode([HourlyForecast].self, forKey: .hourly)
         daily = try values.decode([DailyForecast].self, forKey: .daily)
-        alerts = try values.decode([WeatherAlert].self, forKey: .alerts)
+        alerts = try values.decodeIfPresent([WeatherAlert].self, forKey: .alerts)
     }
 
     enum CodingKeys: String, CodingKey {

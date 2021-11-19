@@ -90,11 +90,11 @@ extension WeatherSDLManager: SDLManagerDelegate {
 // MARK: - Notification Observers
 extension WeatherSDLManager {
     @objc private func weatherDataDidUpdate(_ notification: Notification) {
-        guard let weatherData = WeatherManager.shared.weatherData,
+        guard let weatherData = WeatherService.shared.weatherData,
               sdlManager.hmiLevel != .some(.none) else { return }
 
         // Find any unknown alerts
-        if let currentAlerts = WeatherManager.shared.weatherData?.alerts {
+        if let currentAlerts = WeatherService.shared.weatherData?.alerts {
             var unknownAlerts = Set<WeatherAlert>(currentAlerts)
             unknownAlerts.subtract(knownWeatherAlerts)
 
@@ -169,7 +169,7 @@ extension WeatherSDLManager {
     func showCurrentConditions(speak: Bool) {
         currentDisplayType = .current
 
-        guard let forecast = WeatherManager.shared.weatherData?.current else {
+        guard let forecast = WeatherService.shared.weatherData?.current else {
             return showNoData(speak: speak)
         }
 
@@ -262,7 +262,7 @@ extension WeatherSDLManager {
 // MARK: - Popup Menus
 extension WeatherSDLManager {
     func presentHourlyForecastPopup() {
-        guard let weatherData = WeatherManager.shared.weatherData else {
+        guard let weatherData = WeatherService.shared.weatherData else {
             return presentNoDataAlert()
         }
 
@@ -271,7 +271,7 @@ extension WeatherSDLManager {
     }
 
     func presentDailyForecastPopup() {
-        guard let weatherData = WeatherManager.shared.weatherData else {
+        guard let weatherData = WeatherService.shared.weatherData else {
             return presentNoDataAlert()
         }
 
@@ -280,7 +280,7 @@ extension WeatherSDLManager {
     }
 
     func presentAlertsPopup() {
-        guard let weatherData = WeatherManager.shared.weatherData else {
+        guard let weatherData = WeatherService.shared.weatherData else {
             return presentNoDataAlert()
         }
 

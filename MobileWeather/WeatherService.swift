@@ -13,8 +13,11 @@ extension Notification.Name {
     static let weatherDataUpdate = Notification.Name(rawValue: "MobileWeatherDataUpdatedNotification")
 }
 
-class WeatherManager: ObservableObject {
-    static let shared = WeatherManager()
+class WeatherService: ObservableObject {
+    static let shared = WeatherService()
+
+    private var locationService: LocationService!
+    private let openWeatherService = OpenWeatherService()
 
     private var lastUpdateTime: Date?
 
@@ -22,25 +25,29 @@ class WeatherManager: ObservableObject {
     @Published var weatherData: WeatherData?
 
     init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(locationDidUpdate(_:)), name: .weatherLocationUpdate, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(weatherDataDidUpdate(_:)), name: .weatherDataUpdate, object: nil)
         // TODO: KVO units preference
 //        NotificationCenter.default.addObserver(self, selector: #selector(userDefaultsDidChange(_:)), name: UserDefaults.didChangeNotification, object: nil)
+        locationService = LocationService(delegate: self)
+    }
 
-        LocationService.shared.start()
+    func start() {
+        locationService.start()
     }
 }
 
-extension WeatherManager {
-    @objc private func locationDidUpdate(_ notification: Notification) {
-        if let location = notification.userInfo?["location"] as? WeatherLocation {
-            self.currentLocation = location
-        }
-    }
-
+extension WeatherService {
     @objc private func weatherDataDidUpdate(_ notification: Notification) {
         if let data = notification.userInfo?["data"] as? WeatherData {
             self.weatherData = data
         }
+    }
+}
+
+extension WeatherService: LocationServiceDelegate {
+    func locationDidUpdate(newLocation: WeatherLocation) {
+        currentLocation = newLocation
+
+        openWeatherService.updateWeatherData(location: <#T##WeatherLocation#>)
     }
 }

@@ -9,19 +9,20 @@
 import CoreLocation
 import Foundation
 
-public extension Notification.Name {
-    static let weatherLocationUpdate = Notification.Name(rawValue: "MobileWeatherLocationUpdateNotification")
+protocol LocationServiceDelegate: AnyObject {
+    func locationDidUpdate(newLocation: WeatherLocation)
 }
 
-public class LocationService: NSObject {
-    public static let shared = LocationService()
-
+class LocationService: NSObject {
     private let locationManager = CLLocationManager()
     private let geocoder = CLGeocoder()
     private var lastLocationUpdate = Date(timeIntervalSince1970: 0)
     private let minimumLocationUpdateSeconds = 120.0
+    private weak var delegate: LocationServiceDelegate?
 
-    public override init() {
+    public init(delegate: LocationServiceDelegate) {
+        self.delegate = delegate
+
         locationManager.pausesLocationUpdatesAutomatically = true
         locationManager.desiredAccuracy = 500.0
         locationManager.distanceFilter = 500.0
@@ -68,8 +69,7 @@ extension LocationService: CLLocationManagerDelegate {
             }
 
             let weatherLocation = WeatherLocation(country: place.country, state: place.administrativeArea, city: place.locality, zipCode: place.postalCode, gpsLocation: gpsLocation)
-
-            NotificationCenter.default.post(name: .weatherLocationUpdate, object: self, userInfo: ["location": weatherLocation])
+            self.delegate?.locationDidUpdate(newLocation: weatherLocation)
         }
     }
 }

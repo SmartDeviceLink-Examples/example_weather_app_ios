@@ -10,7 +10,7 @@ import CoreLocation
 import SwiftUI
 
 struct WeatherView: View {
-    @EnvironmentObject var weatherManager: WeatherManager
+    @EnvironmentObject var weatherManager: WeatherService
 
     var body: some View {
         NavigationView {
@@ -26,12 +26,12 @@ struct WeatherView: View {
 }
 
 struct WeatherView_Previews: PreviewProvider {
-    static var testWeatherManager: WeatherManager {
+    static var testWeatherManager: WeatherService {
         let json = Bundle.main.url(forResource: "weather-api-response", withExtension: "json")!
         let jsonData = try! Data(contentsOf: json)
         let data = try! JSONDecoder().decode(WeatherData.self, from: jsonData)
 
-        let testWeatherManager = WeatherManager()
+        let testWeatherManager = WeatherService()
         testWeatherManager.currentLocation = WeatherLocation(country: "United States", state: "Michigan", city: "Royal Oak", zipCode: "", gpsLocation: CLLocation(latitude: 2.0, longitude: 2.0))
         testWeatherManager.weatherData = data
 

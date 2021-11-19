@@ -297,7 +297,7 @@ extension WeatherSDLManager {
     }
 
     func presentNoWeatherAlertsAlert() {
-        let alert = SDLAlertView(text: "No Weather Alerts!", secondaryText: "Cannot display because weather data is still loading", tertiaryText: nil, timeout: NSNumber(5), showWaitIndicator: NSNumber(true), audioIndication: nil, buttons: [SDLSoftButtonObject(name: "Okay", text: "Ok", artwork: nil, handler: nil)], icon: SDLArtwork(image: UIImage(systemName: "arrow.triangle.2.circlepath", withConfiguration: UIImage.SymbolConfiguration(pointSize: 256))!, persistent: true, as: .PNG))
+        let alert = SDLAlertView(text: "No Weather Alerts", secondaryText: "Cannot display because weather data is still loading", tertiaryText: nil, timeout: NSNumber(5), showWaitIndicator: NSNumber(true), audioIndication: nil, buttons: [SDLSoftButtonObject(name: "Okay", text: "Ok", artwork: nil, handler: nil)], icon: SDLArtwork(image: UIImage(systemName: "arrow.triangle.2.circlepath", withConfiguration: UIImage.SymbolConfiguration(pointSize: 256))!, persistent: true, as: .PNG))
         screenManager.presentAlert(alert, withCompletionHandler: nil)
     }
 }

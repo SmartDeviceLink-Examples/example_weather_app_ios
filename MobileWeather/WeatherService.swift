@@ -20,8 +20,8 @@ class WeatherService: ObservableObject {
     private let openWeatherService = OpenWeatherService()
 
     @Published var lastUpdateTime: Date?
-    @Published var currentLocation: WeatherLocation?
-    @Published var weatherData: WeatherData?
+    @Published var currentLocation = WeatherLocation(country: nil, state: nil, city: nil, zipCode: nil, gpsLocation: CLLocation(latitude: 42.4829483, longitude: -83.1426719))
+    @Published var weatherData = WeatherData()
 
     init() {
         locationService = LocationService(delegate: self)

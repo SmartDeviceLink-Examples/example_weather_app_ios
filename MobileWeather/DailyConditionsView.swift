@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct DailyConditionsView: View {
-    @State var dailyForecast: [DailyForecast]?
+    var dailyForecast: [DailyForecast]?
 
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)

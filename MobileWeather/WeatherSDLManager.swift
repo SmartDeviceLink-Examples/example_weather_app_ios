@@ -30,8 +30,8 @@ class WeatherSDLManager: NSObject {
     }
 
     func start() {
-//        let lifecycleConfig = SDLLifecycleConfiguration(appName: "MobileWeather", fullAppId: "330533107")
-        let lifecycleConfig = SDLLifecycleConfiguration(appName: "SDL Weather", fullAppId: "330533107", ipAddress: "m.sdl.tools", port: 10900)
+        let lifecycleConfig = SDLLifecycleConfiguration(appName: "MobileWeather", fullAppId: "330533107")
+//        let lifecycleConfig = SDLLifecycleConfiguration(appName: "SDL Weather", fullAppId: "330533107", ipAddress: "m.sdl.tools", port: 10900)
         lifecycleConfig.ttsName = SDLTTSChunk.textChunks(from: "S D L Weather")
         lifecycleConfig.appIcon = SDLArtwork(image: UIImage(named: "sdl-appicon")!, name: "AppIcon", persistent: true, as: .PNG)
         lifecycleConfig.language = .enUs
@@ -90,11 +90,11 @@ extension WeatherSDLManager: SDLManagerDelegate {
 // MARK: - Notification Observers
 extension WeatherSDLManager {
     @objc private func weatherDataDidUpdate(_ notification: Notification) {
-        guard let weatherData = WeatherService.shared.weatherData,
-              sdlManager.hmiLevel != .some(.none) else { return }
+        guard sdlManager.hmiLevel != .some(.none) else { return }
+        let weatherData = WeatherService.shared.weatherData
 
         // Find any unknown alerts
-        if let currentAlerts = WeatherService.shared.weatherData?.alerts {
+        if let currentAlerts = WeatherService.shared.weatherData.alerts {
             var unknownAlerts = Set<WeatherAlert>(currentAlerts)
             unknownAlerts.subtract(knownWeatherAlerts)
 
@@ -168,9 +168,9 @@ extension WeatherSDLManager {
     func showCurrentConditions(speak: Bool) {
         currentDisplayType = .current
 
-        guard let forecast = WeatherService.shared.weatherData?.current else { return showNoData(speak: speak) }
+        guard WeatherService.shared.lastUpdateTime != nil else { return showNoData(speak: speak) }
 
-        let viewModel = CurrentWeatherSDLViewModel(currentWeather: forecast)
+        let viewModel = CurrentWeatherSDLViewModel(currentWeather: WeatherService.shared.weatherData.current)
         screenManager.beginUpdates()
         screenManager.textField1 = viewModel.dateText
         screenManager.textField2 = viewModel.temperatureText
@@ -267,21 +267,24 @@ extension WeatherSDLManager {
 // MARK: - Popup Menus
 extension WeatherSDLManager {
     func presentHourlyForecastPopup() {
-        guard let weatherData = WeatherService.shared.weatherData else { return presentNoDataAlert() }
+        guard WeatherService.shared.lastUpdateTime != nil else { return presentNoDataAlert() }
+        let weatherData = WeatherService.shared.weatherData
 
         hourlyListInteraction = HourlyForecastSDLList(screenManager: screenManager, weatherData: weatherData)
         hourlyListInteraction!.present()
     }
 
     func presentDailyForecastPopup() {
-        guard let weatherData = WeatherService.shared.weatherData else { return presentNoDataAlert() }
+        guard WeatherService.shared.lastUpdateTime != nil else { return presentNoDataAlert() }
+        let weatherData = WeatherService.shared.weatherData
 
         dailyListInteraction = DailyForecastSDLList(screenManager: screenManager, weatherData: weatherData)
         dailyListInteraction!.present()
     }
 
     func presentAlertsPopup() {
-        guard let weatherData = WeatherService.shared.weatherData else { return presentNoDataAlert() }
+        guard WeatherService.shared.lastUpdateTime != nil else { return presentNoDataAlert() }
+        let weatherData = WeatherService.shared.weatherData
         guard let alerts = weatherData.alerts, !alerts.isEmpty else { return presentNoWeatherAlertsAlert() }
 
         alertsListInteraction = WeatherAlertsSDLList(screenManager: screenManager, weatherData: weatherData)

@@ -21,6 +21,20 @@ struct CurrentForecast: Equatable, Hashable, Decodable {
     let conditionDescriptions: [String]
     let conditionIconNames: [String]
 
+    init() {
+        date = Date()
+        sunriseDate = Date()
+        sunsetDate = Date()
+        temperature = Measurement<UnitTemperature>(value: 0.0, unit: .fahrenheit)
+        feelsLikeTemperature = Measurement<UnitTemperature>(value: 0.0, unit: .fahrenheit)
+        uvIndex = 0.0
+        visibility = Measurement<UnitLength>(value: 0.0, unit: .miles)
+        windSpeed = Measurement<UnitSpeed>(value: 0.0, unit: .milesPerHour)
+        windGust = nil
+        conditionDescriptions = []
+        conditionIconNames = []
+    }
+
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         date = try values.decode(Date.self, forKey: .date)

@@ -17,6 +17,15 @@ struct WeatherData: Decodable {
     let daily: [DailyForecast]
     let alerts: [WeatherAlert]?
 
+    init() {
+        location = CLLocationCoordinate2D(latitude: 42.4829483, longitude: -83.1426719)
+        current = CurrentForecast()
+        minutely = []
+        hourly = []
+        daily = []
+        alerts = []
+    }
+
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 

@@ -10,17 +10,22 @@ import CoreLocation
 import SwiftUI
 
 struct WeatherView: View {
-    @EnvironmentObject var weatherManager: WeatherService
+    @ObservedObject private var weatherManager = WeatherService.shared
 
     var body: some View {
+        #if DEBUG
+        let _ = Self._printChanges()
+        #endif
+
         NavigationView {
             ScrollView {
                 VStack(alignment: .center, spacing: 12) {
-                    CurrentConditionsView(currentForecast: weatherManager.weatherData?.current)
-                    HourlyConditionsView(hourlyForecast: weatherManager.weatherData?.hourly)
-                    DailyConditionsView(dailyForecast: weatherManager.weatherData?.daily)
+                    CurrentConditionsView(currentForecast: weatherManager.weatherData.current)
+                    HourlyConditionsView(hourlyForecast: weatherManager.weatherData.hourly)
+                    DailyConditionsView(dailyForecast: weatherManager.weatherData.daily)
                 }
             }
+            .redacted(reason: (weatherManager.lastUpdateTime == nil) ? .placeholder : [])
         }
     }
 }

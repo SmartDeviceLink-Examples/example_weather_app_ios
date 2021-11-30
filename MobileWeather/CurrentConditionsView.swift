@@ -9,10 +9,45 @@
 import SwiftUI
 
 struct CurrentConditionsView: View {
-    @State var currentForecast: CurrentForecast?
+    var currentForecast: CurrentForecast
 
     var body: some View {
-        Text(currentForecast?.conditionDescriptions.first ?? "Unknown")
+        #if DEBUG
+        let _ = Self._printChanges()
+        #endif
+
+        VStack {
+            HStack(alignment: .center, spacing: 10) {
+                let iconName = OpenWeatherIcon(rawValue: currentForecast.conditionIconNames.first ?? OpenWeatherIcon.clearDay.rawValue)!
+                Image(uiImage: WeatherImage.toUIImage(from: iconName, size: .large))
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width: 80, height: 80)
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(currentForecast.temperature.formatted())
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    HStack {
+                        Image(systemName: "wind")
+                        Text(currentForecast.windSpeed.formatted())
+                    }
+                    HStack {
+                        Image(systemName: "sunrise")
+                        Text(currentForecast.sunriseDate.formatted(date: .omitted, time: .shortened))
+                        Image(systemName: "sunset")
+                        Text(currentForecast.sunsetDate.formatted(date: .omitted, time: .shortened))
+                    }
+                    HStack {
+                        Text("UV: \(Int(currentForecast.uvIndex.rounded()))")
+                    }
+                }
+            }
+            Text(currentForecast.conditionDescriptions.first?.localizedCapitalized ?? "Unknown")
+                .font(.headline)
+        }
+        .padding()
     }
 }
 

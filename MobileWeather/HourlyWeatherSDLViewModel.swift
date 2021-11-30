@@ -10,17 +10,27 @@ import Foundation
 import SmartDeviceLink
 
 struct HourlyWeatherSDLViewModel: WeatherSDLViewModelType {
-    var dateText: String
-    var temperatureText: String
-    var conditionText: String
-    var additionalText: String
-    var artwork1: SDLArtwork
+    let dateText: String
+    let temperatureText: String
+    let conditionText: String
+    let additionalText: String
+    let artwork1: SDLArtwork
 
     private static let hourlyFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateStyle = .none
         f.doesRelativeDateFormatting = false
         f.setLocalizedDateFormatFromTemplate("h a")
+
+        return f
+    }()
+
+    static private let measurementFormatter: MeasurementFormatter = {
+        let f = MeasurementFormatter()
+        f.locale = .autoupdatingCurrent
+        f.unitOptions = .naturalScale
+        f.unitStyle = .medium
+        f.numberFormatter.maximumFractionDigits = 2
 
         return f
     }()
@@ -33,13 +43,16 @@ struct HourlyWeatherSDLViewModel: WeatherSDLViewModelType {
         }
 
         var textField4String = ""
-        if forecast.precipitationChance > 5.0 {
+        if forecast.precipitationChance > 0.05 {
             // If >5% precipitation chance, use that
-            textField4String = "\(Int(forecast.precipitationChance.rounded()))%"
-            if forecast.rainAmount.value > 0.0 {
-                textField4String.append(" | \(forecast.rainAmount.formatted()) of Rain")
-            } else if forecast.snowAmount.value > 0.0 {
-                textField4String.append(" | \(forecast.rainAmount.formatted()) of Snow")
+            textField4String = "\(Int((forecast.precipitationChance * 100).rounded()))% Chance"
+            if (forecast.snowAmount.value > 0) && (forecast.rainAmount.value == 0) {
+                textField4String.append(" of \(HourlyWeatherSDLViewModel.measurementFormatter.string(from: forecast.snowAmount)) Snow")
+            } else if (forecast.rainAmount.value > 0) && (forecast.snowAmount.value == 0) {
+                textField4String.append(" of \(HourlyWeatherSDLViewModel.measurementFormatter.string(from: forecast.rainAmount)) Rain")
+            } else {
+                let totalPrecipitation = forecast.rainAmount + forecast.snowAmount
+                textField4String.append(" \(HourlyWeatherSDLViewModel.measurementFormatter.string(from: totalPrecipitation)) of Snow and Rain")
             }
         } else if forecast.visibility.value < 0.5 {
             // If visibility is less than a half mile, use that value

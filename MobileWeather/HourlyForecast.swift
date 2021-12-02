@@ -8,7 +8,9 @@
 
 import Foundation
 
-struct HourlyForecast: Equatable, Hashable, Decodable {
+struct HourlyForecast: Identifiable, Equatable, Hashable, Decodable {
+    var id: Int { return Int(date.timeIntervalSinceReferenceDate) }
+
     let date: Date
     let temperature: Measurement<UnitTemperature>
     let feelsLikeTemperature: Measurement<UnitTemperature>
@@ -21,6 +23,10 @@ struct HourlyForecast: Equatable, Hashable, Decodable {
     let snowAmount: Measurement<UnitLength>
     let conditionDescriptions: [String]
     let conditionIconNames: [String]
+
+    init(date: Date, temperature: Measurement<UnitTemperature>, feelsLikeTemperature: Measurement<UnitTemperature>, uvIndex: Double, visibility: Measurement<UnitLength>, windSpeed: Measurement<UnitSpeed>, windGust: Measurement<UnitSpeed>?, precipitationChance: Double, rainAmount: Measurement<UnitLength> , snowAmount: Measurement<UnitLength>, conditionDescriptions: [String], conditionIconNames: [String]) {
+        self.date = date; self.temperature = temperature; self.feelsLikeTemperature = feelsLikeTemperature; self.uvIndex = uvIndex; self.visibility = visibility; self.windSpeed = windSpeed; self.windGust = windGust; self.precipitationChance = precipitationChance; self.rainAmount = rainAmount; self.snowAmount = snowAmount; self.conditionDescriptions = conditionDescriptions; self.conditionIconNames = conditionIconNames;
+    }
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -75,4 +81,12 @@ struct HourlyForecast: Equatable, Hashable, Decodable {
     private enum PrecipitationCodingKeys: String, CodingKey {
         case lastHour = "1h"
     }
+}
+
+extension HourlyForecast {
+    static var testData: HourlyForecast = {
+        let testData = HourlyForecast(date: Date(), temperature: Measurement<UnitTemperature>(value: 61, unit: .fahrenheit), feelsLikeTemperature: Measurement<UnitTemperature>(value: 80, unit: .fahrenheit), uvIndex: 7.0, visibility: Measurement<UnitLength>(value: 1.2, unit: .miles), windSpeed: Measurement<UnitSpeed>(value: 15, unit: .milesPerHour), windGust: Measurement<UnitSpeed>(value: 25, unit: .milesPerHour), precipitationChance: 0.2, rainAmount: Measurement<UnitLength>(value: 0.1, unit: .inches), snowAmount: Measurement<UnitLength>(value: 0, unit: .inches), conditionDescriptions: ["overcast and rainy"], conditionIconNames: [OpenWeatherIcon.lightRainDay.rawValue])
+
+        return testData
+    }()
 }

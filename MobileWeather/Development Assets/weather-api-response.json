@@ -58,6 +58,29 @@
                 }
             ],
             "pop": 0
+        },
+        {
+            "dt": 1618318800,
+            "temp": 255.58,
+            "feels_like": 254.4,
+            "pressure": 1010,
+            "humidity": 34,
+            "dew_point": 244.98,
+            "uvi": 7.4,
+            "clouds": 84,
+            "visibility": 123,
+            "wind_speed": 7.12,
+            "wind_deg": 100,
+            "wind_gust": 22.33,
+            "weather": [
+                {
+                    "id": 801,
+                    "main": "Rainy",
+                    "description": "rainy and a few clouds",
+                    "icon": "10d"
+                }
+            ],
+            "pop": 0
         }
     ],
     "daily": [

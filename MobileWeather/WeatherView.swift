@@ -39,6 +39,7 @@ struct WeatherView_Previews: PreviewProvider {
         let testWeatherManager = WeatherService()
         testWeatherManager.currentLocation = WeatherLocation(country: "United States", state: "Michigan", city: "Royal Oak", zipCode: "", gpsLocation: CLLocation(latitude: 2.0, longitude: 2.0))
         testWeatherManager.weatherData = data
+        testWeatherManager.lastUpdateTime = Date()
 
         return testWeatherManager
     }

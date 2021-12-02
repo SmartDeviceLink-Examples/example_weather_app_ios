@@ -8,7 +8,9 @@
 
 import Foundation
 
-struct DailyForecast: Equatable, Hashable, Decodable {
+struct DailyForecast: Identifiable, Equatable, Hashable, Decodable {
+    var id: Int { return Int(date.timeIntervalSinceReferenceDate) }
+
     let date: Date
     let sunriseDate: Date
     let sunsetDate: Date
@@ -22,6 +24,10 @@ struct DailyForecast: Equatable, Hashable, Decodable {
 
     let conditionDescriptions: [String]
     let conditionIconNames: [String]
+
+    init(date: Date, sunriseDate: Date, sunsetDate: Date, lowTemperature: Measurement<UnitTemperature>, highTemperature: Measurement<UnitTemperature>, windSpeed: Measurement<UnitSpeed>, windGust: Measurement<UnitSpeed>?, rainAmount: Measurement<UnitLength>, snowAmount: Measurement<UnitLength>, precipitationChance: Double, conditionDescriptions: [String], conditionIconNames: [String]) {
+        self.date = date; self.sunriseDate = sunriseDate; self.sunsetDate = sunsetDate; self.lowTemperature = lowTemperature; self.highTemperature = highTemperature; self.windSpeed = windSpeed; self.windGust = windGust; self.rainAmount = rainAmount; self.snowAmount = snowAmount; self.precipitationChance = precipitationChance; self.conditionDescriptions = conditionDescriptions; self.conditionIconNames = conditionIconNames;
+    }
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -76,4 +82,14 @@ struct DailyForecast: Equatable, Hashable, Decodable {
     private enum TemperatureCodingKeys: String, CodingKey {
         case morning = "morn", day, evening = "eve", night = "night", low = "min", high = "max"
     }
+}
+
+extension DailyForecast {
+    static var testData: DailyForecast = {
+        let sunriseDate = DateComponents(calendar: Calendar.current, timeZone: TimeZone.current, year: 2021, month: 12, day: 2, hour: 7, minute: 51, second: 1).date!
+        let sunsetDate = DateComponents(calendar: Calendar.current, timeZone: TimeZone.current, year: 2021, month: 12, day: 2, hour: 20, minute: 2, second: 1).date!
+        let testData = DailyForecast(date: Date(), sunriseDate: sunriseDate, sunsetDate: sunsetDate, lowTemperature: Measurement<UnitTemperature>(value: 61, unit: .fahrenheit), highTemperature: Measurement<UnitTemperature>(value: 80, unit: .fahrenheit), windSpeed: Measurement<UnitSpeed>(value: 15, unit: .milesPerHour), windGust: Measurement<UnitSpeed>(value: 25, unit: .milesPerHour), rainAmount: Measurement<UnitLength>(value: 0.1, unit: .inches), snowAmount: Measurement<UnitLength>(value: 0, unit: .inches), precipitationChance: 0.2, conditionDescriptions: ["overcast and rainy"], conditionIconNames: [OpenWeatherIcon.lightRainDay.rawValue])
+
+        return testData
+    }()
 }

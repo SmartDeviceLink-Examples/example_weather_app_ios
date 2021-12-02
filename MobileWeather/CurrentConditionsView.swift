@@ -25,9 +25,11 @@ struct CurrentConditionsView: View {
                     .scaledToFit()
                     .frame(width: 80, height: 80)
 
-                VStack(alignment: .leading, spacing: 10) {
+                Spacer()
+
+                VStack(alignment: .trailing, spacing: 10) {
                     Text(currentForecast.temperature.formatted())
-                        .font(.title2)
+                        .font(.title)
                         .fontWeight(.bold)
                     HStack {
                         Image(systemName: "wind")
@@ -36,16 +38,17 @@ struct CurrentConditionsView: View {
                     HStack {
                         Image(systemName: "sunrise")
                         Text(currentForecast.sunriseDate.formatted(date: .omitted, time: .shortened))
+                    }
+                    HStack {
                         Image(systemName: "sunset")
                         Text(currentForecast.sunsetDate.formatted(date: .omitted, time: .shortened))
                     }
-                    HStack {
-                        Text("UV: \(Int(currentForecast.uvIndex.rounded()))")
-                    }
+                    Text("UV Index: \(Int(currentForecast.uvIndex.rounded()))")
                 }
             }
             Text(currentForecast.conditionDescriptions.first?.localizedCapitalized ?? "Unknown")
-                .font(.headline)
+                .font(.title2)
+                .fontWeight(.medium)
         }
         .padding()
     }

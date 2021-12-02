@@ -9,10 +9,14 @@
 import SwiftUI
 
 struct HourlyConditionsView: View {
-    var hourlyForecast: [HourlyForecast]?
+    var hourlyForecast: [HourlyForecast]
 
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            ForEach(hourlyForecast) { forecast in
+                HourForecastView(forecast: forecast)
+            }
+        }
     }
 }
 

@@ -9,10 +9,14 @@
 import SwiftUI
 
 struct DailyConditionsView: View {
-    var dailyForecast: [DailyForecast]?
+    var dailyForecast: [DailyForecast]
 
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List {
+            ForEach(dailyForecast) { forecast in
+                DayForecastView(forecast: forecast)
+            }
+        }
     }
 }
 

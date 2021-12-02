@@ -12,7 +12,7 @@ struct DailyConditionsView: View {
     var dailyForecast: [DailyForecast]
 
     var body: some View {
-        List {
+        VStack {
             ForEach(dailyForecast) { forecast in
                 DayForecastView(forecast: forecast)
             }

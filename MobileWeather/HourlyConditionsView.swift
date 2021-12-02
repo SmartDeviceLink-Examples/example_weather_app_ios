@@ -12,9 +12,11 @@ struct HourlyConditionsView: View {
     var hourlyForecast: [HourlyForecast]
 
     var body: some View {
-        HStack {
-            ForEach(hourlyForecast) { forecast in
-                HourForecastView(forecast: forecast)
+        ScrollView(.horizontal) {
+            HStack {
+                ForEach(hourlyForecast) { forecast in
+                    HourForecastView(forecast: forecast)
+                }
             }
         }
     }

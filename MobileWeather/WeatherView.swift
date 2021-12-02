@@ -12,6 +12,12 @@ import SwiftUI
 struct WeatherView: View {
     @ObservedObject private var weatherManager = WeatherService.shared
 
+    static var temperatureFormatter: MeasurementFormatter = {
+        let m = MeasurementFormatter()
+        m.numberFormatter.maximumFractionDigits = 0
+        return m
+    }()
+
     var body: some View {
         #if DEBUG
         let _ = Self._printChanges()
@@ -21,8 +27,11 @@ struct WeatherView: View {
             ScrollView {
                 VStack(alignment: .center, spacing: 12) {
                     CurrentConditionsView(currentForecast: weatherManager.weatherData.current)
-                    HourlyConditionsView(hourlyForecast: weatherManager.weatherData.hourly)
-                    DailyConditionsView(dailyForecast: weatherManager.weatherData.daily)
+                        .padding(.horizontal)
+                    HourlyConditionsView(hourlyForecast: Array(weatherManager.weatherData.hourly.prefix(12)))
+                        .padding(.horizontal)
+                    DailyConditionsView(dailyForecast: Array(weatherManager.weatherData.daily.dropFirst().prefix(7)))
+                        .padding(.horizontal)
                 }
             }
             .redacted(reason: (weatherManager.lastUpdateTime == nil) ? .placeholder : [])

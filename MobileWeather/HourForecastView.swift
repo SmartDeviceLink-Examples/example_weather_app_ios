@@ -20,7 +20,7 @@ struct HourForecastView: View {
                 .scaledToFit()
                 .frame(width: 40, height: 40)
 
-            Text(forecast.temperature.formatted())
+            Text(WeatherView.temperatureFormatter.string(from: forecast.temperature))
             Text(forecast.date.formatted(date: .omitted, time: .shortened))
         }
     }

@@ -28,7 +28,7 @@ struct CurrentConditionsView: View {
                 Spacer()
 
                 VStack(alignment: .trailing, spacing: 10) {
-                    Text(currentForecast.temperature.formatted())
+                    Text(WeatherView.temperatureFormatter.string(from: currentForecast.temperature))
                         .font(.title)
                         .fontWeight(.bold)
                     HStack {
@@ -50,7 +50,6 @@ struct CurrentConditionsView: View {
                 .font(.title2)
                 .fontWeight(.medium)
         }
-        .padding()
     }
 }
 

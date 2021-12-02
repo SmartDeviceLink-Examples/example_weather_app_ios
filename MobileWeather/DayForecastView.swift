@@ -38,7 +38,7 @@ struct DayForecastView: View {
 
                 Spacer()
                 
-                Text("\(forecast.highTemperature.formatted()) / \(forecast.lowTemperature.formatted())")
+                Text("\(WeatherView.temperatureFormatter.string(from: forecast.highTemperature)) / \(WeatherView.temperatureFormatter.string(from: forecast.lowTemperature))")
             }
         }
     }

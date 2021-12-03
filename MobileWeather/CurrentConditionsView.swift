@@ -12,11 +12,11 @@ struct CurrentConditionsView: View {
     var currentForecast: CurrentForecast
 
     var body: some View {
-        #if DEBUG
+#if DEBUG
         let _ = Self._printChanges()
-        #endif
+#endif
 
-        VStack {
+        VStack(alignment: .center, spacing: 10) {
             HStack(alignment: .center, spacing: 10) {
                 let iconName = OpenWeatherIcon(rawValue: currentForecast.conditionIconNames.first ?? OpenWeatherIcon.clearDay.rawValue)!
                 WeatherImageView(openWeatherName: iconName)
@@ -43,7 +43,8 @@ struct CurrentConditionsView: View {
                     Text("UV Index: \(Int(currentForecast.uvIndex.rounded()))")
                 }
             }
-            Text("Currently: \(currentForecast.conditionDescriptions.joined(separator: ", ").capitalized)")
+
+            Text("\(currentForecast.conditionDescriptions.joined(separator: ", ").capitalized)")
                 .font(.title2)
                 .fontWeight(.medium)
         }

@@ -30,8 +30,8 @@ class WeatherSDLManager: NSObject {
     }
 
     func start() {
-//        let lifecycleConfig = SDLLifecycleConfiguration(appName: "MobileWeather", fullAppId: "330533107")
-        let lifecycleConfig = SDLLifecycleConfiguration(appName: "SDL Weather", fullAppId: "330533107", ipAddress: "m.sdl.tools", port: 14513)
+        let lifecycleConfig = SDLLifecycleConfiguration(appName: "MobileWeather", fullAppId: "330533107")
+//        let lifecycleConfig = SDLLifecycleConfiguration(appName: "SDL Weather", fullAppId: "330533107", ipAddress: "m.sdl.tools", port: 14513)
         lifecycleConfig.ttsName = SDLTTSChunk.textChunks(from: "S D L Weather")
         lifecycleConfig.appIcon = SDLArtwork(image: UIImage(named: "sdl-appicon")!, name: "AppIcon", persistent: true, as: .PNG)
         lifecycleConfig.language = .enUs

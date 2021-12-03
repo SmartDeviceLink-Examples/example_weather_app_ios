@@ -24,7 +24,7 @@ struct CurrentConditionsView: View {
 
                 Spacer()
 
-                VStack(alignment: .trailing, spacing: 10) {
+                VStack(alignment: .trailing, spacing: 5) {
                     Text(WeatherView.temperatureFormatter.string(from: currentForecast.temperature))
                         .font(.title)
                         .fontWeight(.bold)

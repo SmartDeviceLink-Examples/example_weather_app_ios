@@ -21,15 +21,13 @@ struct DayForecastView: View {
     }()
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 5) {
             Text(DayForecastView.dayFormatter.string(from: forecast.date))
+                .font(.subheadline)
 
             HStack {
                 let iconName = OpenWeatherIcon(rawValue: forecast.conditionIconNames.first ?? OpenWeatherIcon.clearDay.rawValue)!
-                Image(uiImage: WeatherImage.toUIImage(from: iconName, size: .large))
-                    .resizable()
-                    .renderingMode(.template)
-                    .scaledToFit()
+                WeatherImageView(openWeatherName: iconName)
                     .frame(width: 30, height: 30)
 
                 Spacer()
@@ -37,8 +35,21 @@ struct DayForecastView: View {
                 Text(forecast.conditionDescriptions.first!.capitalized)
 
                 Spacer()
-                
-                Text("\(WeatherView.temperatureFormatter.string(from: forecast.highTemperature)) / \(WeatherView.temperatureFormatter.string(from: forecast.lowTemperature))")
+
+                HStack(alignment: .center, spacing: 4) {
+                    HStack(alignment: .center, spacing: 0) {
+                        Image(systemName: "arrow.up")
+                            .foregroundColor(.red)
+                        Text(WeatherView.temperatureFormatter.string(from: forecast.highTemperature))
+                    }
+
+                    HStack(alignment: .center, spacing: 0) {
+                        Image(systemName: "arrow.down")
+                            .foregroundColor(.blue)
+                        Text(WeatherView.temperatureFormatter.string(from: forecast.lowTemperature))
+                    }
+                }
+                .font(.subheadline)
             }
         }
     }

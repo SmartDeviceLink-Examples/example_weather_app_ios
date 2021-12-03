@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 import UIKit
 import SmartDeviceLink
 
@@ -29,26 +30,23 @@ enum WeatherImage {
     }
 
     static func toUIImage(from openWeatherName: OpenWeatherIcon, size: WeatherImageSize) -> UIImage {
-        let systemName = systemImage(from: openWeatherName)
-
-        // TODO: Palatte / Heirarchical colors w/ not template images for some things / on systems we can control the background?
-        return UIImage(systemName: systemName, withConfiguration: UIImage.SymbolConfiguration(pointSize: size.pointSize))!.withRenderingMode(.alwaysTemplate).withTintColor(.systemGray)
+        return Self.systemImage(from: openWeatherName).applyingSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: size.pointSize))!
     }
 
-    static private func systemImage(from openWeatherName: OpenWeatherIcon) -> String {
+    static private func systemImage(from openWeatherName: OpenWeatherIcon) -> UIImage {
         switch openWeatherName {
-        case .clearDay: return "sun.max.fill"
-        case .clearNight: return "moon.stars.fill"
-        case .partlyCloudyDay, .mostlyCloudyDay: return "cloud.sun.fill"
-        case .partlyCloudyNight, .mostlyCloudyNight: return "cloud.moon.fill"
-        case .cloudyDay, .cloudyNight: return "cloud.fill"
-        case .lightRainDay: return "cloud.sun.rain.fill"
-        case .lightRainNight: return "cloud.moon.rain.fill"
-        case .rainDay, .rainNight: return "cloud.rain.fill"
-        case .thunderstormDay, .thunderstormNight: return "cloud.bolt.rain.fill"
-        case .snowDay, .snowNight: return "cloud.snow.fill"
-        case .fogDay: return "sun.haze.fill"
-        case .fogNight: return "cloud.fog.fill"
+        case .clearDay: return UIImage(systemName: "sun.max.fill")!.withRenderingMode(.alwaysOriginal)
+        case .clearNight: return UIImage(systemName: "moon.stars.fill", withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.label, .systemYellow]))!
+        case .partlyCloudyDay, .mostlyCloudyDay: return UIImage(systemName: "cloud.sun.fill", withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.systemGray, .systemYellow]))!
+        case .partlyCloudyNight, .mostlyCloudyNight: return UIImage(systemName: "cloud.moon.fill", withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.systemGray, .label]))!
+        case .cloudyDay, .cloudyNight: return UIImage(systemName: "cloud.fill")!.withTintColor(.systemGray)
+        case .lightRainDay: return UIImage(systemName: "cloud.sun.rain.fill", withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.systemGray, .systemYellow, .systemBlue]))!
+        case .lightRainNight: return UIImage(systemName: "cloud.moon.rain.fill", withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.systemGray, .systemYellow, .systemBlue]))!
+        case .rainDay, .rainNight: return UIImage(systemName: "cloud.rain.fill", withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.systemGray, .systemBlue]))!
+        case .thunderstormDay, .thunderstormNight: return UIImage(systemName: "cloud.bolt.rain.fill", withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.systemGray, .systemBlue]))!
+        case .snowDay, .snowNight: return UIImage(systemName: "cloud.snow.fill", withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.systemGray, .label]))!
+        case .fogDay: return UIImage(systemName: "sun.haze.fill", withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.systemGray, .systemYellow]))!
+        case .fogNight: return UIImage(systemName: "cloud.fog.fill", withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.systemGray, .label]))!
         }
     }
 }

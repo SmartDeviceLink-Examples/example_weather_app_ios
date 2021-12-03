@@ -12,7 +12,11 @@ struct DailyConditionsView: View {
     var dailyForecast: [DailyForecast]
 
     var body: some View {
-        VStack {
+        Text("Daily")
+            .font(.title)
+            .fontWeight(.bold)
+
+        VStack(alignment: .center, spacing: 20) {
             ForEach(dailyForecast) { forecast in
                 DayForecastView(forecast: forecast)
             }

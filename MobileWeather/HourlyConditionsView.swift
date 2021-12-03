@@ -12,8 +12,12 @@ struct HourlyConditionsView: View {
     var hourlyForecast: [HourlyForecast]
 
     var body: some View {
-        ScrollView(.horizontal) {
-            HStack {
+        Text("Hourly")
+            .font(.title)
+            .fontWeight(.bold)
+
+        ScrollView(.horizontal, showsIndicators: true) {
+            HStack(alignment: .center, spacing: 20) {
                 ForEach(hourlyForecast) { forecast in
                     HourForecastView(forecast: forecast)
                 }

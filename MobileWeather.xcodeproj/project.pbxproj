@@ -46,6 +46,7 @@
 		4ABBCB4A273ECFE80020D974 /* WeatherSDLManager+Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABBCB49273ECFE80020D974 /* WeatherSDLManager+Menu.swift */; };
 		4AFFBD4727595A7F002F2EA8 /* HourForecastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFFBD4627595A7F002F2EA8 /* HourForecastView.swift */; };
 		4AFFBD4927595A88002F2EA8 /* DayForecastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFFBD4827595A88002F2EA8 /* DayForecastView.swift */; };
+		4AFFBD4B275A735D002F2EA8 /* WeatherImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFFBD4A275A735D002F2EA8 /* WeatherImageView.swift */; };
 		5DB7EDC91D89CC2C00B62BB7 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5DB7EDC81D89CC2C00B62BB7 /* Settings.bundle */; };
 		5DB7EDCB1D89CC3800B62BB7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DB7EDCA1D89CC3800B62BB7 /* Images.xcassets */; };
 		AA62726DBC705DF2AB93C537 /* Pods_MobileWeather.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5FAE7A71ACD04B5A73D580C /* Pods_MobileWeather.framework */; };
@@ -106,6 +107,7 @@
 		4ADBD20026FD13AF00ABB045 /* weather-api-response.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = "weather-api-response.json"; path = "Development Assets/weather-api-response.json"; sourceTree = "<group>"; };
 		4AFFBD4627595A7F002F2EA8 /* HourForecastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourForecastView.swift; sourceTree = "<group>"; };
 		4AFFBD4827595A88002F2EA8 /* DayForecastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayForecastView.swift; sourceTree = "<group>"; };
+		4AFFBD4A275A735D002F2EA8 /* WeatherImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherImageView.swift; sourceTree = "<group>"; };
 		56FBAA80C3ED8E16429896CD /* Pods-MobileWeather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWeather.release.xcconfig"; path = "Pods/Target Support Files/Pods-MobileWeather/Pods-MobileWeather.release.xcconfig"; sourceTree = "<group>"; };
 		5DB7EDC81D89CC2C00B62BB7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = MobileWeather/Settings.bundle; sourceTree = SOURCE_ROOT; };
 		5DB7EDCA1D89CC3800B62BB7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MobileWeather/Images.xcassets; sourceTree = SOURCE_ROOT; };
@@ -247,10 +249,11 @@
 		4ABBCB46273C64BA0020D974 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4A8DF85526FA377C00B46E2A /* WeatherView.swift */,
-				4A8DF86326FA593200B46E2A /* WeatherView Sub Views */,
 				4A8DF85F26FA487400B46E2A /* SettingsView.swift */,
 				4A8DF85D26FA457500B46E2A /* WeatherAlertView.swift */,
+				4A8DF85526FA377C00B46E2A /* WeatherView.swift */,
+				4A8DF86326FA593200B46E2A /* WeatherView Sub Views */,
+				4AFFBD4C275A78DE002F2EA8 /* Utility Views */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -282,6 +285,14 @@
 				4AFFBD4627595A7F002F2EA8 /* HourForecastView.swift */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		4AFFBD4C275A78DE002F2EA8 /* Utility Views */ = {
+			isa = PBXGroup;
+			children = (
+				4AFFBD4A275A735D002F2EA8 /* WeatherImageView.swift */,
+			);
+			name = "Utility Views";
 			sourceTree = "<group>";
 		};
 		5DC0B72B2182466A00E1B317 /* Supporting Files */ = {
@@ -502,6 +513,7 @@
 				4A491145266E9F9B00A2E06D /* WeatherAlert.swift in Sources */,
 				4A02110E2746D7C200C9FA80 /* HourlyWeatherSDLViewModel.swift in Sources */,
 				4A8DF86226FA58A500B46E2A /* SceneDelegate.swift in Sources */,
+				4AFFBD4B275A735D002F2EA8 /* WeatherImageView.swift in Sources */,
 				4A50124326F50ABF0012B7DD /* WeatherData.swift in Sources */,
 				4AFFBD4927595A88002F2EA8 /* DayForecastView.swift in Sources */,
 				4A50124526F50B140012B7DD /* MinutelyForecast.swift in Sources */,

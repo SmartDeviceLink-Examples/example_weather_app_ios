@@ -11,17 +11,23 @@ import SwiftUI
 struct HourForecastView: View {
     let forecast: HourlyForecast
 
+    private static var hourDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.doesRelativeDateFormatting = false
+        f.setLocalizedDateFormatFromTemplate("h a")
+
+        return f
+    }()
+
     var body: some View {
         VStack {
             let iconName = OpenWeatherIcon(rawValue: forecast.conditionIconNames.first ?? OpenWeatherIcon.clearDay.rawValue)!
-            Image(uiImage: WeatherImage.toUIImage(from: iconName, size: .large))
-                .resizable()
-                .renderingMode(.template)
-                .scaledToFit()
+            WeatherImageView(openWeatherName: iconName)
                 .frame(width: 40, height: 40)
 
             Text(WeatherView.temperatureFormatter.string(from: forecast.temperature))
-            Text(forecast.date.formatted(date: .omitted, time: .shortened))
+            Text(HourForecastView.hourDateFormatter.string(from: forecast.date))
+                .font(.subheadline)
         }
     }
 }

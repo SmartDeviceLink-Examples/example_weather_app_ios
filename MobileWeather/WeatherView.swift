@@ -25,16 +25,26 @@ struct WeatherView: View {
 
         NavigationView {
             ScrollView {
-                VStack(alignment: .center, spacing: 12) {
+                VStack(alignment: .leading, spacing: 25) {
                     CurrentConditionsView(currentForecast: weatherManager.weatherData.current)
                         .padding(.horizontal)
-                    HourlyConditionsView(hourlyForecast: Array(weatherManager.weatherData.hourly.prefix(12)))
+                    HourlyConditionsView(hourlyForecast: Array(weatherManager.weatherData.hourly.prefix(20)))
                         .padding(.horizontal)
                     DailyConditionsView(dailyForecast: Array(weatherManager.weatherData.daily.dropFirst().prefix(7)))
                         .padding(.horizontal)
+
+                    HStack {
+                        Spacer()
+                        Image(systemName: "location")
+                            .tint(.blue)
+                        Text("\(weatherManager.currentLocation.city ?? "Unknown"), \(weatherManager.currentLocation.state ?? "Unknown"), \(weatherManager.currentLocation.country ?? "Unknown")")
+                        Spacer()
+                    }
+                    .padding()
                 }
+                .redacted(reason: (weatherManager.lastUpdateTime == nil) ? .placeholder : [])
             }
-            .redacted(reason: (weatherManager.lastUpdateTime == nil) ? .placeholder : [])
+            .navigationTitle("SDL Weather")
         }
     }
 }

@@ -10,10 +10,10 @@ import Foundation
 import SmartDeviceLink
 
 struct CurrentWeatherSDLViewModel: WeatherSDLViewModelType {
-    var dateText: String
-    var temperatureText: String
-    var conditionText: String
-    var additionalText: String
+    var text1: String
+    var text2: String
+    var text3: String
+    var text4: String
     var artwork1: SDLArtwork
 
     private static var sunriseSunsetFormatter: DateFormatter = {
@@ -51,10 +51,10 @@ struct CurrentWeatherSDLViewModel: WeatherSDLViewModelType {
             }
         }
 
-        dateText = "Right Now"
-        temperatureText = temperatureString
-        conditionText = currentWeather.conditionDescriptions.first!.capitalized(with: .current)
-        additionalText = textField4String
+        text1 = "Right Now"
+        text2 = temperatureString
+        text3 = currentWeather.conditionDescriptions.first!.capitalized(with: .current)
+        text4 = textField4String
         artwork1 = WeatherImage.toSDLArtwork(from: OpenWeatherIcon(rawValue: currentWeather.conditionIconNames.first!)!, size: .large)
     }
 }

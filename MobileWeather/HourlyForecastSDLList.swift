@@ -27,11 +27,11 @@ class HourlyForecastSDLList: NSObject, WeatherSDLListType {
     }
 
     func _createChoiceCells(from weatherData: WeatherData) -> [SDLChoiceCell] {
-        let hourlyViewModels = weatherData.hourly.map { HourlyWeatherSDLViewModel(forecast: $0) }
+        let hourlyViewModels = weatherData.hourly.map { HourlyWeatherSDLViewModel(forecast: $0) }.prefix(20)
         var hourlyForecastCells = [SDLChoiceCell]()
 
         for viewModel in hourlyViewModels {
-            hourlyForecastCells.append(SDLChoiceCell(text: viewModel.conditionText, secondaryText: viewModel.dateText, tertiaryText: viewModel.temperatureText, voiceCommands: nil, artwork: viewModel.artwork1, secondaryArtwork: nil))
+            hourlyForecastCells.append(SDLChoiceCell(text: viewModel.text3, secondaryText: viewModel.text1, tertiaryText: viewModel.text2, voiceCommands: nil, artwork: viewModel.artwork1, secondaryArtwork: nil))
         }
 
         return hourlyForecastCells

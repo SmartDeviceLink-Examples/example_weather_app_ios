@@ -30,8 +30,8 @@ class WeatherSDLManager: NSObject {
     }
 
     func start() {
-        let lifecycleConfig = SDLLifecycleConfiguration(appName: "MobileWeather", fullAppId: "330533107")
-//        let lifecycleConfig = SDLLifecycleConfiguration(appName: "SDL Weather", fullAppId: "330533107", ipAddress: "m.sdl.tools", port: 10900)
+//        let lifecycleConfig = SDLLifecycleConfiguration(appName: "MobileWeather", fullAppId: "330533107")
+        let lifecycleConfig = SDLLifecycleConfiguration(appName: "SDL Weather", fullAppId: "330533107", ipAddress: "m.sdl.tools", port: 14513)
         lifecycleConfig.ttsName = SDLTTSChunk.textChunks(from: "S D L Weather")
         lifecycleConfig.appIcon = SDLArtwork(image: UIImage(named: "sdl-appicon")!, name: "AppIcon", persistent: true, as: .PNG)
         lifecycleConfig.language = .enUs
@@ -172,15 +172,15 @@ extension WeatherSDLManager {
 
         let viewModel = CurrentWeatherSDLViewModel(currentWeather: WeatherService.shared.weatherData.current)
         screenManager.beginUpdates()
-        screenManager.textField1 = viewModel.dateText
-        screenManager.textField2 = viewModel.temperatureText
-        screenManager.textField3 = viewModel.conditionText
-        screenManager.textField4 = viewModel.additionalText
+        screenManager.textField1 = viewModel.text1
+        screenManager.textField2 = viewModel.text2
+        screenManager.textField3 = viewModel.text3
+        screenManager.textField4 = viewModel.text4
         screenManager.primaryGraphic = viewModel.artwork1
         screenManager.endUpdates()
 
         if speak {
-            let speak = SDLSpeak(tts: "\(viewModel.dateText) \(viewModel.temperatureText) \(viewModel.conditionText) + \(viewModel.additionalText)")
+            let speak = SDLSpeak(tts: "\(viewModel.text1) \(viewModel.text2) \(viewModel.text3) \(viewModel.text4)")
             sdlManager.send(request: speak) { request, response, error in
                 if let error = error {
                     SDLLog.e("Error sending speak with string: \(speak.ttsChunks.first!.text), error: \(error)")
@@ -196,15 +196,15 @@ extension WeatherSDLManager {
 
         let viewModel = DailyWeatherSDLViewModel(forecast: forecast)
         screenManager.beginUpdates()
-        screenManager.textField1 = viewModel.dateText
-        screenManager.textField2 = viewModel.temperatureText
-        screenManager.textField3 = viewModel.conditionText
-        screenManager.textField4 = viewModel.additionalText
+        screenManager.textField1 = viewModel.text1
+        screenManager.textField2 = viewModel.text2
+        screenManager.textField3 = viewModel.text3
+        screenManager.textField4 = viewModel.text4
         screenManager.primaryGraphic = viewModel.artwork1
         screenManager.endUpdates()
 
         if speak {
-            let speak = SDLSpeak(tts: "\(viewModel.dateText) \(viewModel.temperatureText) \(viewModel.conditionText) + \(viewModel.additionalText)")
+            let speak = SDLSpeak(tts: "\(viewModel.text1) \(viewModel.text2) \(viewModel.text3) \(viewModel.text4)")
             sdlManager.send(request: speak) { request, response, error in
                 if let error = error {
                     SDLLog.e("Error sending speak with string: \(speak.ttsChunks.first!.text), error: \(error)")
@@ -220,15 +220,15 @@ extension WeatherSDLManager {
 
         let viewModel = HourlyWeatherSDLViewModel(forecast: forecast)
         screenManager.beginUpdates()
-        screenManager.textField1 = viewModel.dateText
-        screenManager.textField2 = viewModel.temperatureText
-        screenManager.textField3 = viewModel.conditionText
-        screenManager.textField4 = viewModel.additionalText
+        screenManager.textField1 = viewModel.text1
+        screenManager.textField2 = viewModel.text2
+        screenManager.textField3 = viewModel.text3
+        screenManager.textField4 = viewModel.text4
         screenManager.primaryGraphic = viewModel.artwork1
         screenManager.endUpdates()
 
         if speak {
-            let speak = SDLSpeak(tts: "\(viewModel.dateText) \(viewModel.temperatureText) \(viewModel.conditionText) + \(viewModel.additionalText)")
+            let speak = SDLSpeak(tts: "\(viewModel.text1) \(viewModel.text2) \(viewModel.text3) \(viewModel.text4)")
             sdlManager.send(request: speak) { request, response, error in
                 if let error = error {
                     SDLLog.e("Error sending speak with string: \(speak.ttsChunks.first!.text), error: \(error)")
@@ -243,16 +243,30 @@ extension WeatherSDLManager {
         currentDisplayType = .alert
 
         let viewModel = WeatherAlertSDLViewModel(alert: alert)
-        screenManager.beginUpdates()
-        screenManager.textField1 = viewModel.dateText
-        screenManager.textField2 = viewModel.temperatureText
-        screenManager.textField3 = viewModel.conditionText
-        screenManager.textField4 = viewModel.additionalText
-        screenManager.primaryGraphic = viewModel.artwork1
-        screenManager.endUpdates()
+        let scrollableMessage = SDLScrollableMessage(message:
+        """
+        \(viewModel.text1)
+        \(viewModel.text2) — \(viewModel.text3)
+
+        \(viewModel.text4)
+        """)
+        let alertView = SDLAlertView(text: viewModel.text1, secondaryText: "\(viewModel.text2) - \(viewModel.text3)", tertiaryText: viewModel.text4.replacingOccurrences(of: "\n", with: " ", options: .literal), timeout: NSNumber(10), showWaitIndicator: nil, audioIndication: nil, buttons: nil, icon: viewModel.artwork1)
+
+        sdlManager.send(request: scrollableMessage) { request, response, error in
+            if let response = response, response.success.boolValue == false {
+                self.screenManager.presentAlert(alertView, withCompletionHandler: nil)
+            }
+        }
+//        screenManager.beginUpdates()
+//        screenManager.textField1 = viewModel.dateText
+//        screenManager.textField2 = viewModel.temperatureText
+//        screenManager.textField3 = viewModel.conditionText
+//        screenManager.textField4 = viewModel.additionalText
+//        screenManager.primaryGraphic = viewModel.artwork1
+//        screenManager.endUpdates()
 
         if speak {
-            let speak = SDLSpeak(tts: "\(viewModel.dateText) \(viewModel.temperatureText) \(viewModel.conditionText) + \(viewModel.additionalText)")
+            let speak = SDLSpeak(tts: "\(viewModel.text1) from \(viewModel.text2) to \(viewModel.text3)")
             sdlManager.send(request: speak) { request, response, error in
                 if let error = error {
                     SDLLog.e("Error sending speak with string: \(speak.ttsChunks.first!.text), error: \(error)")

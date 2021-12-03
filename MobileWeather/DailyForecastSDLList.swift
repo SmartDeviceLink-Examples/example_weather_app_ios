@@ -31,7 +31,7 @@ class DailyForecastSDLList: NSObject, WeatherSDLListType {
         var dailyForecastCells = [SDLChoiceCell]()
 
         for viewModel in dailyViewModels {
-            dailyForecastCells.append(SDLChoiceCell(text: viewModel.conditionText, secondaryText: viewModel.dateText, tertiaryText: viewModel.temperatureText, voiceCommands: nil, artwork: viewModel.artwork1, secondaryArtwork: nil))
+            dailyForecastCells.append(SDLChoiceCell(text: viewModel.text3, secondaryText: viewModel.text1, tertiaryText: viewModel.text2, voiceCommands: nil, artwork: viewModel.artwork1, secondaryArtwork: nil))
         }
 
         return dailyForecastCells

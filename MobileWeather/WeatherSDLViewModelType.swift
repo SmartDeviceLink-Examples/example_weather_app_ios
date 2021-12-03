@@ -9,9 +9,9 @@
 import SmartDeviceLink
 
 protocol WeatherSDLViewModelType {
-    var dateText: String { get }
-    var temperatureText: String { get }
-    var conditionText: String { get }
-    var additionalText: String { get }
+    var text1: String { get }
+    var text2: String { get }
+    var text3: String { get }
+    var text4: String { get }
     var artwork1: SDLArtwork { get }
 }

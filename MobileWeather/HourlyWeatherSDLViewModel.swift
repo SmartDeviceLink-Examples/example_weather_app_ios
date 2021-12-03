@@ -10,10 +10,10 @@ import Foundation
 import SmartDeviceLink
 
 struct HourlyWeatherSDLViewModel: WeatherSDLViewModelType {
-    let dateText: String
-    let temperatureText: String
-    let conditionText: String
-    let additionalText: String
+    let text1: String
+    let text2: String
+    let text3: String
+    let text4: String
     let artwork1: SDLArtwork
 
     private static let hourlyFormatter: DateFormatter = {
@@ -65,10 +65,10 @@ struct HourlyWeatherSDLViewModel: WeatherSDLViewModelType {
             textField4String = "UV Index: \(Int(forecast.uvIndex.rounded()).formatted())"
         }
 
-        dateText = HourlyWeatherSDLViewModel.hourlyFormatter.string(from: forecast.date)
-        temperatureText = temperatureString
-        conditionText = forecast.conditionDescriptions.first!.capitalized(with: .current)
-        additionalText = textField4String
+        text1 = HourlyWeatherSDLViewModel.hourlyFormatter.string(from: forecast.date)
+        text2 = temperatureString
+        text3 = forecast.conditionDescriptions.first!.capitalized(with: .current)
+        text4 = textField4String
         artwork1 = WeatherImage.toSDLArtwork(from: OpenWeatherIcon(rawValue: forecast.conditionIconNames.first!)!, size: .large)
     }
 }

@@ -10,10 +10,10 @@ import Foundation
 import SmartDeviceLink
 
 struct DailyWeatherSDLViewModel: WeatherSDLViewModelType {
-    let dateText: String
-    let temperatureText: String
-    let conditionText: String
-    let additionalText: String
+    let text1: String
+    let text2: String
+    let text3: String
+    let text4: String
     let artwork1: SDLArtwork
 
     static private let dayFormatter: DateFormatter = {
@@ -36,9 +36,9 @@ struct DailyWeatherSDLViewModel: WeatherSDLViewModelType {
     }()
 
     init(forecast: DailyForecast) {
-        dateText = DailyWeatherSDLViewModel.dayFormatter.string(from: forecast.date)
-        temperatureText = "H \(forecast.highTemperature.formatted()) | L \(forecast.lowTemperature.formatted())"
-        conditionText = forecast.conditionDescriptions.first!.capitalized(with: .current)
+        text1 = DailyWeatherSDLViewModel.dayFormatter.string(from: forecast.date)
+        text2 = "H \(forecast.highTemperature.formatted()) | L \(forecast.lowTemperature.formatted())"
+        text3 = forecast.conditionDescriptions.first!.capitalized(with: .current)
 
         var precipitationString = "\(Int((forecast.precipitationChance * 100).rounded()))% Chance"
         if (forecast.snowAmount.value > 0) && (forecast.rainAmount.value == 0) {
@@ -49,7 +49,7 @@ struct DailyWeatherSDLViewModel: WeatherSDLViewModelType {
             let totalPrecipitation = forecast.rainAmount + forecast.snowAmount
             precipitationString.append(" \(DailyWeatherSDLViewModel.measurementFormatter.string(from: totalPrecipitation)) of Snow and Rain")
         }
-        additionalText = precipitationString
+        text4 = precipitationString
 
         artwork1 = WeatherImage.toSDLArtwork(from: OpenWeatherIcon(rawValue: forecast.conditionIconNames.first!)!, size: .large)
     }

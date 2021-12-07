@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SmartDeviceLink
 
 class OpenWeatherService: NSObject {
 //    static private let baseURLFormat = "https://api.openweathermap.org/data/2.5/onecall?lat=%@&lon=%@&appid=%@"

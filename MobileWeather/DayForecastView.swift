@@ -40,13 +40,13 @@ struct DayForecastView: View {
                     HStack(alignment: .center, spacing: 0) {
                         Image(systemName: "arrow.up")
                             .foregroundColor(.red)
-                        Text(WeatherView.temperatureFormatter.string(from: forecast.highTemperature))
+                        Text(WeatherFormatter.temperatureFormatter.string(from: forecast.highTemperature))
                     }
 
                     HStack(alignment: .center, spacing: 0) {
                         Image(systemName: "arrow.down")
                             .foregroundColor(.blue)
-                        Text(WeatherView.temperatureFormatter.string(from: forecast.lowTemperature))
+                        Text(WeatherFormatter.temperatureFormatter.string(from: forecast.lowTemperature))
                     }
                 }
                 .font(.subheadline)

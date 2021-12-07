@@ -31,8 +31,8 @@ struct CurrentForecast: Equatable, Hashable, Decodable {
         visibility = Measurement<UnitLength>(value: 0.0, unit: .miles)
         windSpeed = Measurement<UnitSpeed>(value: 0.0, unit: .milesPerHour)
         windGust = nil
-        conditionDescriptions = []
-        conditionIconNames = []
+        conditionDescriptions = ["Sunny"]
+        conditionIconNames = [OpenWeatherIcon.clearDay.rawValue]
     }
 
     init(from decoder: Decoder) throws {

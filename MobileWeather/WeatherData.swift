@@ -17,13 +17,13 @@ struct WeatherData: Decodable {
     let daily: [DailyForecast]
     let alerts: [WeatherAlert]?
 
-    init() {
-        location = CLLocationCoordinate2D(latitude: 42.4829483, longitude: -83.1426719)
-        current = CurrentForecast()
-        minutely = []
-        hourly = []
-        daily = []
-        alerts = []
+    init(location: CLLocationCoordinate2D, current: CurrentForecast, minutely: [MinutelyForecast], hourly: [HourlyForecast], daily: [DailyForecast], alerts: [WeatherAlert]?) {
+        self.location = location
+        self.current = current
+        self.minutely = minutely
+        self.hourly = hourly
+        self.daily = daily
+        self.alerts = alerts
     }
 
     init(from decoder: Decoder) throws {
@@ -40,4 +40,10 @@ struct WeatherData: Decodable {
     enum CodingKeys: String, CodingKey {
         case lat, lon, current, minutely, hourly, daily, alerts
     }
+}
+
+extension WeatherData {
+    static let testData: WeatherData = {
+        return WeatherData(location: CLLocationCoordinate2D(latitude: 42.4829483, longitude: -83.1426719), current: CurrentForecast(), minutely: [], hourly: [HourlyForecast.testData, HourlyForecast.testData, HourlyForecast.testData, HourlyForecast.testData, HourlyForecast.testData], daily: [DailyForecast.testData, DailyForecast.testData, DailyForecast.testData, DailyForecast.testData, DailyForecast.testData], alerts: nil)
+    }()
 }

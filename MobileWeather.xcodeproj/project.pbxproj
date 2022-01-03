@@ -51,7 +51,7 @@
 		4ABBCB45273C64B40020D974 /* WeatherImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABBCB44273C64B40020D974 /* WeatherImage.swift */; };
 		4ABBCB48273EAC870020D974 /* WeatherSDLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABBCB47273EAC870020D974 /* WeatherSDLManager.swift */; };
 		4ABBCB4A273ECFE80020D974 /* WeatherSDLManager+Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABBCB49273ECFE80020D974 /* WeatherSDLManager+Menu.swift */; };
-		4AC868A127834B5A007579D5 /* WeatherDataTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC868A027834B5A007579D5 /* WeatherDataTimelineProvider.swift */; };
+		4AC868A227834DB9007579D5 /* WeatherDataTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC868A027834B5A007579D5 /* WeatherDataTimelineProvider.swift */; };
 		4AFFBD4727595A7F002F2EA8 /* HourForecastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFFBD4627595A7F002F2EA8 /* HourForecastView.swift */; };
 		4AFFBD4927595A88002F2EA8 /* DayForecastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFFBD4827595A88002F2EA8 /* DayForecastView.swift */; };
 		4AFFBD4B275A735D002F2EA8 /* WeatherImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFFBD4A275A735D002F2EA8 /* WeatherImageView.swift */; };
@@ -653,7 +653,6 @@
 				4A8DF85C26FA455100B46E2A /* DailyConditionsView.swift in Sources */,
 				4A4EBD232742FFAB00F1F325 /* WeatherAlertsSDLList.swift in Sources */,
 				4A491145266E9F9B00A2E06D /* WeatherAlert.swift in Sources */,
-				4AC868A127834B5A007579D5 /* WeatherDataTimelineProvider.swift in Sources */,
 				4A02110E2746D7C200C9FA80 /* HourlyWeatherSDLViewModel.swift in Sources */,
 				4A8DF86226FA58A500B46E2A /* SceneDelegate.swift in Sources */,
 				4AFFBD4B275A735D002F2EA8 /* WeatherImageView.swift in Sources */,
@@ -680,6 +679,7 @@
 				4AFFBD65275E5707002F2EA8 /* SDL_Weather_Widget.intentdefinition in Sources */,
 				4AFFBD7F275E7B1C002F2EA8 /* WeatherFormatter.swift in Sources */,
 				4AA93147275EA832001A0EE8 /* LocationService.swift in Sources */,
+				4AC868A227834DB9007579D5 /* WeatherDataTimelineProvider.swift in Sources */,
 				4AFFBD71275E6E73002F2EA8 /* CurrentForecast.swift in Sources */,
 				4AFFBD70275E6E73002F2EA8 /* DailyForecast.swift in Sources */,
 				4AFFBD72275E6E74002F2EA8 /* MinutelyForecast.swift in Sources */,
@@ -879,7 +879,7 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 Ford. All rights reserved.";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 5.5.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sdl.sdlweather.SDL-Weather-Widget";
@@ -919,7 +919,7 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 Ford. All rights reserved.";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 5.5.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sdl.sdlweather.SDL-Weather-Widget";

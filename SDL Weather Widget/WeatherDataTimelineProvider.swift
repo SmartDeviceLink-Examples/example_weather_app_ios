@@ -9,9 +9,10 @@
 import Intents
 import WidgetKit
 
-struct WeatherDataEntry: TimelineEntry {
+struct HourlyWeatherDataEntry: TimelineEntry {
     let date: Date
-    let data: WeatherData
+    let currentData: CurrentForecast
+    let hourlyData: [HourlyForecast]
     let configuration: ConfigurationIntent
 }
 
@@ -22,32 +23,35 @@ struct WeatherDataTimelineProvider: IntentTimelineProvider {
         WeatherService.shared.start()
     }
 
-    func placeholder(in context: Context) -> WeatherDataEntry {
-        WeatherDataEntry(date: Date(), data: WeatherData.testData, configuration: ConfigurationIntent())
+    func placeholder(in context: Context) -> HourlyWeatherDataEntry {
+        HourlyWeatherDataEntry(date: Date(), currentData: WeatherData.testData.current, hourlyData: WeatherData.testData.hourly, configuration: ConfigurationIntent())
     }
 
-    func getSnapshot(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (WeatherDataEntry) -> ()) {
-        let entry: WeatherDataEntry
+    func getSnapshot(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (HourlyWeatherDataEntry) -> ()) {
+        let entry: HourlyWeatherDataEntry
         if let weatherData = serverWeatherData {
-            entry = WeatherDataEntry(date: Date(), data: weatherData, configuration: configuration)
+            entry = HourlyWeatherDataEntry(date: weatherData.current.date, currentData: weatherData.current, hourlyData: weatherData.hourly, configuration: configuration)
         } else {
-            entry = WeatherDataEntry(date: Date(), data: WeatherData.testData, configuration: configuration)
+            entry = HourlyWeatherDataEntry(date: Date(), currentData: WeatherData.testData.current, hourlyData: WeatherData.testData.hourly, configuration: configuration)
         }
 
         completion(entry)
     }
 
-    func getTimeline(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (Timeline<WeatherDataEntry>) -> ()) {
-        var entries: [WeatherDataEntry] = []
+    func getTimeline(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (Timeline<HourlyWeatherDataEntry>) -> ()) {
+        var entries: [HourlyWeatherDataEntry] = []
 
         Task.init { () -> Void in
             guard let data = await WeatherService.shared.retrieveWeatherData(location: WeatherLocation(country: nil, state: nil, city: nil, zipCode: nil, gpsLocation: CLLocation(latitude: 42.4829483, longitude: -83.1426719))) else {
-                let errorTimeline = Timeline(entries: [WeatherDataEntry(date: Date(), data: .testData, configuration: configuration)], policy: .after(Calendar.current.date(byAdding: .minute, value: 5, to: Date())!))
+                let errorTimeline = Timeline(entries: [HourlyWeatherDataEntry(date: Date(), currentData: WeatherData.testData.current, hourlyData: WeatherData.testData.hourly, configuration: configuration)], policy: .after(Calendar.current.date(byAdding: .minute, value: 5, to: Date())!))
                 return completion(errorTimeline)
             }
 
-            for hourData in data.hourly {
+//            self.serverWeatherData = data
+            print("Received data: \(data)")
 
+            for hourData in data.hourly {
+//                let entry = WeatherDataEntry(date: hourData.date, data: <#T##WeatherData#>, configuration: <#T##ConfigurationIntent#>)
             }
         }
 
@@ -55,7 +59,7 @@ struct WeatherDataTimelineProvider: IntentTimelineProvider {
         let currentDate = Date()
         for hourOffset in 0 ..< 5 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = WeatherDataEntry(date: entryDate, data: WeatherData.testData, configuration: configuration)
+            let entry = HourlyWeatherDataEntry(date: entryDate, currentData: WeatherData.testData.current, hourlyData: WeatherData.testData.hourly, configuration: configuration)
             entries.append(entry)
         }
 

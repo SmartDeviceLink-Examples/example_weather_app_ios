@@ -15,30 +15,30 @@ struct SDL_Weather_WidgetEntryView : View {
     var body: some View {
         VStack {
             HStack(alignment: .center, spacing: 15) {
-                let iconName = OpenWeatherIcon(rawValue: entry.data.current.conditionIconNames.first!)!
+                let iconName = OpenWeatherIcon(rawValue: entry.currentData.conditionIconNames.first!)!
                 WeatherImageView(openWeatherName: iconName)
                     .frame(width: 40, height: 40)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(entry.data.current.conditionDescriptions.first!)
+                    Text(entry.currentData.conditionDescriptions.first!)
                         .font(.callout)
 
                     HStack {
                         Image(systemName: "thermometer")
-                        Text(entry.data.current.temperature.formatted())
+                        Text(entry.currentData.temperature.formatted())
                     }
                     .font(.callout)
 
                     HStack {
                         Image(systemName: "wind")
-                        Text(entry.data.current.windSpeed.formatted())
+                        Text(entry.currentData.windSpeed.formatted())
                     }
                     .font(.callout)
                 }
             }
 
             HStack(alignment: .center, spacing: 25) {
-                ForEach(Array(entry.data.hourly.prefix(5))) { hourlyForecast in
+                ForEach(Array(entry.hourlyData.prefix(5))) { hourlyForecast in
                     HourForecastWidgetView(forecast: hourlyForecast)
                 }
             }
@@ -48,7 +48,7 @@ struct SDL_Weather_WidgetEntryView : View {
 
 struct SDL_Weather_Widget_Previews: PreviewProvider {
     static var previews: some View {
-        SDL_Weather_WidgetEntryView(entry: WeatherDataEntry(date: Date(), data: WeatherData.testData, configuration: ConfigurationIntent()))
+        SDL_Weather_WidgetEntryView(entry: HourlyWeatherDataEntry(date: Date(), currentData: WeatherData.testData.current, hourlyData: WeatherData.testData.hourly, configuration: ConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemMedium))
     }
 }

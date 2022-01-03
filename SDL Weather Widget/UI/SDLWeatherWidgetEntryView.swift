@@ -7,9 +7,10 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 struct SDL_Weather_WidgetEntryView : View {
-    var entry: Provider.Entry
+    var entry: WeatherDataTimelineProvider.Entry
 
     var body: some View {
         VStack {

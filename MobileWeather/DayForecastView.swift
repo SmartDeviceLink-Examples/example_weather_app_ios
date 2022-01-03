@@ -14,16 +14,21 @@ struct DayForecastView: View {
     static private let dayFormatter: DateFormatter = {
         let f = DateFormatter()
         f.timeStyle = .none
+        f.locale = .autoupdatingCurrent
         f.doesRelativeDateFormatting = true
-        f.setLocalizedDateFormatFromTemplate("EE MM d")
+        f.setLocalizedDateFormatFromTemplate("EE MM dd")
 
         return f
     }()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text(DayForecastView.dayFormatter.string(from: forecast.date))
-                .font(.subheadline)
+            HStack {
+                Spacer()
+                Text(DayForecastView.dayFormatter.string(from: forecast.date))
+                    .font(.subheadline)
+                Spacer()
+            }
 
             HStack {
                 let iconName = OpenWeatherIcon(rawValue: forecast.conditionIconNames.first ?? OpenWeatherIcon.clearDay.rawValue)!

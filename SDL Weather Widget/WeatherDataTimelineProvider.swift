@@ -44,9 +44,7 @@ struct WeatherDataTimelineProvider: IntentTimelineProvider {
                 let errorTimeline = Timeline(entries: [HourlyWeatherDataEntry(date: Date(), currentData: WeatherData.testData.current, hourlyData: WeatherData.testData.hourly, configuration: configuration)], policy: .after(Calendar.current.date(byAdding: .minute, value: 5, to: Date())!))
                 return completion(errorTimeline)
             }
-
             serverWeatherData.data = data
-            print("Received data: \(data)")
 
             var entries: [HourlyWeatherDataEntry] = []
             // First item uses actual current data

@@ -20,6 +20,7 @@
 		4A49114A266EAE4600A2E06D /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A491149266EAE4600A2E06D /* WeatherService.swift */; };
 		4A49114B266EAEC000A2E06D /* WeatherLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A491113266E4F8800A2E06D /* WeatherLocation.swift */; };
 		4A49114C266EB02D00A2E06D /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A491115266E4FE700A2E06D /* LocationService.swift */; };
+		4A492C0327837DC6002FE55C /* WeatherDataWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A492C0227837DC6002FE55C /* WeatherDataWrapper.swift */; };
 		4A4EBD1827429FC200F1F325 /* WeatherSDLManager+SoftButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4EBD1727429FC200F1F325 /* WeatherSDLManager+SoftButtons.swift */; };
 		4A4EBD1D2742CAD300F1F325 /* WeatherSDLListType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4EBD1C2742CAD300F1F325 /* WeatherSDLListType.swift */; };
 		4A4EBD1F2742D62100F1F325 /* DailyForecastSDLList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4EBD1E2742D62100F1F325 /* DailyForecastSDLList.swift */; };
@@ -129,6 +130,7 @@
 		4A491144266E9F9B00A2E06D /* WeatherAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAlert.swift; sourceTree = "<group>"; };
 		4A491146266EAA8800A2E06D /* HourlyForecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyForecast.swift; sourceTree = "<group>"; };
 		4A491149266EAE4600A2E06D /* WeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherService.swift; sourceTree = "<group>"; };
+		4A492C0227837DC6002FE55C /* WeatherDataWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDataWrapper.swift; sourceTree = "<group>"; };
 		4A4EBD1727429FC200F1F325 /* WeatherSDLManager+SoftButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WeatherSDLManager+SoftButtons.swift"; sourceTree = "<group>"; };
 		4A4EBD1C2742CAD300F1F325 /* WeatherSDLListType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherSDLListType.swift; sourceTree = "<group>"; };
 		4A4EBD1E2742D62100F1F325 /* DailyForecastSDLList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyForecastSDLList.swift; sourceTree = "<group>"; };
@@ -384,6 +386,7 @@
 				4AFFBD5F275E5706002F2EA8 /* SDL_Weather_Widget.swift */,
 				4AFFBD61275E5706002F2EA8 /* SDL_Weather_Widget.intentdefinition */,
 				4AC868A027834B5A007579D5 /* WeatherDataTimelineProvider.swift */,
+				4A492C0227837DC6002FE55C /* WeatherDataWrapper.swift */,
 				4AFFBD64275E5707002F2EA8 /* Info.plist */,
 				4AA93144275E9606001A0EE8 /* UI */,
 			);
@@ -679,6 +682,7 @@
 				4AFFBD65275E5707002F2EA8 /* SDL_Weather_Widget.intentdefinition in Sources */,
 				4AFFBD7F275E7B1C002F2EA8 /* WeatherFormatter.swift in Sources */,
 				4AA93147275EA832001A0EE8 /* LocationService.swift in Sources */,
+				4A492C0327837DC6002FE55C /* WeatherDataWrapper.swift in Sources */,
 				4AC868A227834DB9007579D5 /* WeatherDataTimelineProvider.swift in Sources */,
 				4AFFBD71275E6E73002F2EA8 /* CurrentForecast.swift in Sources */,
 				4AFFBD70275E6E73002F2EA8 /* DailyForecast.swift in Sources */,

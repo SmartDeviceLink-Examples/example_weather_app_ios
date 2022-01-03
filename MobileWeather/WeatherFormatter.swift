@@ -11,7 +11,17 @@ import Foundation
 enum WeatherFormatter {
     static var temperatureFormatter: MeasurementFormatter = {
         let m = MeasurementFormatter()
+        m.locale = .autoupdatingCurrent
         m.numberFormatter.maximumFractionDigits = 0
+
+        return m
+    }()
+
+    static var speedFormatter: MeasurementFormatter = {
+        let m = MeasurementFormatter()
+        m.locale = .autoupdatingCurrent
+        m.numberFormatter.maximumFractionDigits = 0
+
         return m
     }()
 }

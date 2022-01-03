@@ -20,18 +20,18 @@ struct SDL_Weather_WidgetEntryView : View {
                     .frame(width: 40, height: 40)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(entry.currentData.conditionDescriptions.first!)
+                    Text(entry.currentData.conditionDescriptions.first!.capitalized)
                         .font(.callout)
 
                     HStack {
                         Image(systemName: "thermometer")
-                        Text(entry.currentData.temperature.formatted())
+                        Text(WeatherFormatter.temperatureFormatter.string(from: entry.currentData.temperature))
                     }
                     .font(.callout)
 
                     HStack {
                         Image(systemName: "wind")
-                        Text(entry.currentData.windSpeed.formatted())
+                        Text(WeatherFormatter.speedFormatter.string(from: entry.currentData.windSpeed))
                     }
                     .font(.callout)
                 }

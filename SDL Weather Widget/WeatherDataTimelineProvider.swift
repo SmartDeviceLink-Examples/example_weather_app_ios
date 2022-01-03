@@ -17,7 +17,7 @@ struct HourlyWeatherDataEntry: TimelineEntry {
 }
 
 struct WeatherDataTimelineProvider: IntentTimelineProvider {
-    var serverWeatherData: WeatherData?
+    var serverWeatherData = WeatherDataWrapper()
 
     init() {
         WeatherService.shared.start()
@@ -29,7 +29,7 @@ struct WeatherDataTimelineProvider: IntentTimelineProvider {
 
     func getSnapshot(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (HourlyWeatherDataEntry) -> ()) {
         let entry: HourlyWeatherDataEntry
-        if let weatherData = serverWeatherData {
+        if let weatherData = serverWeatherData.data {
             entry = HourlyWeatherDataEntry(date: weatherData.current.date, currentData: weatherData.current, hourlyData: weatherData.hourly, configuration: configuration)
         } else {
             entry = HourlyWeatherDataEntry(date: Date(), currentData: WeatherData.testData.current, hourlyData: WeatherData.testData.hourly, configuration: configuration)
@@ -39,31 +39,30 @@ struct WeatherDataTimelineProvider: IntentTimelineProvider {
     }
 
     func getTimeline(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (Timeline<HourlyWeatherDataEntry>) -> ()) {
-        var entries: [HourlyWeatherDataEntry] = []
-
         Task.init { () -> Void in
             guard let data = await WeatherService.shared.retrieveWeatherData(location: WeatherLocation(country: nil, state: nil, city: nil, zipCode: nil, gpsLocation: CLLocation(latitude: 42.4829483, longitude: -83.1426719))) else {
                 let errorTimeline = Timeline(entries: [HourlyWeatherDataEntry(date: Date(), currentData: WeatherData.testData.current, hourlyData: WeatherData.testData.hourly, configuration: configuration)], policy: .after(Calendar.current.date(byAdding: .minute, value: 5, to: Date())!))
                 return completion(errorTimeline)
             }
 
-//            self.serverWeatherData = data
+            serverWeatherData.data = data
             print("Received data: \(data)")
 
-            for hourData in data.hourly {
-//                let entry = WeatherDataEntry(date: hourData.date, data: <#T##WeatherData#>, configuration: <#T##ConfigurationIntent#>)
+            var entries: [HourlyWeatherDataEntry] = []
+            // First item uses actual current data
+            let firstEntry = HourlyWeatherDataEntry(date: data.current.date, currentData: data.current, hourlyData: data.hourly, configuration: configuration)
+            entries.append(firstEntry)
+
+            for i in 1..<4 {
+                let currentHour = data.hourly[i]
+                let currentData = CurrentForecast(date: currentHour.date, sunriseDate: data.current.sunriseDate, sunsetDate: data.current.sunsetDate, temperature: currentHour.temperature, feelsLikeTemperature: currentHour.feelsLikeTemperature, uvIndex: currentHour.uvIndex, visibility: currentHour.visibility, windSpeed: currentHour.windSpeed, windGust: currentHour.windGust, conditionDescriptions: currentHour.conditionDescriptions, conditionIconNames: currentHour.conditionIconNames)
+                let entry = HourlyWeatherDataEntry(date: currentData.date, currentData: currentData, hourlyData: Array(data.hourly.dropFirst(i)), configuration: configuration)
+                entries.append(entry)
             }
-        }
 
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = HourlyWeatherDataEntry(date: entryDate, currentData: WeatherData.testData.current, hourlyData: WeatherData.testData.hourly, configuration: configuration)
-            entries.append(entry)
+            // Update after an hour if possible
+            let timeline = Timeline(entries: entries, policy: .after(Calendar.current.date(byAdding: .hour, value: 1, to: Date())!))
+            completion(timeline)
         }
-
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
     }
 }

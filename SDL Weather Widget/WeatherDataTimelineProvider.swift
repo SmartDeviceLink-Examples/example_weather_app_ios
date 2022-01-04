@@ -51,6 +51,7 @@ struct WeatherDataTimelineProvider: IntentTimelineProvider {
             let firstEntry = HourlyWeatherDataEntry(date: data.current.date, currentData: data.current, hourlyData: data.hourly, configuration: configuration)
             entries.append(firstEntry)
 
+            // Create a few additional entries to handle future times by converting future hourly data into 'current' data
             for i in 1..<4 {
                 let currentHour = data.hourly[i]
                 let currentData = CurrentForecast(date: currentHour.date, sunriseDate: data.current.sunriseDate, sunsetDate: data.current.sunsetDate, temperature: currentHour.temperature, feelsLikeTemperature: currentHour.feelsLikeTemperature, uvIndex: currentHour.uvIndex, visibility: currentHour.visibility, windSpeed: currentHour.windSpeed, windGust: currentHour.windGust, conditionDescriptions: currentHour.conditionDescriptions, conditionIconNames: currentHour.conditionIconNames)

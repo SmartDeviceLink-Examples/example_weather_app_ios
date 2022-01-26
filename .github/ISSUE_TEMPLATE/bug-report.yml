@@ -24,7 +24,7 @@ body:
         Expected Behavior:
 
         Observed Behavior:
-    validation:
+    validations:
      required: true
   - type: input
     id: ios-version

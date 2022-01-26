@@ -9,6 +9,7 @@ body:
         Thank you for filling out a bug report. We'll respond as quickly as we can. The more information you provide, the more likely we are to be able to diagnose the problem.
   - type: textarea
     id: summary
+    description: In a paragraph, summarize the problem. Attach any relevant crash reports or test apps as well.
     attributes:
       label: Bug Summary
     validations:
@@ -62,5 +63,5 @@ body:
     id: logs
     attributes:
       label: Relevant log output
-      description: Please copy-paste any relevant log output. Attach any relevant crash reports or test apps as well. This will automatically be rendered as code.
+      description: Please copy-paste any relevant log output. This will automatically be rendered as code.
       render: shell

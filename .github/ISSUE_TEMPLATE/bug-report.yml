@@ -1,5 +1,6 @@
 name: Bug Report
 description: File a bug report
+labels: needs triage
 body:
   - type: markdown
     attributes:
@@ -49,6 +50,11 @@ body:
           - Ford TDK 3.4 (19286_DEVTEST)
           - Manticore v2.9.0 (See top of the open Manticore screen)
           - SDL Core v8.0.0 + Generic_HMI v0.11.0
+      placeholder: |
+        For Example:
+          - Ford TDK 3.4 (19286_DEVTEST)
+          - Manticore v2.9.0 (See top of the open Manticore screen)
+          - SDL Core v8.0.0 + Generic_HMI v0.11.0
       render: markdown
     validations:
       required: true
@@ -56,5 +62,5 @@ body:
     id: logs
     attributes:
       label: Relevant log output
-      description: Please copy-paste any relevant log output. Attach any relevant crash reports or test apps as well.
+      description: Please copy-paste any relevant log output. Attach any relevant crash reports or test apps as well. This will automatically be rendered as code.
       render: shell

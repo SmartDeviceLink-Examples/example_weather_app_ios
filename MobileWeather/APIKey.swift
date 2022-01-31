@@ -8,6 +8,7 @@
 
 import Foundation
 
-struct APIKey {
-    static let apiKey = "d6f1f15f251280a3908a846151e9e61c"
+struct APIKeys {
+    // https://home.openweathermap.org/api_keys
+    static let openWeatherKey = ""
 }

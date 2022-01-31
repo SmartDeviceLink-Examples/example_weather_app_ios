@@ -8,13 +8,11 @@
 
 import Foundation
 
-class OpenWeatherService: NSObject {
-//    static private let baseURLFormat = "https://api.openweathermap.org/data/2.5/onecall?lat=%@&lon=%@&appid=%@"
+enum OpenWeatherService {
+    static func updateWeatherData(location: WeatherLocation) async -> WeatherData? {
+        guard !APIKeys.openWeatherKey.isEmpty else { fatalError("The API Key is empty. Please retrieve an API key from https://home.openweathermap.org/api_keys") }
 
-    func updateWeatherData(location: WeatherLocation) async -> WeatherData? {
-        guard !APIKey.apiKey.isEmpty else { fatalError("The API Key is empty. Please retrieve an API key from https://home.openweathermap.org/api_keys") }
-
-        let urlString = "https://api.openweathermap.org/data/2.5/onecall?lat=\(location.gpsLocation.coordinate.latitude)&lon=\(location.gpsLocation.coordinate.longitude)&appid=\(APIKey.apiKey)"
+        let urlString = "https://api.openweathermap.org/data/2.5/onecall?lat=\(location.gpsLocation.coordinate.latitude)&lon=\(location.gpsLocation.coordinate.longitude)&appid=\(APIKeys.openWeatherKey)"
         let url = URL(string: urlString)!
 
         do {

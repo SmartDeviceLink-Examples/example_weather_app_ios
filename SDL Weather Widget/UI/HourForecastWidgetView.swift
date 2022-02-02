@@ -1,14 +1,14 @@
 //
-//  HourForecastView.swift
+//  HourForecastWidgetView.swift
 //  MobileWeather
 //
-//  Created by Joel Fischer on 12/2/21.
+//  Created by Joel Fischer on 12/6/21.
 //  Copyright © 2021 Ford. All rights reserved.
 //
 
 import SwiftUI
 
-struct HourForecastView: View {
+struct HourForecastWidgetView: View {
     let forecast: HourlyForecast
 
     private static var hourDateFormatter: DateFormatter = {
@@ -23,17 +23,18 @@ struct HourForecastView: View {
         VStack {
             let iconName = OpenWeatherIcon(rawValue: forecast.conditionIconNames.first ?? OpenWeatherIcon.clearDay.rawValue)!
             WeatherImageView(openWeatherName: iconName)
-                .frame(width: 40, height: 40)
+                .frame(width: 30, height: 30)
 
             Text(WeatherFormatter.temperatureFormatter.string(from: forecast.temperature))
-            Text(HourForecastView.hourDateFormatter.string(from: forecast.date))
-                .font(.subheadline)
+                .font(.callout)
+            Text(HourForecastWidgetView.hourDateFormatter.string(from: forecast.date))
+                .font(.footnote)
         }
     }
 }
 
-struct HourForecastView_Previews: PreviewProvider {
+struct HourForecastWidgetView_Previews: PreviewProvider {
     static var previews: some View {
-        HourForecastView(forecast: HourlyForecast.testData)
+        HourForecastWidgetView(forecast: HourlyForecast.testData)
     }
 }

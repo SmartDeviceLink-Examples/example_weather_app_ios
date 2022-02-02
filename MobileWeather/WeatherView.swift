@@ -12,12 +12,6 @@ import SwiftUI
 struct WeatherView: View {
     @ObservedObject private var weatherManager = WeatherService.shared
 
-    static var temperatureFormatter: MeasurementFormatter = {
-        let m = MeasurementFormatter()
-        m.numberFormatter.maximumFractionDigits = 0
-        return m
-    }()
-
     var body: some View {
         #if DEBUG
         let _ = Self._printChanges()

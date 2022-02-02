@@ -9,7 +9,6 @@
 import Foundation
 import SwiftUI
 import UIKit
-import SmartDeviceLink
 
 enum WeatherImageSize {
     case large, small
@@ -23,12 +22,6 @@ enum WeatherImageSize {
 }
 
 enum WeatherImage {
-    static func toSDLArtwork(from openWeatherName: OpenWeatherIcon, size: WeatherImageSize) -> SDLArtwork {
-        let image = toUIImage(from: openWeatherName, size: size)
-
-        return SDLArtwork(image: image, name: openWeatherName.rawValue, persistent: true, as: .PNG)
-    }
-
     static func toUIImage(from openWeatherName: OpenWeatherIcon, size: WeatherImageSize) -> UIImage {
         return Self.systemImage(from: openWeatherName).applyingSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: size.pointSize))!
     }

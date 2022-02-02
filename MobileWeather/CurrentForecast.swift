@@ -31,8 +31,22 @@ struct CurrentForecast: Equatable, Hashable, Decodable {
         visibility = Measurement<UnitLength>(value: 0.0, unit: .miles)
         windSpeed = Measurement<UnitSpeed>(value: 0.0, unit: .milesPerHour)
         windGust = nil
-        conditionDescriptions = []
-        conditionIconNames = []
+        conditionDescriptions = ["Sunny"]
+        conditionIconNames = [OpenWeatherIcon.clearDay.rawValue]
+    }
+
+    init(date: Date, sunriseDate: Date, sunsetDate: Date, temperature: Measurement<UnitTemperature>, feelsLikeTemperature: Measurement<UnitTemperature>, uvIndex: Double, visibility: Measurement<UnitLength>, windSpeed: Measurement<UnitSpeed>, windGust: Measurement<UnitSpeed>?, conditionDescriptions: [String], conditionIconNames: [String]) {
+        self.date = date
+        self.sunriseDate = sunriseDate
+        self.sunsetDate = sunsetDate
+        self.temperature = temperature
+        self.feelsLikeTemperature = feelsLikeTemperature
+        self.uvIndex = uvIndex
+        self.visibility = visibility
+        self.windSpeed = windSpeed
+        self.windGust = windGust
+        self.conditionDescriptions = conditionDescriptions
+        self.conditionIconNames = conditionIconNames
     }
 
     init(from decoder: Decoder) throws {

@@ -38,6 +38,7 @@ struct DayForecastView: View {
                 Spacer()
 
                 Text(forecast.conditionDescriptions.first!.capitalized)
+                    .frame(maxWidth: 1000, alignment: .leading)
 
                 Spacer()
 
@@ -55,6 +56,7 @@ struct DayForecastView: View {
                     }
                 }
                 .font(.subheadline)
+                
             }
         }
     }
@@ -62,6 +64,10 @@ struct DayForecastView: View {
 
 struct DayForecastView_Previews: PreviewProvider {
     static var previews: some View {
-        DayForecastView(forecast: DailyForecast.testData)
+        VStack {
+            DayForecastView(forecast: DailyForecast.testData[0])
+            DayForecastView(forecast: DailyForecast.testData[1])
+        }
+        .previewLayout(.sizeThatFits)
     }
 }

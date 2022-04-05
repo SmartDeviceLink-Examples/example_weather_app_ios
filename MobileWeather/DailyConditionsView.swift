@@ -27,10 +27,7 @@ struct DailyConditionsView: View {
 
 struct DailyConditionsView_Previews: PreviewProvider {
     static var previews: some View {
-        let json = Bundle.main.url(forResource: "weather-api-response", withExtension: "json")!
-        let jsonData = try! Data(contentsOf: json)
-        let data = try! JSONDecoder().decode(WeatherData.self, from: jsonData)
-
-        DailyConditionsView(dailyForecast: data.daily)
+        DailyConditionsView(dailyForecast: DailyForecast.testData)
+            .previewLayout(.sizeThatFits)
     }
 }

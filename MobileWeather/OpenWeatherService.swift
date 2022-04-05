@@ -16,12 +16,13 @@ enum OpenWeatherService {
         let url = URL(string: urlString)!
 
         do {
-            let response = try await URLSession.shared.data(from: url)
+            let (data, response) = try await URLSession.shared.data(from: url)
+            print("Received OpenWeather Response: \((response as! HTTPURLResponse).statusCode)")
 
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .secondsSince1970
 
-            return try decoder.decode(WeatherData.self, from: response.0)
+            return try decoder.decode(WeatherData.self, from: data)
         } catch let error {
             print("Failed to retrieve data or convert to weather data: \(error)")
             return nil

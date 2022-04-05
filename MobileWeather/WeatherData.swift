@@ -44,6 +44,6 @@ struct WeatherData: Decodable {
 
 extension WeatherData {
     static let testData: WeatherData = {
-        return WeatherData(location: CLLocationCoordinate2D(latitude: 42.4829483, longitude: -83.1426719), current: CurrentForecast(), minutely: [], hourly: [HourlyForecast.testData, HourlyForecast.testData, HourlyForecast.testData, HourlyForecast.testData, HourlyForecast.testData], daily: [DailyForecast.testData, DailyForecast.testData, DailyForecast.testData, DailyForecast.testData, DailyForecast.testData], alerts: nil)
+        return WeatherData(location: CLLocationCoordinate2D(latitude: 42.4829483, longitude: -83.1426719), current: CurrentForecast(), minutely: [], hourly: [HourlyForecast.testData, HourlyForecast.testData, HourlyForecast.testData, HourlyForecast.testData, HourlyForecast.testData], daily: DailyForecast.testData, alerts: nil)
     }()
 }

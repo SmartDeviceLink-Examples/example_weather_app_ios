@@ -257,13 +257,6 @@ extension WeatherSDLManager {
                 self.screenManager.presentAlert(alertView, withCompletionHandler: nil)
             }
         }
-//        screenManager.beginUpdates()
-//        screenManager.textField1 = viewModel.dateText
-//        screenManager.textField2 = viewModel.temperatureText
-//        screenManager.textField3 = viewModel.conditionText
-//        screenManager.textField4 = viewModel.additionalText
-//        screenManager.primaryGraphic = viewModel.artwork1
-//        screenManager.endUpdates()
 
         if speak {
             let speak = SDLSpeak(tts: "\(viewModel.text1) from \(viewModel.text2) to \(viewModel.text3)")

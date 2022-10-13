@@ -1,13 +1,13 @@
 PODS:
   - BiSON (1.2.5)
-  - SmartDeviceLink/Default (7.3.1):
+  - SmartDeviceLink/Default (7.5.0):
     - BiSON (~> 1.2)
-  - SmartDeviceLink/Swift (7.3.1):
+  - SmartDeviceLink/Swift (7.5.0):
     - BiSON (~> 1.2)
     - SmartDeviceLink/Default
 
 DEPENDENCIES:
-  - SmartDeviceLink/Swift (~> 7.3)
+  - SmartDeviceLink/Swift (~> 7.5)
 
 SPEC REPOS:
   trunk:
@@ -16,8 +16,8 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   BiSON: 232dc4fdbe825301742963f27a78f10f13bca68b
-  SmartDeviceLink: a3486b871633378c65a5be08ea5e73ec8f5a8057
+  SmartDeviceLink: cc221bebef9523b2b1b12162f3573075219f3fef
 
-PODFILE CHECKSUM: 4a2c20e8d136e67c56055fca84d2bbb4f445e119
+PODFILE CHECKSUM: c224b07cfb933633d94d57585d3f4a6809525560
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

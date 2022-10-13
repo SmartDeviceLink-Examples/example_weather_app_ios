@@ -17,11 +17,10 @@ class WeatherService: ObservableObject {
     static let shared = WeatherService()
 
     private var locationService: LocationService!
-    private let openWeatherService = OpenWeatherService()
 
     @Published var lastUpdateTime: Date?
     @Published var currentLocation = WeatherLocation(country: nil, state: nil, city: nil, zipCode: nil, gpsLocation: CLLocation(latitude: 42.4829483, longitude: -83.1426719))
-    @Published var weatherData = WeatherData()
+    @Published var weatherData = WeatherData.testData
 
     init() {
         locationService = LocationService(delegate: self)
@@ -30,22 +29,28 @@ class WeatherService: ObservableObject {
     func start() {
         locationService.start()
     }
+
+    @discardableResult func retrieveWeatherData(location: WeatherLocation) async -> WeatherData? {
+        if let newWeatherData = await OpenWeatherService.updateWeatherData(location: location) {
+            DispatchQueue.main.async {
+                self.currentLocation = location
+                self.weatherData = newWeatherData
+                self.lastUpdateTime = Date()
+                NotificationCenter.default.post(name: .weatherDataUpdate, object: self)
+            }
+
+            return newWeatherData
+        } else {
+            // TODO: Broadcast an error
+            return nil
+        }
+    }
 }
 
 extension WeatherService: LocationServiceDelegate {
     func locationDidUpdate(newLocation: WeatherLocation) {
-        currentLocation = newLocation
-
         Task.init {
-            if let newWeatherData = await openWeatherService.updateWeatherData(location: newLocation) {
-                DispatchQueue.main.async {
-                    self.weatherData = newWeatherData
-                    self.lastUpdateTime = Date()
-                    NotificationCenter.default.post(name: .weatherDataUpdate, object: self)
-                }
-            } else {
-                // Broadcast an error
-            }
+            await retrieveWeatherData(location: newLocation)
         }
     }
 }
